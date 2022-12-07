@@ -13,7 +13,6 @@ const PopUp = (props) => {
                 <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
                     Enter the Operation Booking Details
                 </Typography>
-                <Button variant="contained" onClick={()=>{setOpen(false)}}>Close</Button>
             </DialogTitle>
             <DialogContent dividers>
                 {children}
