@@ -7,6 +7,11 @@ const PopUp = (props) => {
     const DialogTitleStyle={
         display:'flex',
     }
+
+    const onSubmit = () => {
+        alert('data');
+        setOpen(false)
+    };
     return (
         <Dialog open={openPopUp} maxWidth="xxl">
             <DialogTitle style={DialogTitleStyle}>
@@ -14,12 +19,12 @@ const PopUp = (props) => {
                     Enter the Operation Booking Details
                 </Typography>
             </DialogTitle>
-            <DialogContent dividers>
+            <DialogContent dividers >
                 {children}
             </DialogContent>
             <DialogActions>
                 <Button onClick={()=>{setOpen(false)}}>Cancel</Button>
-                <Button type='submit'>Submit</Button>
+                <Button type='submit' >Submit</Button>              
           </DialogActions>
         </Dialog>
     )

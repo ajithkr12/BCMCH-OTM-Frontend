@@ -1,6 +1,6 @@
 import React,{useState} from 'react'
 import {Grid,TextField} from '@mui/material';
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
@@ -8,13 +8,25 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
-
+import { Button} from '@mui/material';
+import OutlinedInput from '@mui/material/OutlinedInput';
 
 import moment from 'moment';
 
-const BookingRegistrationForm = () => {
+import {SurgeryType} from '../data/Data'
 
-    const { register, formState: { errors }, handleSubmit } = useForm();
+
+
+
+
+const BookingRegistrationForm = (props) => {
+    console.log("form vannu")
+    const { register,control,formState: { errors }, handleSubmit } = useForm({
+        defaultValues: {
+            UHID: props.uhid,
+            surgery_Name:props.name
+         }
+     });
     const [periodStart, setPeriodStart] = useState(moment());
 
     const onSubmit = (data) => console.log(data);
@@ -26,7 +38,7 @@ const BookingRegistrationForm = () => {
           },
         textfield:{
             width:'100%',
-            fontSize:"16px",
+            fontSize:"12px",
             
         },
         errortext:{
@@ -131,16 +143,18 @@ const BookingRegistrationForm = () => {
             <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Surgery Type</InputLabel>
                 <Select 
-                labelId="demo-simple-select-label"
-
+                    labelId="demo-simple-select-label"
                     id="demo-simple-select"    
                     label="Surgery Type"   
                     style={useStyles.textfield} 
                     {...register('surgery_Type',{ required: true})}
                 >
-                    <MenuItem value="abcd">abcd</MenuItem>
-                    <MenuItem value="wxyz">wxyz</MenuItem>
-                    <MenuItem value="mlno">mlno</MenuItem>
+                {
+                    SurgeryType.map((data) => {
+                        return (
+                            <MenuItem value={data.value}>{data.label}</MenuItem>
+                        )})
+                }
                 </Select>
                 {errors.surgery_Type && errors.surgery_Type.type === "required" && <p style={useStyles.errortext}>Surgery Type is required.</p>}
             </FormControl>
@@ -157,16 +171,40 @@ const BookingRegistrationForm = () => {
                     {errors.surgery_Name && errors.surgery_Name.type === "minLength" && (<p style={useStyles.errortext}>Your name must be at least 2 characters.</p>)}
             </Grid>
 
+
             <Grid md={3} style={useStyles.root}>
-                <TextField 
-                    label="A Surgery Name" 
-                    variant="outlined" 
-                    style={useStyles.textfield} 
-                    {...register('a_surgery_Name', { required: true,minLength: 2})}
+                <Controller
+                    name="a_surgery_Name"
+                    control={control}
+                    type="text"
+                    defaultValue={[]}
+                    render={({ register }) => (
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-multiple-name-label">A Surgery Name</InputLabel>
+                                <Select 
+                                    {...register}
+                                    labelId="demo-multiple-name-label"
+                                    id="demo-multiple-name"    
+                                    label="A Surgery Name"   
+                                    multiple
+                                    defaultValue={[]}
+                                    style={useStyles.textfield} 
+                                    // MenuProps={MenuProps}
+                                    
+                                >
+                                    {
+                                        SurgeryType.map((data) => {
+                                            return(
+                                                <MenuItem key={data.id} value={data.value}>{data.label}</MenuItem>
+                                            )    
+                                        })
+                                    }
+                                </Select>
+                        </FormControl>
+                    )}
                 />
-                    {errors.a_surgery_Name && errors.a_surgery_Name.type === "required" && <p style={useStyles.errortext}>Name is required.</p>}
-                    {errors.a_surgery_Name && errors.a_surgery_Name.type === "minLength" && (<p style={useStyles.errortext}>Your name must be at least 2 characters.</p>)}
             </Grid>
+
 
             <Grid md={3} style={useStyles.root}>
                 <TextField 
@@ -288,7 +326,7 @@ const BookingRegistrationForm = () => {
             </Grid>
 
         </Grid>
-        <input type="submit" />
+        <button type="submit" >Submit</button>
         </form>
 
     )
@@ -296,9 +334,3 @@ const BookingRegistrationForm = () => {
 
 export default BookingRegistrationForm
 
-
-// <select {...register("se")}>
-// <option value="asdsa">asdsa</option>
-// <option value="gbcg">gbcg</option>
-// <option value="ghh">ghh</option>
-// </select>
