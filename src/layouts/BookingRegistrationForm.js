@@ -38,7 +38,7 @@ const BookingRegistrationForm = (props) => {
           },
         textfield:{
             width:'100%',
-            fontSize:"12px",
+            fontSize:"14px",
             
         },
         errortext:{
@@ -47,7 +47,10 @@ const BookingRegistrationForm = (props) => {
             fontSize:"12px"
         },
       };
-
+      const SelectChange = (e)=>{
+        console.log(">>>>>>>>>",e)
+        return e.target?.value;
+      }
     return (
 
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -178,17 +181,22 @@ const BookingRegistrationForm = (props) => {
                     control={control}
                     type="text"
                     defaultValue={[]}
-                    render={({ register }) => (
+                    rules={{ required: true }}
+                    render={({ field:{value,onChange} })=> (
                         <FormControl fullWidth>
                             <InputLabel id="demo-multiple-name-label">A Surgery Name</InputLabel>
                                 <Select 
                                     {...register}
-                                    labelId="demo-multiple-name-label"
-                                    id="demo-multiple-name"    
+                                    labelId="a_surgery_Name"
+                                    id="a_surgery_Name"    
                                     label="A Surgery Name"   
                                     multiple
                                     defaultValue={[]}
                                     style={useStyles.textfield} 
+                                    onChange={(e)=>{
+                                        let newData = SelectChange(e);
+                                        onChange(newData)
+                                    }}
                                     // MenuProps={MenuProps}
                                     
                                 >
@@ -203,29 +211,50 @@ const BookingRegistrationForm = (props) => {
                         </FormControl>
                     )}
                 />
+                {errors.a_surgery_Name && errors.a_surgery_Name.type === "required" && <p style={useStyles.errortext}>A Surgery Name is required.</p>}
             </Grid>
 
 
             <Grid md={3} style={useStyles.root}>
-                <TextField 
-                    label="Anesthesia Type" 
-                    variant="outlined" 
+            <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Anesthesia Type</InputLabel>
+                <Select 
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"    
+                    label="Anesthesia Type"   
                     style={useStyles.textfield} 
-                    {...register('anesthesia_Type', { required: true,minLength: 2})}
-                />
-                    {errors.anesthesia_Type && errors.anesthesia_Type.type === "required" && <p style={useStyles.errortext}>Anesthesia Type is required.</p>}
-                    {errors.anesthesia_Type && errors.anesthesia_Type.type === "minLength" && (<p style={useStyles.errortext}>Your name must be at least 2 characters.</p>)}
+                    {...register('anesthesia_Type',{ required: true})}
+                >
+                {
+                    SurgeryType.map((data) => {
+                        return (
+                            <MenuItem value={data.value}>{data.label}</MenuItem>
+                        )})
+                }
+                </Select>
+                {errors.anesthesia_Type && errors.anesthesia_Type.type === "required" && <p style={useStyles.errortext}>Anesthesia Type is required.</p>}
+            </FormControl>
             </Grid>
 
             <Grid md={3} style={useStyles.root}>
-                <TextField 
-                    label="Preffered Anasthetist" 
-                    variant="outlined" 
+            <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Preffered Anasthetist</InputLabel>
+                <Select 
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"    
+                    label="Preffered Anasthetist"   
                     style={useStyles.textfield} 
-                    {...register('anasthetist', { required: true,minLength: 2})}
-                />
-                    {errors.anasthetist && errors.anasthetist.type === "required" && <p style={useStyles.errortext}>Anasthetist is required.</p>}
-                    {errors.anasthetist && errors.anasthetist.type === "minLength" && (<p style={useStyles.errortext}>Your name must be at least 2 characters.</p>)}
+                    {...register('anasthetist',{ required: true})}
+                >
+                {
+                    SurgeryType.map((data) => {
+                        return (
+                            <MenuItem value={data.value}>{data.label}</MenuItem>
+                        )})
+                }
+                </Select>
+                {errors.anasthetist && errors.anasthetist.type === "required" && <p style={useStyles.errortext}>Preffered Anasthetist is required.</p>}
+            </FormControl>
             </Grid>
 
 
