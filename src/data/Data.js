@@ -14,6 +14,21 @@ export const SurgeryType =[
         "value": "lmno",
         "label":"lmno"
     },
+    {
+        "id": "48",
+        "value": "abc",
+        "label":"abc"
+    },
+    {
+        "id": "49",
+        "value": "wxy",
+        "label":"wxy"
+    },
+    {
+        "id": "50",
+        "value": "lmn",
+        "label":"lmn"
+    },
 ]
   export const SurgeonName =[
     {

@@ -2,6 +2,7 @@ import React,{useState} from 'react'
 import {Grid,TextField} from '@mui/material';
 import { Controller, useForm } from "react-hook-form";
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import Select from '@mui/material/Select';
@@ -28,6 +29,8 @@ const BookingRegistrationForm = (props) => {
          }
      });
     const [periodStart, setPeriodStart] = useState(moment());
+    const [TimeStart, setTimeStart] = useState();
+    const [TimeEnd, setTimeEnd] = useState();
 
     const onSubmit = (data) => console.log(data);
     
@@ -104,7 +107,7 @@ const BookingRegistrationForm = (props) => {
             <Grid md={3} style={useStyles.root}>
                 <LocalizationProvider dateAdapter={AdapterMoment}>
                     <DesktopDatePicker
-                        label="Date desktop"
+                        label="Date "
                         inputFormat="MM/DD/YYYY"
                         style={useStyles.textfield} 
                         value={periodStart}
@@ -121,26 +124,41 @@ const BookingRegistrationForm = (props) => {
             </Grid>
 
             <Grid md={3} style={useStyles.root}>
-                <TextField 
-                    label="Start time" 
-                    variant="outlined" 
-                    style={useStyles.textfield} 
-                    {...register('sTime', { required: true,minLength: 2})}
-                />
+                <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <TimePicker
+                        label="Start time"
+                        style={useStyles.textfield} 
+                        value={TimeStart}
+                        onChange={(newDate) => {
+                            setTimeStart(newDate)
+                        }}
+                        renderInput={(params) => 
+                            <TextField {...params} 
+                                {...register('sTime')}
+                            />}
+                        />
                     {errors.sTime && errors.sTime.type === "required" && <p style={useStyles.errortext}>Start time is required.</p>}
-                    {errors.sTime && errors.sTime.type === "minLength" && (<p style={useStyles.errortext}>Your name must be at least 2 characters.</p>)}
+                </LocalizationProvider>
             </Grid>
 
             <Grid md={3} style={useStyles.root}>
-                <TextField 
-                    label="End Time" 
-                    variant="outlined" 
+            <LocalizationProvider dateAdapter={AdapterMoment}>
+                <TimePicker
+                    label="End time"
                     style={useStyles.textfield} 
-                    {...register('eTime', { required: true,minLength: 2})}
-                />
-                    {errors.eTime && errors.eTime.type === "required" && <p style={useStyles.errortext}>End Time is required.</p>}
-                    {errors.eTime && errors.eTime.type === "minLength" && (<p style={useStyles.errortext}>Your name must be at least 2 characters.</p>)}
-            </Grid>
+                    value={TimeEnd}
+                    onChange={(newDate) => {
+                        setTimeEnd(newDate)
+                    }}
+                    renderInput={(params) => 
+                        <TextField {...params} 
+                            {...register('eTime')}
+                        />}
+                    />
+                {errors.eTime && errors.eTime.type === "required" && <p style={useStyles.errortext}>End time is required.</p>}
+            </LocalizationProvider>
+        </Grid>
+ 
 
             <Grid md={3} style={useStyles.root}>
             <FormControl fullWidth>
@@ -256,52 +274,162 @@ const BookingRegistrationForm = (props) => {
                 {errors.anasthetist && errors.anasthetist.type === "required" && <p style={useStyles.errortext}>Preffered Anasthetist is required.</p>}
             </FormControl>
             </Grid>
-
-
-
             <Grid md={3} style={useStyles.root}>
-                <TextField 
-                    label="Other Department Surgen Names" 
-                    variant="outlined" 
-                    style={useStyles.textfield} 
-                    {...register('od_surgenName', { required: true,minLength: 2})}
+                <Controller
+                    name="od_Names"
+                    control={control}
+                    type="text"
+                    defaultValue={[]}
+                    rules={{ required: true }}
+                    render={({ field:{value,onChange} })=> (
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-multiple-name-label">Other Department Names</InputLabel>
+                                <Select 
+                                    {...register}
+                                    labelId="od_Names"
+                                    id="od_Names"    
+                                    label="Other Department Names"   
+                                    multiple
+                                    defaultValue={[]}
+                                    style={useStyles.textfield} 
+                                    onChange={(e)=>{
+                                        let newData = SelectChange(e);
+                                        onChange(newData)
+                                    }}
+                                    // MenuProps={MenuProps}
+                                    
+                                >
+                                    {
+                                        SurgeryType.map((data) => {
+                                            return(
+                                                <MenuItem key={data.id} value={data.value}>{data.label}</MenuItem>
+                                            )    
+                                        })
+                                    }
+                                </Select>
+                        </FormControl>
+                    )}
                 />
-                    {errors.od_surgenName && errors.od_surgenName.type === "required" && <p style={useStyles.errortext}>Surgery Name is required.</p>}
+                {errors.od_Names && errors.od_Names.type === "required" && <p style={useStyles.errortext}>Other Department Names is required.</p>}
             </Grid>
 
             <Grid md={3} style={useStyles.root}>
-                <TextField 
-                    label="Other Department A.Surgen Names" 
-                    variant="outlined" 
-                    style={useStyles.textfield} 
-                    {...register('od_a_surgery_Name', { required: true,minLength: 2})}
+                <Controller
+                    name="od_surgenName"
+                    control={control}
+                    type="text"
+                    defaultValue={[]}
+                    rules={{ required: true }}
+                    render={({ field:{value,onChange} })=> (
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-multiple-name-label">Other Department Surgen Names</InputLabel>
+                                <Select 
+                                    {...register}
+                                    labelId="od_surgenName"
+                                    id="od_surgenName"    
+                                    label="Other Department Surgen Names"   
+                                    multiple
+                                    defaultValue={[]}
+                                    style={useStyles.textfield} 
+                                    onChange={(e)=>{
+                                        let newData = SelectChange(e);
+                                        onChange(newData)
+                                    }}
+                                    // MenuProps={MenuProps}
+                                    
+                                >
+                                    {
+                                        SurgeryType.map((data) => {
+                                            return(
+                                                <MenuItem key={data.id} value={data.value}>{data.label}</MenuItem>
+                                            )    
+                                        })
+                                    }
+                                </Select>
+                        </FormControl>
+                    )}
                 />
-                    {errors.od_a_surgery_Name && errors.od_a_surgery_Name.type === "required" && <p style={useStyles.errortext}>Name is required.</p>}
+                {errors.od_surgenName && errors.od_surgenName.type === "required" && <p style={useStyles.errortext}>Other Department Surgen Names is required.</p>}
+            </Grid>
+
+
+            <Grid md={3} style={useStyles.root}>
+                <Controller
+                    name="od_a_surgery_Name"
+                    control={control}
+                    type="text"
+                    defaultValue={[]}
+                    rules={{ required: true }}
+                    render={({ field:{value,onChange} })=> (
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-multiple-name-label">Other Department A.Surgen Names</InputLabel>
+                                <Select 
+                                    {...register}
+                                    labelId="od_a_surgery_Name"
+                                    id="od_a_surgery_Name"    
+                                    label="Other Department A.Surgen Names"   
+                                    multiple
+                                    defaultValue={[]}
+                                    style={useStyles.textfield} 
+                                    onChange={(e)=>{
+                                        let newData = SelectChange(e);
+                                        onChange(newData)
+                                    }}
+                                    // MenuProps={MenuProps}
+                                    
+                                >
+                                    {
+                                        SurgeryType.map((data) => {
+                                            return(
+                                                <MenuItem key={data.id} value={data.value}>{data.label}</MenuItem>
+                                            )    
+                                        })
+                                    }
+                                </Select>
+                        </FormControl>
+                    )}
+                />
+                {errors.od_surgenName && errors.od_surgenName.type === "required" && <p style={useStyles.errortext}>Other Department A.Surgen Names is required.</p>}
             </Grid>
 
             <Grid md={3} style={useStyles.root}>
-                <TextField 
-                    label="Anesthesia Type" 
-                    variant="outlined" 
-                    style={useStyles.textfield} 
-                    {...register('anesthesia_Type', { required: true,minLength: 2})}
+                <Controller
+                    name="sEquipment"
+                    control={control}
+                    type="text"
+                    defaultValue={[]}
+                    rules={{ required: true }}
+                    render={({ field:{value,onChange} })=> (
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-multiple-name-label">Special Equipment</InputLabel>
+                                <Select 
+                                    {...register}
+                                    labelId="sEquipment"
+                                    id="sEquipment"    
+                                    label="Special Equipment"   
+                                    multiple
+                                    defaultValue={[]}
+                                    style={useStyles.textfield} 
+                                    onChange={(e)=>{
+                                        let newData = SelectChange(e);
+                                        onChange(newData)
+                                    }}
+                                    // MenuProps={MenuProps}
+                                    
+                                >
+                                    {
+                                        SurgeryType.map((data) => {
+                                            return(
+                                                <MenuItem key={data.id} value={data.value}>{data.label}</MenuItem>
+                                            )    
+                                        })
+                                    }
+                                </Select>
+                        </FormControl>
+                    )}
                 />
-                    {errors.anesthesia_Type && errors.anesthesia_Type.type === "required" && <p style={useStyles.errortext}>Anesthesia Type is required.</p>}
-                    {errors.anesthesia_Type && errors.anesthesia_Type.type === "minLength" && (<p style={useStyles.errortext}>Your name must be at least 2 characters.</p>)}
+                {errors.sEquipment && errors.sEquipment.type === "required" && <p style={useStyles.errortext}>Special Equipment is required.</p>}
             </Grid>
-
-            <Grid md={3} style={useStyles.root}>
-                <TextField 
-                    label="Special Equipment" 
-                    variant="outlined" 
-                    style={useStyles.textfield} 
-                    {...register('sEquipment', { required: true,minLength: 2})}
-                />
-                    {errors.sEquipment && errors.sEquipment.type === "required" && <p style={useStyles.errortext}>Special Equipment is required.</p>}
-            </Grid>
-
-
-
 
             <Grid md={3} style={useStyles.root}>
                 <TextField 
