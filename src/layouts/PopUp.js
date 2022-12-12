@@ -8,10 +8,6 @@ const PopUp = (props) => {
         display:'flex',
     }
 
-    const onSubmit = () => {
-        alert('data');
-        setOpen(false)
-    };
     return (
         <Dialog open={openPopUp} maxWidth="xxl">
             <DialogTitle style={DialogTitleStyle}>
