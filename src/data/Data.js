@@ -1,32 +1,32 @@
 export const SurgeryType =[
     {
         "id": "45",
-        "value": "abcd",
+        "value": "123",
         "label":"abcd"
     },
     {
         "id": "46",
-        "value": "wxyz",
+        "value": "124",
         "label":"wxyz"
     },
     {
         "id": "47",
-        "value": "lmno",
+        "value": "125",
         "label":"lmno"
     },
     {
         "id": "48",
-        "value": "abc",
+        "value": "126",
         "label":"abc"
     },
     {
         "id": "49",
-        "value": "wxy",
+        "value": "127",
         "label":"wxy"
     },
     {
         "id": "50",
-        "value": "lmn",
+        "value": "128",
         "label":"lmn"
     },
 ]

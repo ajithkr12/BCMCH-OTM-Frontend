@@ -15,13 +15,13 @@ import { Button} from '@mui/material';
 import OutlinedInput from '@mui/material/OutlinedInput';
 
 import {SurgeryType} from '../data/Data';
-import {CreateOneData} from '../services/UserServices';
+import {PostBookingData} from '../services/UserServices';
 
 
 
 
 const BookingRegistrationForm = (props) => {
-    console.log(props)
+    console.log("###",props.results)
     ////////////////////////////////////////
     const PatientName="Hari Devan";
     const WardName="B21";
@@ -68,7 +68,7 @@ const BookingRegistrationForm = (props) => {
         data.EmployeeIdArray=[...data.OdEmployeeIdArray,...data.EmployeeIdArray]
         try {
           console.log("data sentomo")
-          await CreateOneData(data); 
+          await PostBookingData(data); 
           alert("Post created!");
           setInputs({
             ...inputs,
@@ -91,7 +91,7 @@ const BookingRegistrationForm = (props) => {
           console.log('error vannu',_error);  
         }
   
-        // navigate("/");
+        navigate("/");
       };
     
       const SelectChange = (e)=>{
@@ -212,13 +212,14 @@ const BookingRegistrationForm = (props) => {
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"    
                     label="Surgery Type"   
+                    defaultValue=""
                     style={useStyles.textfield} 
                     {...register('SurgeryId',{ required: true})}
                 >
                 {
-                    SurgeryType.map((data) => {
+                    props.results.SurgeryType.map((data) => {
                         return (
-                            <MenuItem value={data.value}>{data.label}</MenuItem>
+                            <MenuItem key={data.id} value={data.id}>{data.name}</MenuItem>
                         )})
                 }
                 </Select>
@@ -265,11 +266,10 @@ const BookingRegistrationForm = (props) => {
                                     
                                 >
                                     {
-                                        SurgeryType.map((data) => {
-                                            return(
-                                                <MenuItem key={data.id} value={data.value}>{data.label}</MenuItem>
-                                            )    
-                                        })
+                                        props.results.AbcType.map((data) => {
+                                            return (
+                                                <MenuItem key={data.id} value={data.id}>{data.name}</MenuItem>
+                                            )})
                                     }
                                 </Select>
                         </FormControl>
@@ -285,14 +285,15 @@ const BookingRegistrationForm = (props) => {
                 <Select 
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"    
-                    label="Anesthesia Type"   
+                    label="Anesthesia Type"  
+                    defaultValue="" 
                     style={useStyles.textfield} 
                     {...register('AnaesthesiaTypeId',{ required: true})}
                 >
                 {
-                    SurgeryType.map((data) => {
+                    props.results.AnaesthesiaType.map((data) => {
                         return (
-                            <MenuItem value={data.value}>{data.label}</MenuItem>
+                            <MenuItem key={data.id} value={data.id}>{data.name}</MenuItem>
                         )})
                 }
                 </Select>
@@ -307,13 +308,14 @@ const BookingRegistrationForm = (props) => {
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"    
                     label="Preffered Anasthetist"   
+                    defaultValue=""
                     style={useStyles.textfield} 
                     {...register('AnaesthetistId',{ required: true})}
                 >
                 {
-                    SurgeryType.map((data) => {
+                    props.results.AbcType.map((data) => {
                         return (
-                            <MenuItem value={data.value}>{data.label}</MenuItem>
+                            <MenuItem key={data.id} value={data.id}>{data.name}</MenuItem>
                         )})
                 }
                 </Select>
@@ -346,11 +348,10 @@ const BookingRegistrationForm = (props) => {
                                     
                                 >
                                     {
-                                        SurgeryType.map((data) => {
-                                            return(
-                                                <MenuItem key={data.id} value={data.value}>{data.label}</MenuItem>
-                                            )    
-                                        })
+                                        props.results.AbcType.map((data) => {
+                                            return (
+                                                <MenuItem key={data.id} value={data.id}>{data.name}</MenuItem>
+                                            )})
                                     }
                                 </Select>
                         </FormControl>
@@ -385,11 +386,10 @@ const BookingRegistrationForm = (props) => {
                                     
                                 >
                                     {
-                                        SurgeryType.map((data) => {
-                                            return(
-                                                <MenuItem key={data.id} value={data.value}>{data.label}</MenuItem>
-                                            )    
-                                        })
+                                        props.results.AbcType.map((data) => {
+                                            return (
+                                                <MenuItem key={data.id} value={data.id}>{data.name}</MenuItem>
+                                            )})
                                     }
                                 </Select>
                         </FormControl>
@@ -426,11 +426,10 @@ const BookingRegistrationForm = (props) => {
                                     
                                 >
                                     {
-                                        SurgeryType.map((data) => {
-                                            return(
-                                                <MenuItem key={data.id} value={data.value}>{data.label}</MenuItem>
-                                            )    
-                                        })
+                                        props.results.AbcType.map((data) => {
+                                            return (
+                                                <MenuItem key={data.id} value={data.id}>{data.name}</MenuItem>
+                                            )})
                                     }
                                 </Select>
                         </FormControl>
@@ -443,6 +442,7 @@ const BookingRegistrationForm = (props) => {
                 <TextField 
                     label="Instructions for Nurses" 
                     variant="outlined" 
+                    defaultValue=""
                     multiline
                     maxRows={4}
                     style={useStyles.textfield} 
@@ -455,6 +455,7 @@ const BookingRegistrationForm = (props) => {
                 <TextField 
                     label="Instructions for anaesthetist" 
                     variant="outlined" 
+                    defaultValue=""
                     multiline
                     maxRows={4}
                     style={useStyles.textfield} 
@@ -468,6 +469,7 @@ const BookingRegistrationForm = (props) => {
                 <TextField 
                     label="Instructions for OT Person" 
                     variant="outlined" 
+                    defaultValue=""
                     multiline
                     maxRows={4}
                     style={useStyles.textfield} 
@@ -481,6 +483,7 @@ const BookingRegistrationForm = (props) => {
                 <TextField 
                     label="Special Material Requests" 
                     variant="outlined" 
+                    defaultValue=""
                     multiline
                     maxRows={4}
                     style={useStyles.textfield} 

@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 
 import BookingRegistrationForm from '../layouts/BookingRegistrationForm';
 import PopUp from '../layouts/PopUp';
-import {GetAllData} from "../services/UserServices";
+import {GetSelectList} from "../services/UserServices";
 
 const Home = () => {
 
@@ -29,7 +29,7 @@ const Home = () => {
 
       const FetchData= async () => {
         try {
-              const response =  await GetAllData();
+              const response =  await GetSelectList();
               console.log('fetch data',response)
               setState({
                   ...state,

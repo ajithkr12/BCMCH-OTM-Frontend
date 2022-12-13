@@ -4,7 +4,7 @@ const API_URL = "http://localhost:3333";
 
   
 
-export const CreateOneData=async (payload)=>{
+export const PostBookingData=async (payload)=>{
 
   try {
     console.log("data sentomo")
@@ -28,7 +28,7 @@ export const CreateOneData=async (payload)=>{
   
 }
 
-export const GetAllData=async ( )=>{
+export const GetSelectList=async ( )=>{
 
   try {
     const response =  await axios.get(API_URL+"/others");

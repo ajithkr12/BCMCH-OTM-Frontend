@@ -29,31 +29,122 @@
         "lmno"
       ],
       "id": 1
+    },
+    {
+      "RegistrationNo": "ABCWE12345",
+      "DoctorId": "XERTA2345",
+      "OperationTheatreId": "OT1",
+      "SurgeryId": "1",
+      "AnaesthesiaTypeId": "124",
+      "AnaesthetistId": "123",
+      "InstructionToNurse": "kkk",
+      "InstructionToAnaesthetist": "kkk",
+      "InstructionToOperationTeatrePersons": "kkk",
+      "RequestForSpecialMeterial": "kkk",
+      "bDate": "11/12/2022",
+      "sTime": "02:57 PM",
+      "eTime": "02:57 PM",
+      "EmployeeIdArray": [
+        "123",
+        "123"
+      ],
+      "DepartmentId": [
+        "124"
+      ],
+      "OdEmployeeIdArray": [
+        "123"
+      ],
+      "EquipmentsIdArray": [
+        "123"
+      ],
+      "id": 2
+    },
+    {
+      "RegistrationNo": "ABCWE12345",
+      "DoctorId": "XERTA2345",
+      "OperationTheatreId": "OT1",
+      "SurgeryId": "2",
+      "AnaesthesiaTypeId": "147",
+      "AnaesthetistId": "1",
+      "InstructionToNurse": "ffff",
+      "InstructionToAnaesthetist": "ffff",
+      "InstructionToOperationTeatrePersons": "fffff",
+      "RequestForSpecialMeterial": "fffff",
+      "bDate": "11/12/2022",
+      "sTime": "03:19 PM",
+      "eTime": "03:19 PM",
+      "EmployeeIdArray": [
+        "3",
+        "1"
+      ],
+      "DepartmentId": [
+        "3"
+      ],
+      "OdEmployeeIdArray": [
+        "3"
+      ],
+      "EquipmentsIdArray": [
+        "5"
+      ],
+      "id": 3
     }
   ],
-  "others": [
-    {
-      "OtNames": [
-        {
-          "name": "Jane Doe",
-          "id": "888-555-1212"
-        },
-        {
-          "name": "Jane Doe",
-          "id": "888-555-1212"
-        }
-      ],
-      "department": [
-        {
-          "name": "Jane Doe",
-          "id": "888-555-1212"
-        },
-        {
-          "name": "Jane Doe",
-          "id": "888-555-1212"
-        }
-      ]
-      
-    }
-  ]
+  "others": {
+    "OtNames": [
+      {
+        "name": "Jane Doe",
+        "id": "888-555-1212"
+      },
+      {
+        "name": "Jane Doe",
+        "id": "888-555-1212"
+      }
+    ],
+    "SurgeryType": [
+      {
+        "name": "abcd",
+        "id": "1"
+      },
+      {
+        "name": "xyz",
+        "id": "2"
+      },
+      {
+        "name": "lmnop",
+        "id": "3"
+      },
+      {
+        "name": "yuir",
+        "id": "5"
+      }
+    ],
+    "AnaesthesiaType": [
+      {
+        "name": "qwert",
+        "id": "146"
+      },
+      {
+        "name": "gtyuwer",
+        "id": "147"
+      }
+    ],
+    "AbcType": [
+      {
+        "name": "abcd",
+        "id": "1"
+      },
+      {
+        "name": "xyz",
+        "id": "2"
+      },
+      {
+        "name": "lmnop",
+        "id": "3"
+      },
+      {
+        "name": "yuir",
+        "id": "5"
+      }
+    ]
+  }
 }
