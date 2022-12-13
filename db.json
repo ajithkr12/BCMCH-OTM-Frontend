@@ -1,0 +1,59 @@
+{
+  "events": [
+    {
+      "RegistrationNo": "ABCWE12345",
+      "DoctorId": "XERTA2345",
+      "OperationTheatreId": "OT1",
+      "SurgeryId": "wxyz",
+      "AnaesthesiaTypeId": "wxyz",
+      "AnaesthetistId": "abcd",
+      "InstructionToNurse": "ggg",
+      "InstructionToAnaesthetist": "ggg",
+      "InstructionToOperationTeatrePersons": "gggg",
+      "RequestForSpecialMeterial": "gggg",
+      "bDate": "11/12/2022",
+      "sTime": "12:55 PM",
+      "eTime": "12:55 PM",
+      "EmployeeIdArray": [
+        "abc",
+        "wxyz",
+        "lmno"
+      ],
+      "DepartmentId": [
+        "abc"
+      ],
+      "OdEmployeeIdArray": [
+        "abc"
+      ],
+      "EquipmentsIdArray": [
+        "lmno"
+      ],
+      "id": 1
+    }
+  ],
+  "others": [
+    {
+      "OtNames": [
+        {
+          "name": "Jane Doe",
+          "id": "888-555-1212"
+        },
+        {
+          "name": "Jane Doe",
+          "id": "888-555-1212"
+        }
+      ],
+      "department": [
+        {
+          "name": "Jane Doe",
+          "id": "888-555-1212"
+        },
+        {
+          "name": "Jane Doe",
+          "id": "888-555-1212"
+        }
+      ]
+      
+    }
+  ]
+}
