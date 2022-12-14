@@ -1,6 +1,5 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import {Grid,TextField} from '@mui/material';
 import { Controller, useForm } from "react-hook-form";
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
@@ -11,17 +10,11 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
-import { Button} from '@mui/material';
-import OutlinedInput from '@mui/material/OutlinedInput';
-
-import {SurgeryType} from '../data/Data';
-import {PostBookingData} from '../services/UserServices';
-
-
-
+import {PostBookingData,GetSurgeryList} from '../services/UserServices';
+import Autocomplete from '@mui/material/Autocomplete';
+import {SurgeryType} from "../data/Data"
 
 const BookingRegistrationForm = (props) => {
-    console.log("###",props.results)
     ////////////////////////////////////////
     const PatientName="Hari Devan";
     const WardName="B21";
@@ -29,7 +22,6 @@ const BookingRegistrationForm = (props) => {
     ///////////////////////////////////////
 
     const navigate = useNavigate();
-    console.log("form vannu");
     const useStyles = {
         root: {
             padding: '12px 6px',
@@ -58,20 +50,23 @@ const BookingRegistrationForm = (props) => {
     const [periodStart, setPeriodStart] = useState('11/12/2022');
     const [TimeStart, setTimeStart] = useState();
     const [TimeEnd, setTimeEnd] = useState();
-    const [inputs, setInputs] = useState({
+    const [value, setValue] = useState('a');
+    const [inputValue, setInputValue] = useState();
+   
+    const [state, setState] = useState({
         loading:false,
+        results:{},
         errorMessage:'',
     });
 
     const onSubmit =  async(data) => {
-        console.log(data)
+    
         data.EmployeeIdArray=[...data.OdEmployeeIdArray,...data.EmployeeIdArray]
         try {
-          console.log("data sentomo")
           await PostBookingData(data); 
           alert("Post created!");
-          setInputs({
-            ...inputs,
+          setState({
+            ...state,
             loading:true
           }) ;
           
@@ -83,8 +78,8 @@ const BookingRegistrationForm = (props) => {
               error.response.data.message) ||
                 error.message ||
                   error.toString();
-          setInputs({
-            ...inputs,
+          setState({
+            ...state,
             loading:false,
             errorMessage:_error
           }) ;
@@ -95,9 +90,48 @@ const BookingRegistrationForm = (props) => {
       };
     
       const SelectChange = (e)=>{
-        console.log(">>>>>>>>>",e)
+        console.log("typing >>>>>>>>> ",e)
         return e.target?.value;
       }
+
+      useEffect(() => {
+
+        const FetchData= async () => {
+          try {
+                const response =  await GetSurgeryList(inputValue);
+                console.log(inputValue,'>>>><<<<',response)
+                setState({
+                    ...state,
+                    loading:false,
+                    results:response,
+                    errorMessage:""
+                }) ;
+          } 
+          catch (error) {
+            const _error =
+            (error.response &&
+              error.response.data &&
+                error.response.data.message) ||
+                  error.message ||
+                    error.toString();
+            setState({
+                ...state,
+                loading:false,
+                results:'',
+                errorMessage:_error
+            }) ;
+
+          }
+          finally {
+            console.log("The END");
+          }
+        };
+        FetchData();
+      },[inputValue])
+
+    let { loading,results,errorMessage}=state;
+
+      console.log("^^^",results)
 
     return (
 
@@ -105,7 +139,7 @@ const BookingRegistrationForm = (props) => {
 
         <Grid container>
 
-            <Grid md={3} style={useStyles.root}>
+            <Grid item={true}md={3} style={useStyles.root}>
                 <TextField 
                     label="Patient's UHID" 
                     variant="outlined" 
@@ -205,27 +239,29 @@ const BookingRegistrationForm = (props) => {
         </Grid>
  
 
+
+
+
             <Grid md={3} style={useStyles.root}>
-            <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Surgery Type</InputLabel>
-                <Select 
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"    
-                    label="Surgery Type"   
-                    defaultValue=""
-                    style={useStyles.textfield} 
-                    {...register('SurgeryId',{ required: true})}
-                >
-                {
-                    props.results.SurgeryType.map((data) => {
-                        return (
-                            <MenuItem key={data.id} value={data.id}>{data.name}</MenuItem>
-                        )})
-                }
-                </Select>
+                <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    value={value}
+                    options={results}
+                    style={useStyles.textfield}
+                    onChange={(event, newValue) => {
+                        setValue(newValue);
+                    }}
+                    inputValue={inputValue}
+                    onInputChange={(event, newInputValue) => {
+                        setInputValue(newInputValue);
+                    }}
+                    renderInput={(params) => <TextField {...params}  {...register('SurgeryId')} label="Surgery Type" />}
+                />
                 {errors.SurgeryId && errors.SurgeryId.type === "required" && <p style={useStyles.errortext}>Surgery Type is required.</p>}
-            </FormControl>
+
             </Grid>
+
 
             <Grid md={3} style={useStyles.root}>
                 <TextField 
@@ -492,6 +528,7 @@ const BookingRegistrationForm = (props) => {
                     {errors.RequestForSpecialMeterial && errors.RequestForSpecialMeterial.type === "maxLength" && (<p style={useStyles.errortext}>Your name must be at least 2 characters.</p>)}
             </Grid>
 
+
         </Grid>
         <button type="submit" >Submit</button>
         </form>
@@ -541,4 +578,29 @@ export default BookingRegistrationForm;
 // />
 // {errors.od_surgenName && errors.od_surgenName.type === "required" && <p style={useStyles.errortext}>Other Department A.Surgen Names is required.</p>}
 // </Grid>
+
+
+
+
+            // <Grid md={3} style={useStyles.root}>
+            // <FormControl fullWidth>
+            //     <InputLabel id="demo-simple-select-label">Surgery Type</InputLabel>
+            //     <Select 
+            //         labelId="demo-simple-select-label"
+            //         id="demo-simple-select"    
+            //         label="Surgery Type"   
+            //         defaultValue=""
+            //         style={useStyles.textfield} 
+            //         {...register('SurgeryId',{ required: true})}
+            //     >
+            //     {
+            //         props.results.SurgeryType.map((data) => {
+            //             return (
+            //                 <MenuItem key={data.id} value={data.id}>{data.name}</MenuItem>
+            //             )})
+            //     }
+            //     </Select>
+            //     {errors.SurgeryId && errors.SurgeryId.type === "required" && <p style={useStyles.errortext}>Surgery Type is required.</p>}
+            // </FormControl>
+            // </Grid>
 

@@ -10,7 +10,6 @@ import {GetSelectList} from "../services/UserServices";
 const Home = () => {
 
   let {uhid,name} = useParams();
-  console.log(uhid,name)
 
     const BtnStyle={backgroundColor:'#874563'}
 
@@ -28,9 +27,9 @@ const Home = () => {
     useEffect(() => {
 
       const FetchData= async () => {
+        console.log('##############')
         try {
               const response =  await GetSelectList();
-              console.log('fetch data',response)
               setState({
                   ...state,
                   loading:false,
@@ -59,7 +58,6 @@ const Home = () => {
     },[])
 
     let { loading,results,errorMessage}=state;
-    console.log("read >>>>>>>>>> ",results)
 
   return (   
     <div>

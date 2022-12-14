@@ -87,6 +87,71 @@
         "5"
       ],
       "id": 3
+    },
+    {
+      "RegistrationNo": "ABCWE12345",
+      "DoctorId": "XERTA2345",
+      "OperationTheatreId": "OT1",
+      "SurgeryId": "2",
+      "AnaesthesiaTypeId": "146",
+      "AnaesthetistId": "3",
+      "InstructionToNurse": "jjjj",
+      "InstructionToAnaesthetist": "jjjjj",
+      "InstructionToOperationTeatrePersons": "jjjj",
+      "RequestForSpecialMeterial": "jjj",
+      "bDate": "11/12/2022",
+      "sTime": "07:28 PM",
+      "eTime": "07:28 PM",
+      "EmployeeIdArray": [
+        "3",
+        "2"
+      ],
+      "DepartmentId": [
+        "1"
+      ],
+      "OdEmployeeIdArray": [
+        "3"
+      ],
+      "EquipmentsIdArray": [
+        "1"
+      ],
+      "mmmm": "abc",
+      "id": 4
+    },
+    {
+      "RegistrationNo": "ABCWE12345",
+      "DoctorId": "XERTA2345",
+      "OperationTheatreId": "OT1",
+      "AnaesthesiaTypeId": "146",
+      "AnaesthetistId": "3",
+      "InstructionToNurse": "dd",
+      "InstructionToAnaesthetist": "ddd",
+      "InstructionToOperationTeatrePersons": "ddd",
+      "RequestForSpecialMeterial": "ddd",
+      "bDate": "11/12/2022",
+      "sTime": "07:45 PM",
+      "eTime": "07:45 PM",
+      "SurgeryId": "dddd",
+      "EmployeeIdArray": [
+        "1",
+        "2",
+        "2",
+        "3",
+        "5"
+      ],
+      "DepartmentId": [
+        "1",
+        "2",
+        "3"
+      ],
+      "OdEmployeeIdArray": [
+        "1",
+        "2"
+      ],
+      "EquipmentsIdArray": [
+        "3"
+      ],
+      "id": 5
     }
   ],
   "others": {
@@ -146,5 +211,39 @@
         "id": "5"
       }
     ]
-  }
+  },
+  "surgeryType": [
+    {
+      "name": "abc",
+      "id": "101"
+    },
+    {
+      "name": "aqwe",
+      "id": "102"
+    },
+    {
+      "name": "zzdf",
+      "id": "103"
+    },
+    {
+      "name": "xcv",
+      "id": "104"
+    },
+    {
+      "name": "abcui",
+      "id": "105"
+    },
+    {
+      "name": "zzdftr",
+      "id": "106"
+    },
+    {
+      "name": "xcvaer",
+      "id": "107"
+    },
+    {
+      "name": "aqweop",
+      "id": "108"
+    }
+  ]
 }
