@@ -152,6 +152,39 @@
         "3"
       ],
       "id": 5
+    },
+    {
+      "RegistrationNo": "ABCWE12345",
+      "DoctorId": "XERTA2345",
+      "OperationTheatreId": "OT1",
+      "AnaesthesiaTypeId": "146",
+      "AnaesthetistId": "3",
+      "InstructionToNurse": "jjj",
+      "InstructionToAnaesthetist": "jjj",
+      "InstructionToOperationTeatrePersons": "jjj",
+      "RequestForSpecialMeterial": "jjj",
+      "bDate": "11/12/2022",
+      "sTime": "11:14 AM",
+      "eTime": "11:14 AM",
+      "SurgeryId": "a",
+      "EmployeeIdArray": [
+        "1",
+        "2",
+        "3",
+        "2"
+      ],
+      "DepartmentId": [
+        "2"
+      ],
+      "OdEmployeeIdArray": [
+        "1",
+        "2"
+      ],
+      "EquipmentsIdArray": [
+        "1",
+        "2"
+      ],
+      "id": 6
     }
   ],
   "others": {

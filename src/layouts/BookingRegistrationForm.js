@@ -50,8 +50,9 @@ const BookingRegistrationForm = (props) => {
     const [periodStart, setPeriodStart] = useState('11/12/2022');
     const [TimeStart, setTimeStart] = useState();
     const [TimeEnd, setTimeEnd] = useState();
-    const [value, setValue] = useState('a');
+    const [value, setValue] = useState();
     const [inputValue, setInputValue] = useState();
+    const [page,setPage] = useState('1');
    
     const [state, setState] = useState({
         loading:false,
@@ -94,8 +95,22 @@ const BookingRegistrationForm = (props) => {
         return e.target?.value;
       }
 
-      useEffect(() => {
+      const loadMoreResults = () => {
+        const nextPage = page + 1;
+        setPage(nextPage);
+        console.log("page number",nextPage)
+    
+      };
+      const handleScroll = (event) => {
+        const listboxNode = event.currentTarget;
+        const position = listboxNode.scrollTop + listboxNode.clientHeight;
+        console.log(listboxNode.scrollHeight - position);
+        if (listboxNode.scrollHeight - position <= 1) {
+          loadMoreResults();
+        }
+      };
 
+      useEffect(() => {
         const FetchData= async () => {
           try {
                 const response =  await GetSurgeryList(inputValue);
@@ -167,7 +182,7 @@ const BookingRegistrationForm = (props) => {
                     variant="outlined" 
                     value={OtName}
                     style={useStyles.textfield} 
-                    {...register('OperationTheatreId', { required: true,minLength: 2})}
+                    {...register('OperationTheatreId', { required: true})}
                 />
                     {errors.OperationTheatreId && errors.OperationTheatreId.type === "required" && <p style={useStyles.errortext}>OT Name is required.</p>}
             </Grid>
@@ -247,7 +262,7 @@ const BookingRegistrationForm = (props) => {
                     disablePortal
                     id="combo-box-demo"
                     value={value}
-                    options={results}
+                    options={SurgeryType}
                     style={useStyles.textfield}
                     onChange={(event, newValue) => {
                         setValue(newValue);
@@ -256,7 +271,11 @@ const BookingRegistrationForm = (props) => {
                     onInputChange={(event, newInputValue) => {
                         setInputValue(newInputValue);
                     }}
+
                     renderInput={(params) => <TextField {...params}  {...register('SurgeryId')} label="Surgery Type" />}
+                    ListboxProps={{
+                        onScroll: handleScroll
+                    }}
                 />
                 {errors.SurgeryId && errors.SurgeryId.type === "required" && <p style={useStyles.errortext}>Surgery Type is required.</p>}
 
@@ -269,10 +288,9 @@ const BookingRegistrationForm = (props) => {
                     variant="outlined" 
                     disabled
                     style={useStyles.textfield} 
-                    {...register('DoctorId', { required: true,minLength: 2})}
+                    {...register('DoctorId', { required: true})}
                 />
                     {errors.DoctorId && errors.DoctorId.type === "required" && <p style={useStyles.errortext}>Surgery Name is required.</p>}
-                    {errors.DoctorId && errors.DoctorId.type === "minLength" && (<p style={useStyles.errortext}>Your name must be at least 2 characters.</p>)}
             </Grid>
 
 
@@ -425,7 +443,8 @@ const BookingRegistrationForm = (props) => {
                                         props.results.AbcType.map((data) => {
                                             return (
                                                 <MenuItem key={data.id} value={data.id}>{data.name}</MenuItem>
-                                            )})
+                                            )
+                                        })
                                     }
                                 </Select>
                         </FormControl>
@@ -465,7 +484,8 @@ const BookingRegistrationForm = (props) => {
                                         props.results.AbcType.map((data) => {
                                             return (
                                                 <MenuItem key={data.id} value={data.id}>{data.name}</MenuItem>
-                                            )})
+                                            )
+                                        })
                                     }
                                 </Select>
                         </FormControl>
@@ -482,7 +502,7 @@ const BookingRegistrationForm = (props) => {
                     multiline
                     maxRows={4}
                     style={useStyles.textfield} 
-                    {...register('InstructionToNurse', { required: true,maxLength: 1000})}
+                    {...register('InstructionToNurse', { required: true})}
                 />
                     {errors.InstructionToNurse && errors.InstructionToNurse.type === "required" && <p style={useStyles.errortext}>Instructions is required.</p>}
             </Grid>
@@ -512,7 +532,6 @@ const BookingRegistrationForm = (props) => {
                     {...register('InstructionToOperationTeatrePersons', { required: true,maxLength: 1000})}
                 />
                     {errors.InstructionToOperationTeatrePersons && errors.InstructionToOperationTeatrePersons.type === "required" && <p style={useStyles.errortext}>Instructions is required.</p>}
-                    {errors.InstructionToOperationTeatrePersons && errors.InstructionToOperationTeatrePersons.type === "maxLength" && (<p style={useStyles.errortext}>Your name must be at least 2 characters.</p>)}
             </Grid>
 
             <Grid md={3} style={useStyles.root}>
@@ -523,9 +542,8 @@ const BookingRegistrationForm = (props) => {
                     multiline
                     maxRows={4}
                     style={useStyles.textfield} 
-                    {...register('RequestForSpecialMeterial', { required: true,maxLength: 1000})}
+                    {...register('RequestForSpecialMeterial')}
                 />
-                    {errors.RequestForSpecialMeterial && errors.RequestForSpecialMeterial.type === "maxLength" && (<p style={useStyles.errortext}>Your name must be at least 2 characters.</p>)}
             </Grid>
 
 

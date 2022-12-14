@@ -26,7 +26,37 @@ export const SurgeryType =[
     },
     {
         "id": "50",
-        "value": "128",
+        "value": "1284",
+        "label":"lmn"
+    },
+    {
+        "id": "51",
+        "value": "1237",
+        "label":"abcd"
+    },
+    {
+        "id": "460",
+        "value": "1246",
+        "label":"wxyz"
+    },
+    {
+        "id": "470",
+        "value": "1256",
+        "label":"lmno"
+    },
+    {
+        "id": "480",
+        "value": "1266",
+        "label":"abc"
+    },
+    {
+        "id": "490",
+        "value": "1276",
+        "label":"wxy"
+    },
+    {
+        "id": "500",
+        "value": "1286",
         "label":"lmn"
     },
 ]
