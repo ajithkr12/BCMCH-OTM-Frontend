@@ -6,7 +6,7 @@ export const PostBookingData=async (payload)=>{
 
   try {
     console.log("data sentomo")
-    await axios.post(API_URL+'/events',payload); 
+    await axios.post(API_URL+'/event',payload); 
     // alert("Post created!");
     return null;
     
@@ -41,7 +41,8 @@ export const GetSelectList=async ( )=>{
         error.response.data.message) ||
           error.message ||
             error.toString();
-    console.log('error vannu',_error);  
+    console.log('error vannu ^^^^^',_error);  
+    return _error;
   }
   finally {
     console.log("The Promise is settled, meaning it has been resolved or rejected.");
@@ -49,11 +50,12 @@ export const GetSelectList=async ( )=>{
   
 }
 
-export const GetSurgeryList=async ( val )=>{
+export const GetSurgeryList=async ( val,page )=>{
   console.log(val,'..>>>><<<<..')
 
   try {
-    const response =  await axios.get(API_URL+"/surgeryType?name="+val);
+    const response =  await axios.get(API_URL+"/surgeryType");
+
     return response.data;
     
   } 

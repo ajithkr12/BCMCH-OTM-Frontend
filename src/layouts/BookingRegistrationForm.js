@@ -15,6 +15,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import {SurgeryType} from "../data/Data"
 
 const BookingRegistrationForm = (props) => {
+    console.log("from booking form " ,props.results.AnaesthesiaType)
     ////////////////////////////////////////
     const PatientName="Hari Devan";
     const WardName="B21";
@@ -39,21 +40,22 @@ const BookingRegistrationForm = (props) => {
         },
       };
 
-    const { register,control,formState: { errors }, handleSubmit } = useForm({
+    const { register, control, formState: { errors }, handleSubmit } = useForm({
         defaultValues: {
             RegistrationNo: props.uhid,
-            DoctorId:props.EpId,
-            
+            DoctorId: props.EpId,
+
         }
     });
-
+    console.log("register====",register)
     const [periodStart, setPeriodStart] = useState('11/12/2022');
     const [TimeStart, setTimeStart] = useState();
     const [TimeEnd, setTimeEnd] = useState();
     const [value, setValue] = useState();
     const [inputValue, setInputValue] = useState();
     const [page,setPage] = useState('1');
-   
+    const [dummy,setDummy] = useState({});
+    console.log(dummy);
     const [state, setState] = useState({
         loading:false,
         results:{},
@@ -129,6 +131,7 @@ const BookingRegistrationForm = (props) => {
                 error.response.data.message) ||
                   error.message ||
                     error.toString();
+                console.log("error>>>",_error)
             setState({
                 ...state,
                 loading:false,
@@ -144,7 +147,19 @@ const BookingRegistrationForm = (props) => {
         FetchData();
       },[inputValue])
 
+      useEffect(() => {
+        console.log('##############')
+        const FetchData= async () => {
+          console.log('##############')
+          
+        };
+        FetchData();
+      },[])
+
+
+
     let { loading,results,errorMessage}=state;
+    console.log("error",errorMessage)
 
       console.log("^^^",results)
 
@@ -255,8 +270,6 @@ const BookingRegistrationForm = (props) => {
  
 
 
-
-
             <Grid md={3} style={useStyles.root}>
                 <Autocomplete
                     disablePortal
@@ -272,7 +285,7 @@ const BookingRegistrationForm = (props) => {
                         setInputValue(newInputValue);
                     }}
 
-                    renderInput={(params) => <TextField {...params}  {...register('SurgeryId')} label="Surgery Type" />}
+                    renderInput={(params) => <TextField {...params}  {...register('SurgeryId',{ required: true})} label="Surgery Type" />}
                     ListboxProps={{
                         onScroll: handleScroll
                     }}
@@ -348,7 +361,8 @@ const BookingRegistrationForm = (props) => {
                     props.results.AnaesthesiaType.map((data) => {
                         return (
                             <MenuItem key={data.id} value={data.id}>{data.name}</MenuItem>
-                        )})
+                        )
+                    })
                 }
                 </Select>
                 {errors.AnaesthesiaTypeId && errors.AnaesthesiaTypeId.type === "required" && <p style={useStyles.errortext}>Anesthesia Type is required.</p>}
@@ -397,6 +411,8 @@ const BookingRegistrationForm = (props) => {
                                     onChange={(e)=>{
                                         let newData = SelectChange(e);
                                         onChange(newData)
+                                        setDummy(newData)
+
                                     }}
                                     // MenuProps={MenuProps}
                                     
@@ -548,7 +564,7 @@ const BookingRegistrationForm = (props) => {
 
 
         </Grid>
-        <button type="submit" >Submit</button>
+        <button type="submit">Submit</button>
         </form>
 
     )

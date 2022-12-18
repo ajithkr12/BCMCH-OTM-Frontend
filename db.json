@@ -185,6 +185,99 @@
         "2"
       ],
       "id": 6
+    },
+    {
+      "RegistrationNo": "ABCWE12345",
+      "DoctorId": "XERTA2345",
+      "OperationTheatreId": "OT1",
+      "AnaesthesiaTypeId": "147",
+      "AnaesthetistId": "2",
+      "InstructionToNurse": "HHH",
+      "InstructionToAnaesthetist": "HHHH",
+      "InstructionToOperationTeatrePersons": "HHHH",
+      "RequestForSpecialMeterial": "HHHHH",
+      "bDate": "11/12/2022",
+      "sTime": "01:09 PM",
+      "eTime": "01:09 PM",
+      "SurgeryId": "abcd",
+      "EmployeeIdArray": [
+        "1",
+        "2",
+        "3",
+        "1"
+      ],
+      "DepartmentId": [
+        "1",
+        "2"
+      ],
+      "OdEmployeeIdArray": [
+        "1",
+        "2",
+        "3"
+      ],
+      "EquipmentsIdArray": [
+        "1",
+        "2"
+      ],
+      "id": 7
+    },
+    {
+      "RegistrationNo": "ABCWE12345",
+      "DoctorId": "XERTA2345",
+      "OperationTheatreId": "OT1",
+      "AnaesthesiaTypeId": "146",
+      "AnaesthetistId": "1",
+      "InstructionToNurse": "GGGG",
+      "InstructionToAnaesthetist": "GGG",
+      "InstructionToOperationTeatrePersons": "GGGG",
+      "RequestForSpecialMeterial": "",
+      "bDate": "11/12/2022",
+      "sTime": "01:16 PM",
+      "eTime": "01:16 PM",
+      "SurgeryId": "",
+      "EmployeeIdArray": [
+        "2",
+        "1"
+      ],
+      "DepartmentId": [
+        "3"
+      ],
+      "OdEmployeeIdArray": [
+        "2"
+      ],
+      "EquipmentsIdArray": [
+        "1"
+      ],
+      "id": 8
+    },
+    {
+      "RegistrationNo": "ABCWE12345",
+      "DoctorId": "XERTA2345",
+      "OperationTheatreId": "OT1",
+      "AnaesthesiaTypeId": "147",
+      "AnaesthetistId": "1",
+      "InstructionToNurse": "iii",
+      "InstructionToAnaesthetist": "iii",
+      "InstructionToOperationTeatrePersons": "iiii",
+      "RequestForSpecialMeterial": "iiii",
+      "bDate": "11/12/2022",
+      "sTime": "03:30 PM",
+      "eTime": "03:30 PM",
+      "SurgeryId": "abcd",
+      "EmployeeIdArray": [
+        "1",
+        "1"
+      ],
+      "DepartmentId": [
+        "1"
+      ],
+      "OdEmployeeIdArray": [
+        "1"
+      ],
+      "EquipmentsIdArray": [
+        "1"
+      ],
+      "id": 9
     }
   ],
   "others": {

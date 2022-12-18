@@ -24,3 +24,7 @@ yarn-error.log*
 
 #files
 src/pages/Pagination.test.js
+src/test/Child.js
+src/test/Parent.js
+src/components/Header.test.js
+src/pages/PopUpForm.test.js
