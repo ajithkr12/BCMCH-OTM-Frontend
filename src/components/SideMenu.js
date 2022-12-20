@@ -18,7 +18,7 @@ const SideMenu = () => {
             onClose={handleDrawerToggle}
             ModalProps={{ keepMounted: true }}
             sx={{
-                display: { xs: 'block', lg: 'none' },
+                display: {  },
                 '& .MuiDrawer-paper': {
                     boxSizing: 'border-box',
                     width: '120px',
@@ -35,3 +35,5 @@ const SideMenu = () => {
 }
 
 export default SideMenu
+
+// xs: 'block', lg: 'none'

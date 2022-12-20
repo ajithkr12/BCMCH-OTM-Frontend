@@ -1,6 +1,6 @@
 import React ,{useState} from 'react'
 import { AppBar, IconButton, Toolbar,Stack,Typography,Avatar,Box } from '@mui/material';
- import { AiOutlineMenuFold,AiOutlineMenuUnfold } from "react-icons/ai";
+import { AiOutlineMenuFold,AiOutlineMenuUnfold } from "react-icons/ai";
 const Header = () => {
   
     const [open ,setOpen]= useState(false)
@@ -10,6 +10,7 @@ const Header = () => {
     
     
   return (
+    
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
@@ -35,6 +36,8 @@ const Header = () => {
         </Toolbar>
       </AppBar>
     </Box>
+    
+   
   )
 }
 

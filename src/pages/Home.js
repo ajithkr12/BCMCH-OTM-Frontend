@@ -1,11 +1,11 @@
 import React,{useState} from 'react'
 import {useParams} from 'react-router-dom';
+import {Grid} from '@mui/material';
 
 import Button from '@mui/material/Button';
 
 import Header from '../components/Header';
-import SideMenu from '../components/SideMenu';
-import PopUpForm from './PopUpForm';
+
 import EventContainer from '../layouts/EventContainer';
 
 const Home = () => {
@@ -24,8 +24,9 @@ const Home = () => {
   return (   
     <div>
       <Header />
-      <Button variant="contained" onClick={handleClickOpen} style={BtnStyle}>Click</Button>
+      <Grid md={8} p={4}>
       <EventContainer uhid={uhid} EpId={name}/>
+      </Grid>
 
     </div>
   )

@@ -15,7 +15,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import {SurgeryType} from "../data/Data"
 
 const BookingRegistrationForm = (props) => {
-    console.log("from booking form " ,props.results.AnaesthesiaType)
+    console.log("from booking form " ,props.results)
     ////////////////////////////////////////
     const PatientName="Hari Devan";
     const WardName="B21";
@@ -52,7 +52,7 @@ const BookingRegistrationForm = (props) => {
     const [TimeStart, setTimeStart] = useState();
     const [TimeEnd, setTimeEnd] = useState();
     const [value, setValue] = useState();
-    const [inputValue, setInputValue] = useState();
+    const [inputValue, setInputValue] = useState('a');
     const [page,setPage] = useState('1');
     const [dummy,setDummy] = useState({});
     console.log(dummy);
@@ -147,21 +147,13 @@ const BookingRegistrationForm = (props) => {
         FetchData();
       },[inputValue])
 
-      useEffect(() => {
-        console.log('##############')
-        const FetchData= async () => {
-          console.log('##############')
-          
-        };
-        FetchData();
-      },[])
 
 
 
     let { loading,results,errorMessage}=state;
-    console.log("error",errorMessage)
 
-      console.log("^^^",results)
+      console.log("inner side",results)
+      console.log ("outer side",props.results)
 
     return (
 
@@ -169,7 +161,7 @@ const BookingRegistrationForm = (props) => {
 
         <Grid container>
 
-            <Grid item={true}md={3} style={useStyles.root}>
+            <Grid item={true} md={3} style={useStyles.root}>
                 <TextField 
                     label="Patient's UHID" 
                     variant="outlined" 
@@ -329,8 +321,7 @@ const BookingRegistrationForm = (props) => {
                                         let newData = SelectChange(e);
                                         onChange(newData)
                                     }}
-                                    // MenuProps={MenuProps}
-                                    
+                                    // MenuProps={MenuProps}  
                                 >
                                     {
                                         props.results.AbcType.map((data) => {
@@ -564,7 +555,7 @@ const BookingRegistrationForm = (props) => {
 
 
         </Grid>
-        <button type="submit">Submit</button>
+        <button type="submit" >Submit</button>
         </form>
 
     )

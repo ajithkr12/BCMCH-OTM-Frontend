@@ -50,8 +50,8 @@ export const GetSelectList=async ( )=>{
   
 }
 
-export const GetSurgeryList=async ( val,page )=>{
-  console.log(val,'..>>>><<<<..')
+export const GetSurgeryList=async (  )=>{
+  
 
   try {
     const response =  await axios.get(API_URL+"/surgeryType");

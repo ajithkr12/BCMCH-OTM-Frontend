@@ -43,7 +43,7 @@ const EventContainer = (props) => {
                     cursor: disabled ? "not-allowed" : "pointer"
                   }}
                   onClick={(e) => {
-                    console.log("====e====", e);
+                    // console.log("====e====", e);
                     
                     if (disabled) {
                       return alert("Opss");
