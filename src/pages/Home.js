@@ -1,6 +1,6 @@
-import React,{useState} from 'react'
-import {useParams} from 'react-router-dom';
-import {Grid} from '@mui/material';
+import React, { useContext, useState } from 'react'
+import { useParams } from 'react-router-dom';
+import { Grid } from '@mui/material';
 
 import Button from '@mui/material/Button';
 
@@ -8,24 +8,35 @@ import Header from '../components/Header';
 
 import EventContainer from '../layouts/EventContainer';
 
+import { ContextConsumer } from '../Utils/Context';
+
 const Home = () => {
 
-  let {uhid,name} = useParams();
+  const contextValues = useContext(ContextConsumer);
+  console.log(contextValues);
 
-    const BtnStyle={backgroundColor:'#874563'}
-
-    const [open,setOpen] =useState(true);
-
-    const handleClickOpen =()=>{
-        setOpen(true)
-    }
+  // const contextValues = useContext(ContextConsumer);
+  // console.log(contextValues)
 
 
-  return (   
+  let { uhid, name } = useParams();
+
+  const BtnStyle = { backgroundColor: '#874563' }
+
+  const [open, setOpen] = useState(true);
+
+  const handleClickOpen = () => {
+    setOpen(true)
+  }
+
+
+  
+
+  return (
     <div>
       <Header />
       <Grid md={8} p={4}>
-      <EventContainer uhid={uhid} EpId={name}/>
+        <EventContainer uhid={uhid} EpId={name} />
       </Grid>
 
     </div>

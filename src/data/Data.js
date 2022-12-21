@@ -2,32 +2,32 @@ export const SurgeryType =[
     {
         "id": "45",
         "value": "123",
-        "label":"abcd"
+        "label":"abc c "
     },
     {
         "id": "46",
         "value": "124",
-        "label":"wxyz"
+        "label":"wxyz aa"
     },
     {
         "id": "47",
         "value": "125",
-        "label":"lmno"
+        "label":"lmno aa"
     },
     {
         "id": "48",
         "value": "126",
-        "label":"abc"
+        "label":"abc b"
     },
     {
         "id": "49",
         "value": "127",
-        "label":"wxy"
+        "label":"wxy b"
     },
     {
         "id": "50",
         "value": "1284",
-        "label":"lmn"
+        "label":"lmn as"
     },
     {
         "id": "51",
@@ -37,7 +37,7 @@ export const SurgeryType =[
     {
         "id": "460",
         "value": "1246",
-        "label":"wxyz"
+        "label":"wxyz a"
     },
     {
         "id": "470",
@@ -47,12 +47,12 @@ export const SurgeryType =[
     {
         "id": "480",
         "value": "1266",
-        "label":"abc"
+        "label":"abc a"
     },
     {
         "id": "490",
         "value": "1276",
-        "label":"wxy"
+        "label":"wxy a"
     },
     {
         "id": "500",
@@ -60,7 +60,9 @@ export const SurgeryType =[
         "label":"lmn"
     },
 ]
-  export const SurgeonName =[
+
+
+export const SurgeonName =[
     {
         "id": "45",
         "name": "qqqqq"
