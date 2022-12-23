@@ -1,6 +1,6 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect, useContext} from 'react';
 import { useNavigate } from 'react-router-dom';
-import {Grid,TextField} from '@mui/material';
+import {Button, Divider, Grid,List,ListItem,TextField} from '@mui/material';
 import { Controller, useForm } from "react-hook-form";
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
@@ -12,34 +12,41 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import {PostBookingData,GetSurgeryList} from '../services/UserServices';
 import Autocomplete from '@mui/material/Autocomplete';
-import moment from 'moment';
 import {SurgeryType,SurgeonName} from "../data/Data"
+
+import { ContextConsumer } from '../Utils/Context';
 
 const BookingRegistrationForm = (props) => {
 
     ////////////////////////////////////////
     const PatientName="Hari Devan";
     const WardName="B21";
-    const OtName="OT1"
+    const OtName="OT1";
     ///////////////////////////////////////
 
     const {startTime, otherData }=props.dataToForm;
 
     console.log("dataToForm booking: ", startTime)
 
+    // dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
+    // const startDateTime = new Date( startTime ).toISOString();
     const startDateTime = new Date( startTime );
+    
     let day     = startDateTime.getDate();
     let month   = startDateTime.getMonth()+1;
     let year    = startDateTime.getFullYear();
     var dateSelected = day+"/"+month+"/"+year;
-
+    
     var startTimeSelected =  startDateTime.getTime();
-    console.log("startTimeSelected : ",startTimeSelected)
     const endTimeSelected = startTimeSelected + (30 * 60 * 1000);
-    console.log("endTimeSelected : ",endTimeSelected)
-    
+
     const navigate = useNavigate();
-    
+
+    const {setBookingFormOpen } = useContext(ContextConsumer);
+
+    const OnCancel = ()=>{
+        setBookingFormOpen(false)
+    }
     
     // style START
     const useStyles = {
@@ -283,6 +290,7 @@ const BookingRegistrationForm = (props) => {
             {/* Surgery Type Selector START */}
             <Grid md={3} style={useStyles.root}>
                 <Autocomplete
+                    // ListboxProps={{ style: { maxHeight: 200, overflow: 'auto' } }}
                     disablePortal
                     id="combo-box-demo"
                     value={value}
@@ -310,7 +318,8 @@ const BookingRegistrationForm = (props) => {
                                 }
 
                     ListboxProps={{
-                        onScroll: handleScroll
+                        onScroll: handleScroll,
+                        style: { maxHeight: 200, overflow: 'auto' }
                     }}
                 />
                 {errors.SurgeryId && errors.SurgeryId.type === "required" && <p style={useStyles.errortext}>Surgery Type is required.</p>}
@@ -641,8 +650,18 @@ const BookingRegistrationForm = (props) => {
             </Grid>
 
 
+        </Grid> 
+        
+        <Divider/>
+
+        <Grid style={{display:'flex', align:"right"}}> 
+        <Grid style={{ flexGrow: 1 }} item></Grid>                                    
+            <Grid style={{align:"right"}} item>
+                <Button onClick={ () => OnCancel()}>Cancel</Button>
+                <Button type='submit' >Submit</Button>              
+            </Grid>
         </Grid>
-        <button type="submit" >Submit</button>
+        
         </form>
 
     )

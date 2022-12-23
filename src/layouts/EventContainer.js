@@ -20,10 +20,6 @@ const EventContainer = (props) => {
 
   const {bookingFormOpen , setBookingFormOpen } = useContext(ContextConsumer);
 
-
-  useEffect(() => {
-  },[]);
-
   // const InconomingData = {
   //                 Patientid:"1234",
   //                 SurgeonId:"546",

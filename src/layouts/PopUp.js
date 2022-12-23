@@ -32,17 +32,17 @@ const PopUp = (props) => {
                 </Typography>
 
                 <CloseIcon  onClick={() =>OnCancel()} />
-                
+
             </DialogTitle>
             
             <DialogContent dividers >
                 <BookingRegistrationForm dataToForm={props.dataToForm}  />
             </DialogContent>
 
-            <DialogActions>
+            {/* <DialogActions>
                 <Button onClick={ () => OnCancel()}>Cancel</Button>
                 <Button type='submit' >Submit</Button>              
-          </DialogActions>
+            </DialogActions> */}
 
         </Dialog>
     )
