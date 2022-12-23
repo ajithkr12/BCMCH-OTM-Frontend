@@ -65,15 +65,18 @@ export const SurgeryType =[
 export const SurgeonName =[
     {
         "id": "45",
-        "name": "qqqqq"
+        "name": "qqqqq",
+        "label":"qqqqq"
       },
       {
           "id": "45",
-          "name": "qqqqq"
+          "name": "acdc",
+          "label":"acdc"
       },
       {
           "id": "45",
-          "name": "qqqqq"
+          "name": "babbb",
+          "label":"babbb"
       }
 
 ]

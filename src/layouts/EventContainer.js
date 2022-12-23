@@ -98,7 +98,8 @@ const EventContainer = (props) => {
                 })
                 
               }}
-              disableRipple={true}
+
+              // disableRipple={true}
             >
 
             </div>

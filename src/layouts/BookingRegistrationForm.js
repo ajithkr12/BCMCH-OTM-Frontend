@@ -12,7 +12,7 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import {PostBookingData,GetSurgeryList} from '../services/UserServices';
 import Autocomplete from '@mui/material/Autocomplete';
-
+import moment from 'moment';
 import {SurgeryType,SurgeonName} from "../data/Data"
 
 const BookingRegistrationForm = (props) => {
@@ -27,19 +27,17 @@ const BookingRegistrationForm = (props) => {
 
     console.log("dataToForm booking: ", startTime)
 
-    const d = new Date( startTime );
-    let day     = d.getDate();
-    let month   = d.getMonth()+1;
-    let year    = d.getFullYear();
+    const startDateTime = new Date( startTime );
+    let day     = startDateTime.getDate();
+    let month   = startDateTime.getMonth()+1;
+    let year    = startDateTime.getFullYear();
     var dateSelected = day+"/"+month+"/"+year;
 
-    var startTimeSelected =  d.getTime();
-
-    console.log("result day: ", day)
-    console.log("result month: ", month)
-    console.log("result year: ", year)
-
-
+    var startTimeSelected =  startDateTime.getTime();
+    console.log("startTimeSelected : ",startTimeSelected)
+    const endTimeSelected = startTimeSelected + (30 * 60 * 1000);
+    console.log("endTimeSelected : ",endTimeSelected)
+    
     const navigate = useNavigate();
     
     
@@ -78,7 +76,7 @@ const BookingRegistrationForm = (props) => {
 
     const [dateSelector, setDateSelector] = useState(dateSelected);
     const [TimeStart, setTimeStart] = useState(startTimeSelected);
-    const [TimeEnd, setTimeEnd] = useState();
+    const [TimeEnd, setTimeEnd] = useState(endTimeSelected);
     const [value, setValue] = useState();
     const [inputValue, setInputValue] = useState('a');
     const [page,setPage] = useState('1');
@@ -377,7 +375,7 @@ const BookingRegistrationForm = (props) => {
                         onScroll: handleScroll
                     }}
                 />
-                {errors.SurgeonId && errors.SurgeonId.type === "required" && <p style={useStyles.errortext}>Surgery Type is required.</p>}
+                {errors.SurgeonId && errors.SurgeonId.type === "required" && <p style={useStyles.errortext}>surgeon is required.</p>}
             </Grid>
             {/* <Grid md={3} style={useStyles.root}>
                 <Controller
