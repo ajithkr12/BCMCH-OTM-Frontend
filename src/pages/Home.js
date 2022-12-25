@@ -4,7 +4,7 @@ import { Grid } from '@mui/material';
 
 import Button from '@mui/material/Button';
 
-import Header from '../components/Header';
+import Header from '../Components/Header';
 
 import EventContainer from '../layouts/EventContainer';
 

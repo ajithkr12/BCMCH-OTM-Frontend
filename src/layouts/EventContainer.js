@@ -5,8 +5,6 @@ import { Scheduler } from "@aldabil/react-scheduler";
 import PopUp from './PopUp';
 import BookingRegistrationForm from './BookingRegistrationForm';
 
-
-import {GetSelectList} from "../services/UserServices";
 import { ContextConsumer } from '../Utils/Context';
 
 
@@ -36,6 +34,7 @@ const EventContainer = (props) => {
     
     <Scheduler
       view="week"
+      
       selectedDate={new Date('2021-05-02T10:20:30Z')}
       week={{
         weekDays: [0, 1, 2, 3, 4, 5, 6],
@@ -44,7 +43,6 @@ const EventContainer = (props) => {
         endHour: 17,
         step: 30,
         navigation: true,
-
 
         cellRenderer: ({ height, start, ...props }) => {
 
@@ -78,23 +76,17 @@ const EventContainer = (props) => {
               }}
 
               onClick={(e) => {                
-              
                 if (blocked) {
                   return alert("Opss");
                 }
-
                 setBookingFormOpen(true);
-
                 setdataToForm({
                   startTime:start,
                   otherData:props
                 })
                 
               }}
-
-              // disableRipple={true}
             >
-
             </div>
           );
         }
