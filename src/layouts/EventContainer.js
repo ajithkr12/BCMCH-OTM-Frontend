@@ -77,10 +77,7 @@ const EventContainer = (props) => {
                 cursor: blocked ? "not-allowed" : "pointer"
               }}
 
-              onClick={(e) => {
-
-                console.log("====e==== : ",e );
-                
+              onClick={(e) => {                
               
                 if (blocked) {
                   return alert("Opss");
