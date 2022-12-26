@@ -7,42 +7,43 @@ import React, { useState, useEffect, useContext } from 'react';
 import { ContextConsumer } from '../Utils/Context';
 
 const PopUp = (props) => {
-    // const {dataToForm,otherData}=props;
-
-
 
     const DialogTitleStyle={
         display:'flex',
-        // align:'flex-end'
     }
 
     const {bookingFormOpen , setBookingFormOpen } = useContext(ContextConsumer);
 
-    const OnCancel = ()=>{
+    const OnClose = ()=>{
         setBookingFormOpen(false)
     }
 
     
     return (
         <Dialog open={bookingFormOpen} maxWidth="xxl">
+            <DialogTitle style={DialogTitleStyle}>
 
-            <DialogTitle style={DialogTitleStyle}  >
                 <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
-                    Enter the Operation Booking Details
+                    {
+                        !props.isEventEditor?
+                            <>Booking Form</>
+                            :
+                            <>Event {props.dataToForm.event_id}</>
+                    }
                 </Typography>
 
-                <CloseIcon  onClick={() =>OnCancel()} />
+                <CloseIcon onClick={()=>OnClose()}/>
 
             </DialogTitle>
             
             <DialogContent dividers >
-                <BookingRegistrationForm dataToForm={props.dataToForm}  />
-            </DialogContent>
+                
+                <BookingRegistrationForm 
+                    dataToForm={props.dataToForm} 
+                    isEventEditor={props.isEventEditor} 
+                />
 
-            {/* <DialogActions>
-                <Button onClick={ () => OnCancel()}>Cancel</Button>
-                <Button type='submit' >Submit</Button>              
-            </DialogActions> */}
+            </DialogContent>
 
         </Dialog>
     )

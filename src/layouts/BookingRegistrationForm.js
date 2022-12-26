@@ -17,28 +17,45 @@ import { GetAllMasters, GetOtherDepartmentSurgeons, GetSurgeryList } from '../AP
 import { createFilterOptions } from "@mui/material/Autocomplete";
 
 const BookingRegistrationForm = (props) => {
-    ////////////////////////////////////////
+
+    console.log("props: ", props );
+
+    ///////////////////////////////////////
     const PatientName = "Hari Devan";
     const WardName = "B21";
     const OtName = "OT1";
     ///////////////////////////////////////
 
-    const { startTime, otherData } = props.dataToForm;
+    const { start, otherData} = props.dataToForm;
+    const {isEventEditor} =props;
+    // isEventEditor is used to know weather its an editor form 
+    // or booking form . 
+    // if it is an editor form we need to load data from that particular booking with its id 
+    // else we load a new form for bookig 
 
-    // console.log("dataToForm booking: ", startTime)
+    const startDateTime = new Date(start);
 
-    // dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
-    // const startDateTime = new Date( startTime ).toISOString();
-    const startDateTime = new Date(startTime);
-
+    // we first select date from the datetime from event scheduler 
     let day = startDateTime.getDate();
     let month = startDateTime.getMonth() + 1;
     let year = startDateTime.getFullYear();
     var dateSelected = day + "/" + month + "/" + year;
-
+    // the above dateSelected contains the selected date in dd/mm/yyyy format
     var startTimeSelected = startDateTime.getTime();
-    const endTimeSelected = startTimeSelected + (30 * 60 * 1000);
+    // the above line selects the time only from the given datetime 
 
+    var endTimeSelected;
+
+    if(isEventEditor===true){
+        console.log("event editor : ", props.dataToForm );
+        endTimeSelected = new Date(props.dataToForm.end);
+        // loads endtime from the 
+    }
+    else{
+        // To form add 30 minutes with the starttime . 
+        endTimeSelected = startTimeSelected + (30 * 60 * 1000);
+    }
+    
     const navigate = useNavigate();
 
     const { setBookingFormOpen } = useContext(ContextConsumer);
@@ -181,10 +198,7 @@ const BookingRegistrationForm = (props) => {
 
     const GetMasters  = async ()=>{
         var _allMasters = await GetAllMasters();
-        // var _surgeryList = await GetSurgeryList(1);
         console.log("masters : ", _allMasters)
-        // console.log("_surgeryList : ", _surgeryList)
-        // setSurgeryList(_surgeryList);
         setMasters(_allMasters)
         setLoading(false);
     }
@@ -687,7 +701,6 @@ const BookingRegistrationForm = (props) => {
                                         onChange(newData)
                                     }}
                                 // MenuProps={MenuProps}
-
                                 >
                                     {
                                         Masters.equipmentList.map((data) => {

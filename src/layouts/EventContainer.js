@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext } from "react";
 
 import { Scheduler } from "@aldabil/react-scheduler";
 // import PopUpForm from '../pages/PopUpForm';
-import PopUp from './PopUp';
-import BookingRegistrationForm from './BookingRegistrationForm';
+import PopUp from "./PopUp";
+import BookingRegistrationForm from "./BookingRegistrationForm";
 
-import { ContextConsumer } from '../Utils/Context';
-
-
-
-const date = new Date(2017, 1, 29);
+import { ContextConsumer } from "../Utils/Context";
+import { GetAllocation, GetEvents } from "../API/GetEventsService";
 
 const EventContainer = (props) => {
   let { uhid, EpId } = props;
-
   const [loading, setLoading] = useState(true);
+  const [isEventEditor, setIsEventEditor] = useState(false);
 
-  const {bookingFormOpen , setBookingFormOpen } = useContext(ContextConsumer);
+  const [events, setEvents] = useState([]);
+  const [allocation, setAllocation] = useState([]);
+
+  const { bookingFormOpen, setBookingFormOpen } = useContext(ContextConsumer);
 
   // const InconomingData = {
   //                 Patientid:"1234",
@@ -24,100 +24,167 @@ const EventContainer = (props) => {
   //                 DepartmentId:"546",
   //               };
 
-  
+  const [dataToForm, setdataToForm] = useState({});
 
-  const [ dataToForm , setdataToForm] = useState({});
+  const EventDataFormatter = async (eventsFetchedFromDb) => {
+    try {
+      var reformattedArray = await eventsFetchedFromDb.map(
+        ({ event_id, startDate, endDate, ...props }) => ({
+          ["title"]: "event " + event_id,
+          ["start"]: new Date(startDate),
+          ["end"]: new Date(endDate),
+          ...props,
+        })
+      );
+      // console.log("reformattedArray : ", reformattedArray);
+      return reformattedArray;
+    } catch (error) {
+      console.log("errror thrown : ", error )
+    }
+  };
 
 
-  return (
-    <>
-    
-    <Scheduler
-      view="week"
+
+  const IsAllocated = (_allocations, _startTimeToCheck, _endTimeToCheck) => {
+    var _allocationStatus = false;
+
+    _allocations.map((_allocation)=>{
+      var _allocationStartDate  = new Date (_allocation.startDate);
+      var _allocationEndDate    = new Date (_allocation.endDate);
+      var _startDateTimeToCheck = new Date (_startTimeToCheck);
+      var _endDateTimeToCheck   = new Date (_endTimeToCheck);
       
-      selectedDate={new Date('2021-05-02T10:20:30Z')}
-      week={{
-        weekDays: [0, 1, 2, 3, 4, 5, 6],
-        weekStartOn: 0,
-        startHour: 9,
-        endHour: 17,
-        step: 30,
-        navigation: true,
+      
+      if( (_startDateTimeToCheck >= _allocationStartDate)  )
+      {
+        if(_startDateTimeToCheck <= _allocationEndDate){
+          if(_endDateTimeToCheck <= _allocationEndDate){
+            _allocationStatus = true;
+          }
+        }
+      }
+      
+      
+    })
+    return _allocationStatus;
+  };
 
-        cellRenderer: ({ height, start, ...props }) => {
+  const CellStatusCheck = (allocation, start,end)=>{
+    var _isallocatedStatus = IsAllocated(allocation, start, end)
+    
+    var _style ={};
+    _style.height= "100%";
+    
 
-          // const time = start.getTime();
+    if(!_isallocatedStatus){
+      _style.background ="#cccc";
+      _style.cursor ="not-allowed";
+      return {_style, _isallocatedStatus};
+    }
+    
 
-          // const blocked = false;
+    _style.background ="transperant";
+    _style.cursor ="pointer";
+    
 
-          const time = start.getTime();
-          // console.log("time : ", time)
+    return {_style, _isallocatedStatus};
 
-          // console.log("time utc : ", new Date("2021-05-02T09:30:00.000").valueOf());
-          
-          var blocked = time >= new Date("2021-05-02T09:30:00.000").valueOf();
-          blocked &= time <= new Date("2021-05-02T10:30:00.000").valueOf();
-          
+  }
 
 
+  const LoadEvents = async () => {
+    const _events = await GetEvents(1, "01/01/2022", "01/01/2023");
+    var _eventsformatted = await EventDataFormatter(_events);
 
-          // var blocked = time >= new Date("2021-05-02T09:30:00.000").valueOf();
-          // blocked &= time <= new Date("2021-05-02T10:30:00.000").valueOf();
+    const _allocation = await GetAllocation(1, "01/01/2022", "01/01/2023");
+    
+    setAllocation(_allocation);
+    setEvents(_eventsformatted);
+    setLoading(false);
+    
+    console.log("_allocation : ", _allocation);
+    return _eventsformatted;
+  };
 
-          const restProps = blocked ? {} : props;
 
+
+  useEffect(() => {
+    LoadEvents();
+  }, []);
+
+  return loading ? (
+    <>
+      loading ..
+      <Scheduler loading={true} />
+    </>
+  ) : (
+    <>
+      <Scheduler
+        view="week"
+        // loading={loading}
+        // selectedDate={new Date("2022-12-26T10:20:30Z")}
+        selectedDate={new Date()}
+        week={{
+          weekDays: [0, 1, 2, 3, 4, 5, 6],
+          weekStartOn: 0,
+          startHour: 1,
+          endHour: 23,
+          step: 30,
+          navigation: true,
+
+          cellRenderer: ({ height, start, ...props }) => {
+            var {_style,_isallocatedStatus} = CellStatusCheck(allocation, start,props.end);
+            return (
+              <div
+                style={_style}
+
+                onClick={(e) => {
+                  if (!_isallocatedStatus) {
+                    return "";
+                  }
+                  
+                  setIsEventEditor(false);
+                  setdataToForm({
+                    start: start,
+                    otherData: props,
+                  });
+                  setBookingFormOpen(true);
+                }}
+              ></div>
+            );
+          },
+        }}
+
+        eventRenderer={(event) => {
           return (
             <div
               style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
                 height: "100%",
-                background:"transperant",
-                background: blocked ? "#eee" : "transparent",
-                cursor: blocked ? "not-allowed" : "pointer"
+                background: "green",
               }}
-
-              onClick={(e) => {                
-                if (blocked) {
-                  return alert("Opss");
-                }
+              onClick={() => {
+                setIsEventEditor(true);
+                setdataToForm(event);
                 setBookingFormOpen(true);
-                setdataToForm({
-                  startTime:start,
-                  otherData:props
-                })
-                
               }}
             >
+              <div>{event.title}</div>
             </div>
           );
-        }
-      }}
+        }}
+        getRemoteEvents={LoadEvents}
+        // events={events}
+      />
 
-
-      events={[
-        {
-          event_id: 1,
-          title: "Event 1",
-          start: new Date("2021/5/2 09:30"),
-          end: new Date("2021/5/2 10:30"),
-        },
-        {
-          event_id: 2,
-          title: "Event 2",
-          start: new Date("2021/5/4 10:00"),
-          end: new Date("2021/5/4 11:00"),
-        },
-
-      ]}
-    />
-    
-
-      {
-        bookingFormOpen &&  
-        <PopUp dataToForm={dataToForm} />
-      }
-
+      {bookingFormOpen && (
+        <PopUp dataToForm={dataToForm} isEventEditor={isEventEditor} />
+      )}
     </>
-  )
-}
+  );
+};
 
-export default EventContainer
+export default EventContainer;
