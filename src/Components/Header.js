@@ -50,7 +50,7 @@ const Header = (props) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Menu
+            BeHIve OTM
           </Typography>
           <Stack direction="row" spacing={2} alignItems="center" sx={{ p: 0.5 }}>
             <Avatar alt="profile user" src={''} sx={{ width: 32, height: 32 }} />
