@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Scheduler } from "@aldabil/react-scheduler";
 // import PopUpForm from '../pages/PopUpForm';
 import PopUp from "./PopUp";
-import BookingRegistrationForm from "./BookingRegistrationForm";
+import Loader from "../Components/Loader";
 
 import { ContextConsumer } from "../Utils/Context";
 import { GetAllocation, GetEvents } from "../API/GetEventsService";
@@ -135,10 +135,7 @@ const EventContainer = (props) => {
   }, []);
 
   return loading ? (
-    <>
-      loading ..
-      <Scheduler loading={true} />
-    </>
+    <Loader />
   ) : (
     <>
       <Scheduler
