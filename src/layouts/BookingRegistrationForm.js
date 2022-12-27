@@ -11,10 +11,11 @@ import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Autocomplete from '@mui/material/Autocomplete';
+import { createFilterOptions } from "@mui/material/Autocomplete";
 
 import { ContextConsumer } from '../Utils/Context';
 import { GetAllMasters, GetOtherDepartmentSurgeons, GetSurgeryList } from '../API/GetMasters';
-import { createFilterOptions } from "@mui/material/Autocomplete";
+import Loader from "../Components/Loader";
 
 const BookingRegistrationForm = (props) => {
 
@@ -795,16 +796,3 @@ const BookingRegistrationForm = (props) => {
 }
 
 export default BookingRegistrationForm;
-
-
-const Loader = () =>{
-    return(
-        <div style={{position: 'relative'}}>
-            <CircularProgress
-                size={40}
-                top={10}
-                status={'loading'}
-                style={{marginLeft: '50%'}} />
-        </div>
-    )
-}
