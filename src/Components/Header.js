@@ -29,14 +29,13 @@ const AppBar = styled(MuiAppBar, {
 
 
 
-export default function Header(props) {
+const Header = (props) => {
   const {open,setOpen} =props
   const theme = useTheme();
 
   const handleDrawerOpen = () => {
     setOpen(true);
   };
-
 
   return (
       <AppBar position="fixed" open={open}>
@@ -62,3 +61,4 @@ export default function Header(props) {
 
   );
 }
+export default Header

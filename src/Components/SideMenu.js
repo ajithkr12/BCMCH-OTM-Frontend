@@ -25,7 +25,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
-export default function SideMenu(props) {
+const SideMenu = (props) => {
   const theme = useTheme();
   const {open,setOpen} =props;
 
@@ -35,8 +35,6 @@ export default function SideMenu(props) {
 
   return (
     
-
-
       <Drawer
         sx={{
           width: drawerWidth,
@@ -72,6 +70,5 @@ export default function SideMenu(props) {
 
   );
 }
+export default SideMenu;
 
-
-// xs: 'block', lg: 'none'
