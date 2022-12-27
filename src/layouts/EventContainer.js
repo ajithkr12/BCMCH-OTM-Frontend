@@ -7,6 +7,7 @@ import Loader from "../Components/Loader";
 
 import { ContextConsumer } from "../Utils/Context";
 import { GetAllocation, GetEvents } from "../API/GetEventsService";
+import {EventTypeCheck, CellStatusCheck} from "../services/SchedulerServices";
 
 const EventContainer = (props) => {
   let { uhid, EpId } = props;
@@ -45,73 +46,7 @@ const EventContainer = (props) => {
 
 
 
-  const IsAllocated = (_allocations, _startTimeToCheck, _endTimeToCheck) => {
-    var _allocationStatus = false;
-
-    _allocations.map((_allocation)=>{
-      var _allocationStartDate  = new Date (_allocation.startDate);
-      var _allocationEndDate    = new Date (_allocation.endDate);
-      var _startDateTimeToCheck = new Date (_startTimeToCheck);
-      var _endDateTimeToCheck   = new Date (_endTimeToCheck);
-      
-      
-      if( (_startDateTimeToCheck >= _allocationStartDate)  )
-      {
-        if(_startDateTimeToCheck <= _allocationEndDate){
-          if(_endDateTimeToCheck <= _allocationEndDate){
-            _allocationStatus = true;
-          }
-        }
-      }
-      
-      
-    })
-    return _allocationStatus;
-  };
-
-  const CellStatusCheck = (allocation, start,end)=>{
-    var _isallocatedStatus = IsAllocated(allocation, start, end)
-    
-    var _style ={};
-    _style.height= "100%";
-    
-
-    if(!_isallocatedStatus){
-      _style.background ="#cccc";
-      _style.cursor ="not-allowed";
-      return {_style, _isallocatedStatus};
-    }
-    
-
-    _style.background ="transperant";
-    _style.cursor ="pointer";
-    
-
-    return {_style, _isallocatedStatus};
-
-  }
-
-  const EventTypeCheck = (eventType)=>{
-    console.log("eventType",eventType)
-    var _eventStyle ={};
-    _eventStyle.height= "100%";
-    _eventStyle.width= "100%";
-    _eventStyle.display= "flex";
-    _eventStyle.flexDirection= "column";
-    _eventStyle.justifyContent= "space-between";
-
-    if(eventType === "BOOKED"){
-      _eventStyle.background= "green";
-      return {_eventStyle};
-    }
-    else if(eventType === "BLOCKED"){
-      _eventStyle.background= "red";
-      return {_eventStyle};
-    }
-    _eventStyle.background= "blue";
-    return { _eventStyle};
-
-  }
+  
 
 
   const LoadEvents = async () => {
@@ -129,6 +64,52 @@ const EventContainer = (props) => {
   };
 
 
+  const CustomEventRenderer = (_event) => {
+    // renders the event 
+    var {_eventStyle} = EventTypeCheck(_event.statusName);
+    return (
+      <div
+        style={_eventStyle}
+        onClick={() => {
+          setIsEventEditor(true);
+          setdataToForm(_event);
+          setBookingFormOpen(true);
+        }}
+      >
+        <div>{_event.title}</div>
+      </div>
+    );
+  }
+
+  const CustomCellRenderer = ({ height, start, ...props }) => {
+    // Renders a single cell in scheduler 
+    var {_style,_isallocatedStatus} = CellStatusCheck(allocation, start,props.end);
+    // The above function returns the style of a cell in accordance with its allocation table 
+    // if is allocacted then the mouse pointer will be clickable and also the background is white
+    // else the mouse pointer is not clickable and background will be a disabled color
+    return (
+      <div
+        style={_style}
+
+        onClick={(e) => {
+          if (!_isallocatedStatus) {
+            return "";
+          }
+          
+          setIsEventEditor(false);
+          setdataToForm({
+            start: start,
+            otherData: props,
+          });
+          setBookingFormOpen(true);
+        }}
+      ></div>
+    );
+  }
+
+
+
+
 
   useEffect(() => {
     LoadEvents();
@@ -136,12 +117,13 @@ const EventContainer = (props) => {
 
   return loading ? (
     <Loader />
+    // <>
+    //   <Scheduler loading={true} />
+    // </>
   ) : (
     <>
       <Scheduler
         view="week"
-        // loading={loading}
-        // selectedDate={new Date("2022-12-26T10:20:30Z")}
         selectedDate={new Date()}
         week={{
           weekDays: [0, 1, 2, 3, 4, 5, 6],
@@ -151,47 +133,13 @@ const EventContainer = (props) => {
           step: 30,
           navigation: true,
 
-          cellRenderer: ({ height, start, ...props }) => {
-            var {_style,_isallocatedStatus} = CellStatusCheck(allocation, start,props.end);
-            return (
-              <div
-                style={_style}
-
-                onClick={(e) => {
-                  if (!_isallocatedStatus) {
-                    return "";
-                  }
-                  
-                  setIsEventEditor(false);
-                  setdataToForm({
-                    start: start,
-                    otherData: props,
-                  });
-                  setBookingFormOpen(true);
-                }}
-              ></div>
-            );
-          },
+          cellRenderer:CustomCellRenderer,
         }}
 
-        eventRenderer={(event) => {
-          console.log("events>>",event)
-          var {_eventStyle} = EventTypeCheck(event.statusName);
-          return (
-            <div
-              style={_eventStyle}
-              onClick={() => {
-                setIsEventEditor(true);
-                setdataToForm(event);
-                setBookingFormOpen(true);
-              }}
-            >
-              <div>{event.title}</div>
-            </div>
-          );
-        }}
-        getRemoteEvents={LoadEvents}
-        // events={events}
+        eventRenderer={CustomEventRenderer}
+
+        // getRemoteEvents={LoadEvents}
+        events={events}
       />
 
       {bookingFormOpen && (

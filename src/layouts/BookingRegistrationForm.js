@@ -40,7 +40,9 @@ const BookingRegistrationForm = (props) => {
     let day = startDateTime.getDate();
     let month = startDateTime.getMonth() + 1;
     let year = startDateTime.getFullYear();
-    var dateSelected = day + "/" + month + "/" + year;
+    var dateSelected =month + "/"+ day + "/"  + year;
+
+    console.log("dateSelected : ",dateSelected);
     // the above dateSelected contains the selected date in dd/mm/yyyy format
     var startTimeSelected = startDateTime.getTime();
     // the above line selects the time only from the given datetime 
