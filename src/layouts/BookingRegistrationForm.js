@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Card, CircularProgress, Divider, Grid, List, ListItem, Menu, TextField } from '@mui/material';
+import { Button, Card, CircularProgress, Divider, Grid, List, ListItem, Menu, TextField ,DialogContent} from '@mui/material';
 import { Controller, useForm } from "react-hook-form";
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
@@ -220,6 +220,8 @@ const BookingRegistrationForm = (props) => {
     return (
         loading? <Loader/>
         :
+        <>
+        <DialogContent dividers >
         <form onSubmit={handleSubmit(onSubmit)}>
             
             <Grid container>
@@ -773,17 +775,21 @@ const BookingRegistrationForm = (props) => {
 
             </Grid>
 
-            <Divider />
+         
 
-            <Grid style={{ display: 'flex', align: "right" }}>
-                <Grid style={{ flexGrow: 1 }} item></Grid>
-                <Grid style={{ align: "right" }} item>
-                    <Button onClick={() => OnCancel()}>Cancel</Button>
-                    <Button type='submit' >Submit</Button>
-                </Grid>
-            </Grid>
+
 
         </form>
+
+        </DialogContent >
+        <Grid style={{ display: 'flex', align: "right" }}>
+        <Grid style={{ flexGrow: 1 }} item></Grid>
+        <Grid style={{ align: "right" }} item>
+            <Button onClick={() => OnCancel()} variant="outlined" style={{ margin: 12}}>Cancel</Button>
+            <Button onClick={handleSubmit(onSubmit)} type='submit' variant="outlined" style={{ margin: 12}}>Submit</Button>
+        </Grid>
+        </Grid>
+        </>
 
     )
 }

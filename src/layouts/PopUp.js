@@ -36,14 +36,14 @@ const PopUp = (props) => {
 
             </DialogTitle>
             
-            <DialogContent dividers >
+          
                 
                 <BookingRegistrationForm 
                     dataToForm={props.dataToForm} 
                     isEventEditor={props.isEventEditor} 
                 />
 
-            </DialogContent>
+         
 
         </Dialog>
     )
