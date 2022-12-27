@@ -65,3 +65,4 @@ export const GetAllocation = async (_departmentId, _fromDate, _toDate ) =>{
 
 
 // operationTheatreId=1&fromDate=01%2F01%2F01&toDate=01%2F01%2F2023
+

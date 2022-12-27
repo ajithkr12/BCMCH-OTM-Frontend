@@ -91,6 +91,28 @@ const EventContainer = (props) => {
 
   }
 
+  const EventTypeCheck = (eventType)=>{
+    console.log("eventType",eventType)
+    var _eventStyle ={};
+    _eventStyle.height= "100%";
+    _eventStyle.width= "100%";
+    _eventStyle.display= "flex";
+    _eventStyle.flexDirection= "column";
+    _eventStyle.justifyContent= "space-between";
+
+    if(eventType === "BOOKED"){
+      _eventStyle.background= "green";
+      return {_eventStyle};
+    }
+    else if(eventType === "BLOCKED"){
+      _eventStyle.background= "red";
+      return {_eventStyle};
+    }
+    _eventStyle.background= "blue";
+    return { _eventStyle};
+
+  }
+
 
   const LoadEvents = async () => {
     const _events = await GetEvents(1, "01/01/2022", "01/01/2023");
@@ -102,7 +124,7 @@ const EventContainer = (props) => {
     setEvents(_eventsformatted);
     setLoading(false);
     
-    console.log("_allocation : ", _allocation);
+    console.log("_allocation : ", _eventsformatted);
     return _eventsformatted;
   };
 
@@ -156,16 +178,11 @@ const EventContainer = (props) => {
         }}
 
         eventRenderer={(event) => {
+          console.log("events>>",event)
+          var {_eventStyle} = EventTypeCheck(event.statusName);
           return (
             <div
-              style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                height: "100%",
-                background: "green",
-              }}
+              style={_eventStyle}
               onClick={() => {
                 setIsEventEditor(true);
                 setdataToForm(event);
