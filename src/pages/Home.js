@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
-import { useParams } from 'react-router-dom';
-
-import EventContainer from '../layouts/EventContainer';
+import React, { useState } from 'react';
 import { styled} from '@mui/material/styles';
+
 
 import Header from '../Components/Header';
 import SideMenu from '../Components/SideMenu';
+import TabMenu from '../Components/TabMenu';
 
 const drawerWidth = 240;
 
@@ -25,14 +24,13 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
         }),
         marginLeft: `${drawerWidth}px`,
       }),
-      marginTop:80,
+      marginTop:60,
       
     }),
   );
 const Home = () => {
 
-  const [open, setOpen]=useState(false)
-  let { uhid, name } = useParams();
+  const [open, setOpen]=useState(false);
 
   return (
     <div>
@@ -40,7 +38,7 @@ const Home = () => {
       <Header open={open} setOpen={setOpen}/>
       <SideMenu open={open} setOpen={setOpen}/>
       <Main open={open}>
-          <EventContainer uhid={uhid} EpId={name} />
+        <TabMenu />
       </Main>
       
     </div>
@@ -49,3 +47,25 @@ const Home = () => {
 
 export default Home
 
+
+
+
+// <Grid  container style={{marginBottom:'2%'}}>
+// <Grid  md={6}>
+//   <Tabs
+//     value={value}
+//     onChange={handleChange}
+//     // textColor="secondary"
+//     // indicatorColor="secondary"
+//     aria-label="secondary tabs example"
+//   >
+//     <Tab value="one" label="scheduler" />
+//     <Tab value="two" label="Booking List" />
+//   </Tabs>
+// </Grid>
+// <Grid  md={6}>
+  
+// </Grid>
+// </Grid>      
+//   {value === "one" && <EventContainer uhid={uhid} EpId={name} />}
+//   {value === "two" && <BookingList />}
