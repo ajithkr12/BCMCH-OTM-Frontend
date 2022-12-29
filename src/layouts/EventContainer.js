@@ -6,8 +6,20 @@ import PopUp from "./PopUp";
 import Loader from "../Components/Loader";
 
 import { ContextConsumer } from "../Utils/Context";
-import { GetAllocation, GetEvents } from "../API/GetEventsService";
-import {EventTypeCheck, CellStatusCheck} from "../services/SchedulerServices";
+import {
+  GetAllocation,
+  GetEvents,
+  GetEventsAndAllocations,
+} from "../API/GetEventsService";
+import {
+  EventTypeCheck,
+  CellStatusCheck,
+  EventDataFormatter,
+} from "../services/SchedulerServices";
+import {
+  JsDatetimeToSQLDatetTme,
+  DateOnly,
+} from "../services/DateTimeServices";
 
 const EventContainer = (props) => {
   let { uhid, EpId } = props;
@@ -17,56 +29,46 @@ const EventContainer = (props) => {
   const [events, setEvents] = useState([]);
   const [allocation, setAllocation] = useState([]);
 
-  const { bookingFormOpen, setBookingFormOpen } = useContext(ContextConsumer);
+  const { bookingFormOpen, setBookingFormOpen, dbdateTimeToday } =
+    useContext(ContextConsumer);
 
   // const InconomingData = {
   //                 Patientid:"1234",
   //                 SurgeonId:"546",
   //                 DepartmentId:"546",
   //               };
+  // console.log("date: ",new Date("02-02-2022"))
 
   const [dataToForm, setdataToForm] = useState({});
+  const [schedulerStartDate, setSchedulerStartDate] = useState("");
+  const [schedulerEndDate, setSchedulerEndDate] = useState("2023-01-02");
 
-  const EventDataFormatter = async (eventsFetchedFromDb) => {
-    try {
-      var reformattedArray = await eventsFetchedFromDb.map(
-        ({ event_id, startDate, endDate, ...props }) => ({
-          ["title"]: "event " + event_id,
-          ["start"]: new Date(startDate),
-          ["end"]: new Date(endDate),
-          ...props,
-        })
-      );
-      // console.log("reformattedArray : ", reformattedArray);
-      return reformattedArray;
-    } catch (error) {
-      console.log("errror thrown : ", error )
-    }
+
+  const LoadEventsAndAllocations = async () => {
+    var opThetreid = 1;
+    const { bookings, allocations } = await GetEventsAndAllocations(
+                                            opThetreid,
+                                            schedulerStartDate,
+                                            schedulerEndDate,
+                                            setLoading
+                                          );
+
+    // console.log("schedulerStartDate : ", schedulerStartDate)
+    // console.log("schedulerEndDate : ", schedulerEndDate)
+    var bookingsformatted = await EventDataFormatter(bookings);
+    setAllocation(allocations);
+    setEvents(bookingsformatted);
+    console.log("bookings : ", bookings);
+    console.log("allocations : ", allocations);
+    return bookingsformatted;
   };
 
-
-
-  
-
-
-  const LoadEvents = async () => {
-    const _events = await GetEvents(1, "01/01/2022", "01/01/2023");
-    var _eventsformatted = await EventDataFormatter(_events);
-
-    const _allocation = await GetAllocation(1, "01/01/2022", "01/01/2023");
-    
-    setAllocation(_allocation);
-    setEvents(_eventsformatted);
-    setLoading(false);
-    
-    console.log("_allocation : ", _eventsformatted);
-    return _eventsformatted;
-  };
 
 
   const CustomEventRenderer = (_event) => {
-    // renders the event 
-    var {_eventStyle} = EventTypeCheck(_event.statusName);
+    // renders the event
+    // console.log("event : ", _event)
+    var { _eventStyle } = EventTypeCheck(_event.statusName);
     return (
       <div
         style={_eventStyle}
@@ -79,66 +81,95 @@ const EventContainer = (props) => {
         <div>{_event.title}</div>
       </div>
     );
-  }
+  };
 
-  const CustomCellRenderer = ({ height, start, ...props }) => {
-    // Renders a single cell in scheduler 
-    var {_style,_isallocatedStatus} = CellStatusCheck(allocation, start,props.end);
-    // The above function returns the style of a cell in accordance with its allocation table 
+
+
+  const CustomCellRenderer = (props) => {
+    // Renders a single cell in scheduler
+    var { _style, _isallocatedStatus } = CellStatusCheck(
+      allocation,
+      props.start,
+      props.end
+    );
+    // The above function returns the style of a cell in accordance with its allocation table
     // if is allocacted then the mouse pointer will be clickable and also the background is white
     // else the mouse pointer is not clickable and background will be a disabled color
     return (
       <div
         style={_style}
-
         onClick={(e) => {
           if (!_isallocatedStatus) {
             return "";
           }
-          
           setIsEventEditor(false);
           setdataToForm({
-            start: start,
-            otherData: props,
+            props
+            // start: props.start,
+            // otherData: props,
           });
           setBookingFormOpen(true);
         }}
       ></div>
     );
-  }
+  };
 
 
 
 
-
+  
   useEffect(() => {
-    LoadEvents();
-  }, []);
+    // executes whenever there is a change in schedulerStartDate, dbdateTimeToday
+    // console.log("dbdatetime : ", dbdateTimeToday);
+
+    if (dbdateTimeToday.loaded === true) {
+      // executed only if dbdateTimeToday is fetched in the context. 
+      // if dbdateTimeToday the dbdateTimeToday.loaded status will be true 
+      // and then is set as schedulerStartDate using SchedulerStartDate
+      if(schedulerStartDate===""){
+        setSchedulerStartDate(dbdateTimeToday.date);
+      }
+      if(schedulerStartDate!=""){
+        LoadEventsAndAllocations();
+      }
+      // fetches the events and allocations
+    }
+
+  }, [schedulerStartDate, dbdateTimeToday ]);
+
+
+
+
 
   return loading ? (
     <Loader />
-    // <>
-    //   <Scheduler loading={true} />
-    // </>
   ) : (
     <>
       <Scheduler
         view="week"
-        selectedDate={new Date()}
+        selectedDate={new Date(schedulerStartDate)}
         week={{
           weekDays: [0, 1, 2, 3, 4, 5, 6],
-          weekStartOn: 0,
+          weekStartOn: new Date(schedulerStartDate).getDay(),
           startHour: 1,
           endHour: 23,
           step: 30,
           navigation: true,
-
-          cellRenderer:CustomCellRenderer,
+          cellRenderer: CustomCellRenderer,
         }}
 
-        eventRenderer={CustomEventRenderer}
+        eventRenderer={(event) => CustomEventRenderer(event)}
 
-        // getRemoteEvents={LoadEvents}
+        getRemoteEvents={(e) => {
+          // this will be called when we press the event date switcher on the top 
+          console.log(e);
+          var startDate = JsDatetimeToSQLDatetTme(e.start);
+          // console.log("startDate : ",startDate)
+          var endDate = JsDatetimeToSQLDatetTme(e.end);
+          // console.log("endDate : ",endDate)
+          setSchedulerStartDate(startDate);
+          setSchedulerEndDate(endDate);
+        }}
         events={events}
       />
 

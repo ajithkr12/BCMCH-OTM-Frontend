@@ -1,7 +1,6 @@
 import React,{useEffect, useState, useContext} from 'react'
-import axios from 'axios'
-import qs from 'qs';
-import { ConstantURL } from '../Constants/ConstantURL';
+import { GetServerDateTime } from '../API/GetMasters';
+
 
 
 const DataContext = React.createContext()
@@ -9,11 +8,31 @@ const DataContext = React.createContext()
 function  ContextProvider(props) {
 
     const test="data";
-
     const [bookingFormOpen , setBookingFormOpen ] = useState();
+    const [dbdateTimeToday, setDbdateTimeToday] = useState({
+        date: "",
+        Time:"",
+        loaded:false
+    });
+
+    const [masters,setMasters] = useState();
 
 
 
+    const FetchDateTimeToday =async ()=>{
+        var _today = await GetServerDateTime();
+        var _todaySplitted = _today.split("T");
+        setDbdateTimeToday({
+            date : _todaySplitted[0],
+            time : _todaySplitted[1],
+            loaded : true
+        });
+    }
+
+
+    useEffect(()=>{
+        FetchDateTimeToday();    
+    },[]);
 
     
 
@@ -21,7 +40,8 @@ function  ContextProvider(props) {
     return (
         <DataContext.Provider value={{
             test,
-            bookingFormOpen , setBookingFormOpen 
+            bookingFormOpen , setBookingFormOpen,
+            dbdateTimeToday
         }}>
 
             {props.children}

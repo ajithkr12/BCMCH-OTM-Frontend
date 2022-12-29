@@ -1,3 +1,29 @@
+
+export const EventDataFormatter = async (eventsFetchedFromDb) => {
+  // used to format events from backend to the format of the eventscheduler 
+  // in backend we get data as startdate but for the scheduler we need to give it as start
+  // and also endDate from backend is treated as end in the scheduler
+  // also an extra parameter title is required . 
+  // So we loop through data from backend and give new fileds and edit existing fields.
+  try {
+    var reformattedArray = await eventsFetchedFromDb.map(
+      ({ event_id, startDate, endDate, ...props }) => ({
+        ["title"]: "event " + event_id,
+        ["start"]: new Date(startDate),
+        ["end"]: new Date(endDate),
+        ...props,
+      })
+    );
+    // console.log("reformattedArray : ", reformattedArray);
+    return reformattedArray;
+  } catch (error) {
+    console.log("errror thrown (ScedulerServices.js EventDataFormatter) : ", error )
+  }
+};
+
+
+
+
 export const EventTypeCheck = (eventType) => {
   var _eventStyle = {};
   _eventStyle.height = "100%";
@@ -33,6 +59,7 @@ export const IsAllocated = (_allocations, _startTimeToCheck, _endTimeToCheck) =>
         if(_startDateTimeToCheck <= _allocationEndDate){
           if(_endDateTimeToCheck <= _allocationEndDate){
             _allocationStatus = true;
+            // console.log("allocated : ", _startTimeToCheck, ":",_endTimeToCheck," , " ,_allocations)
           }
         }
       }
@@ -44,19 +71,16 @@ export const IsAllocated = (_allocations, _startTimeToCheck, _endTimeToCheck) =>
 
   export const CellStatusCheck = (allocation, start,end)=>{
     var _isallocatedStatus = IsAllocated(allocation, start, end)
-    
     var _style ={};
     _style.height= "100%";
     
-
     if(!_isallocatedStatus){
       _style.background ="#cccc";
       _style.cursor ="not-allowed";
       return {_style, _isallocatedStatus};
     }
     
-
-    _style.background ="transperant";
+    _style.background ="white";
     _style.cursor ="pointer";
     
 
