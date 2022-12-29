@@ -47,25 +47,3 @@ const Home = () => {
 
 export default Home
 
-
-
-
-// <Grid  container style={{marginBottom:'2%'}}>
-// <Grid  md={6}>
-//   <Tabs
-//     value={value}
-//     onChange={handleChange}
-//     // textColor="secondary"
-//     // indicatorColor="secondary"
-//     aria-label="secondary tabs example"
-//   >
-//     <Tab value="one" label="scheduler" />
-//     <Tab value="two" label="Booking List" />
-//   </Tabs>
-// </Grid>
-// <Grid  md={6}>
-  
-// </Grid>
-// </Grid>      
-//   {value === "one" && <EventContainer uhid={uhid} EpId={name} />}
-//   {value === "two" && <BookingList />}

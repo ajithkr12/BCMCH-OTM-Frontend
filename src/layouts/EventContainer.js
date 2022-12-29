@@ -147,17 +147,22 @@ const EventContainer = (props) => {
     <>
       <Scheduler
         view="week"
+        navigationPickerProps={{navigation:{month:false}}}
         selectedDate={new Date(schedulerStartDate)}
         week={{
           weekDays: [0, 1, 2, 3, 4, 5, 6],
-          weekStartOn: new Date(schedulerStartDate).getDay(),
+          weekStartOn: new Date(schedulerStartDate).getDay(), 
+          // weekStartOn defines wihich day we want to show as scheduler start day
+          // if weekStartOn=0 then calendar will start on sunday 
+          // loads the week day number from schedulerstartdate 
+          // new Date(schedulerStartDate).getDay() will return the weekend count 
           startHour: 1,
           endHour: 23,
           step: 30,
           navigation: true,
           cellRenderer: CustomCellRenderer,
         }}
-
+        
         eventRenderer={(event) => CustomEventRenderer(event)}
 
         getRemoteEvents={(e) => {
@@ -171,6 +176,18 @@ const EventContainer = (props) => {
           setSchedulerEndDate(endDate);
         }}
         events={events}
+        // navigationPickerProps={{
+        //   views: ["week"]
+          
+        // }}
+        translations = {{
+          navigation: {
+          today: false,
+          month: false,
+          week: false,
+          day: false
+          }
+        }}
       />
 
       {bookingFormOpen && (
