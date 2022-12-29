@@ -27,7 +27,7 @@ const BookingRegistrationForm = (props) => {
     const OtName = "OT1";
     ///////////////////////////////////////
 
-    const { start } = props.dataToForm;
+    const { start } = props.dataToForm.props;
     const {isEventEditor} =props;
     // isEventEditor is used to know weather its an editor form 
     // or booking form . 
