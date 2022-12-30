@@ -44,9 +44,9 @@ const EventContainer = (props) => {
   const [schedulerStartDate, setSchedulerStartDate] = useState("");
   const [schedulerEndDate, setSchedulerEndDate] = useState("2023-01-02");
 
-
+  var departmentId = 2;
   const LoadEventsAndAllocations = async () => {
-    var departmentId = 1;
+  
 
     const { bookings, allocations,allocatedOperationTheatres } = await GetEventsAndAllocations(
                                             departmentId,
@@ -87,14 +87,14 @@ const EventContainer = (props) => {
   };
 
   const DataFilter = allocation.filter(allocation => {
-    console.log("poda patti")
-    return allocation.operationTheatreId === 1;
+    console.log("filter data")
+    return allocation.operationTheatreId === departmentId;
   });
 
   const CustomCellRenderer = (props) => {
     // Renders a single cell in scheduler
     const allocationData = DataFilter;
-    console.log("poda patti..",allocationData)
+    console.log("filter data..",allocationData)
     var { _style, _isallocatedStatus } = CellStatusCheck(
       // allocation,
       allocationData,
