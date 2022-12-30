@@ -21,8 +21,6 @@ function  ContextProvider(props) {
     });
     const [allocatedOperationTheatres,setAllocatedOperationTheatres] = useState([]);
 
-    const [EventsAndAllocations,setEventsAndAllocations] =useState({})
-
 
 
     // LOCAL FUNCTIONS USED IN CONTEXT ONLY START
@@ -41,11 +39,6 @@ function  ContextProvider(props) {
         setMasters(_data)
     }
 
-    const FetchEventsAndAllocationsData = async ()=>{
-        var _data = await GetEventsAndAllocations();
-        _data.loaded = true;
-        setEventsAndAllocations(_data)
-    }
     // FUNCTIONS USED FOR FETCHING IN CONTEXT ONLY END
 
 
@@ -54,7 +47,6 @@ function  ContextProvider(props) {
     useEffect(()=>{
         FetchDateTimeToday();  
         FetchMasterData();  
-        FetchEventsAndAllocationsData();
     },[]);
 
     
@@ -67,7 +59,7 @@ function  ContextProvider(props) {
             dbdateTimeToday, 
             allocatedOperationTheatres,setAllocatedOperationTheatres,
             masters,
-            EventsAndAllocations,
+            
         }}>
 
             {props.children}

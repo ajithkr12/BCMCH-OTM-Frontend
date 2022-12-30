@@ -24,6 +24,7 @@ import { MenuItem, Select } from "@mui/material";
 
 const EventContainer = (props) => {
   let { uhid, EpId } = props;
+  var OperationTheatreId=1;
   const [loading, setLoading] = useState(true);
   const [isEventEditor, setIsEventEditor] = useState(false);
 
@@ -46,6 +47,7 @@ const EventContainer = (props) => {
 
   const LoadEventsAndAllocations = async () => {
     var departmentId = 1;
+
     const { bookings, allocations,allocatedOperationTheatres } = await GetEventsAndAllocations(
                                             departmentId,
                                             schedulerStartDate,
@@ -84,12 +86,18 @@ const EventContainer = (props) => {
     );
   };
 
-
+  const DataFilter = allocation.filter(allocation => {
+    console.log("poda patti")
+    return allocation.operationTheatreId === 1;
+  });
 
   const CustomCellRenderer = (props) => {
     // Renders a single cell in scheduler
+    const allocationData = DataFilter;
+    console.log("poda patti..",allocationData)
     var { _style, _isallocatedStatus } = CellStatusCheck(
-      allocation,
+      // allocation,
+      allocationData,
       props.start,
       props.end
     );

@@ -37,6 +37,7 @@ export const EventTypeCheck = (eventType) => {
     return { _eventStyle };
   } else if (eventType === "BLOCKED") {
     _eventStyle.background = "red";
+    _eventStyle.cursor ="not-allowed";
     return { _eventStyle };
   }
   _eventStyle.background = "blue";
