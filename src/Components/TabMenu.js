@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useParams } from 'react-router-dom';
 
 import EventContainer from '../layouts/EventContainer';
@@ -6,16 +6,21 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import {Grid} from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
+
+import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 import BookingList from '../layouts/BookingList'
+import { ContextConsumer } from '../Utils/Context';
 
 const TabMenu = () => {
+  const { allocatedOperationTheatres,masters } = useContext(ContextConsumer);
 
   let { uhid, name } = useParams();
-  const [value, setValue] = useState('one');
+  const [value, setValue] = useState('SCHEDULER');
   const [OperationTheatreId, setOperationTheatreId] = useState('');
 
   const handleChangeOT = (event) => {
@@ -24,6 +29,7 @@ const TabMenu = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  
   return (
     
     <>
@@ -36,27 +42,40 @@ const TabMenu = () => {
               indicatorColor="secondary"
               aria-label="secondary tabs example"
             >
-              <Tab value="one" label="scheduler" />
-              <Tab value="two" label="Booking List" />
+              <Tab value="SCHEDULER" label="scheduler" />
+              <Tab value="SCHEDULELIST" label="Booking List" />
             </Tabs>
           </Grid>
           <Grid  md={2}>
           <FormControl fullWidth>
+          
+
+
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={OperationTheatreId}
+            // value={OperationTheatreId}
+            // defaultValue={masters.operationTheatreList[0].name}
             onChange={handleChangeOT}
+            style={{height:45,width:200}}
           >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            {
+              masters.loaded && allocatedOperationTheatres.map((operationTheatre, key)=>{
+                  return(
+                    <MenuItem key={key} value={masters.operationTheatreList[operationTheatre-1].name} id={operationTheatre-1} >
+                      {masters.operationTheatreList[operationTheatre-1].name}
+                    </MenuItem>
+                  )
+              })
+            }
           </Select>
+
+        
         </FormControl>
           </Grid>
-        </Grid>   
-        {value === "one" && <EventContainer uhid={uhid} EpId={name} />}
-        {value === "two" && <BookingList />} 
+        </Grid>
+        {value === "SCHEDULER" && <EventContainer uhid={uhid} EpId={name} />}
+        {value === "SCHEDULELIST" && <BookingList />} 
     </>  
 
   )

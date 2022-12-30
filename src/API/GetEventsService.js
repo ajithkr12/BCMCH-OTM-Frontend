@@ -61,7 +61,7 @@ export const GetAllocation = async (_departmentId, _fromDate, _toDate) => {
   }
 };
 
-export const GetEventsAndAllocations = async ( _operationTheatreId, _fromDate, _toDate,setLoading) => {
+export const GetEventsAndAllocations = async ( _departmentId, _fromDate, _toDate,setLoading) => {
   
   _fromDate +="T00:00:00.000Z";
   _toDate   +="T00:00:00.000Z";
@@ -74,7 +74,7 @@ export const GetEventsAndAllocations = async ( _operationTheatreId, _fromDate, _
       ConstantURL.GetEventsAndAllocations,
       {
         params: {
-          operationTheatreId: _operationTheatreId,
+          departmentId: _departmentId,
           fromDate: _fromDate,
           toDate: _toDate,
         },
@@ -88,6 +88,7 @@ export const GetEventsAndAllocations = async ( _operationTheatreId, _fromDate, _
     return {
       bookings: response.data.data.bookings,
       allocations: response.data.data.allocations,
+      allocatedOperationTheatres: response.data.data.allocatedOperationTheatres,
     };
   } catch (error) {
     const _error =

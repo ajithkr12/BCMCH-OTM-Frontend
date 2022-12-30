@@ -20,6 +20,7 @@ import {
   JsDatetimeToSQLDatetTme,
   DateOnly,
 } from "../services/DateTimeServices";
+import { MenuItem, Select } from "@mui/material";
 
 const EventContainer = (props) => {
   let { uhid, EpId } = props;
@@ -29,8 +30,7 @@ const EventContainer = (props) => {
   const [events, setEvents] = useState([]);
   const [allocation, setAllocation] = useState([]);
 
-  const { bookingFormOpen, setBookingFormOpen, dbdateTimeToday } =
-    useContext(ContextConsumer);
+  const { bookingFormOpen, setBookingFormOpen, dbdateTimeToday,setAllocatedOperationTheatres } = useContext(ContextConsumer);
 
   // const InconomingData = {
   //                 Patientid:"1234",
@@ -45,21 +45,22 @@ const EventContainer = (props) => {
 
 
   const LoadEventsAndAllocations = async () => {
-    var opThetreid = 1;
-    const { bookings, allocations } = await GetEventsAndAllocations(
-                                            opThetreid,
+    var departmentId = 1;
+    const { bookings, allocations,allocatedOperationTheatres } = await GetEventsAndAllocations(
+                                            departmentId,
                                             schedulerStartDate,
                                             schedulerEndDate,
                                             setLoading
                                           );
-
-    // console.log("schedulerStartDate : ", schedulerStartDate)
-    // console.log("schedulerEndDate : ", schedulerEndDate)
     var bookingsformatted = await EventDataFormatter(bookings);
+
+    setAllocatedOperationTheatres(allocatedOperationTheatres);
     setAllocation(allocations);
     setEvents(bookingsformatted);
     console.log("bookings : ", bookings);
     console.log("allocations : ", allocations);
+    console.log("allocatedOperationTheatres : ", allocatedOperationTheatres);
+    
     return bookingsformatted;
   };
 
@@ -120,16 +121,17 @@ const EventContainer = (props) => {
   
   useEffect(() => {
     // executes whenever there is a change in schedulerStartDate, dbdateTimeToday
-    // console.log("dbdatetime : ", dbdateTimeToday);
-
-    if (dbdateTimeToday.loaded === true) {
+    if (dbdateTimeToday.loaded === true) 
+    {
       // executed only if dbdateTimeToday is fetched in the context. 
       // if dbdateTimeToday the dbdateTimeToday.loaded status will be true 
       // and then is set as schedulerStartDate using SchedulerStartDate
-      if(schedulerStartDate===""){
+      if(schedulerStartDate==="")
+      {
         setSchedulerStartDate(dbdateTimeToday.date);
       }
-      if(schedulerStartDate!=""){
+      if(schedulerStartDate!="")
+      {
         LoadEventsAndAllocations();
       }
       // fetches the events and allocations
@@ -139,13 +141,28 @@ const EventContainer = (props) => {
 
 
 
-
-
   return loading ? (
     <Loader />
-  ) : (
+  ) : 
+  (
     <>
+
+{/*  */}
+      {/* <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        // value={OperationTheatreId}
+        // onChange={handleChangeOT}
+        style={{height:45,width:200, alignContent:"right", alignSelf:"right"}}
+      >
+        <MenuItem value={10}>Ten</MenuItem>
+        <MenuItem value={20}>Twenty</MenuItem>
+        <MenuItem value={30}>Thirty</MenuItem>
+      </Select> */}
+{/*  */}
+    
       <Scheduler
+        loading={loading}
         view="week"
         navigationPickerProps={{navigation:{month:false}}}
         selectedDate={new Date(schedulerStartDate)}
@@ -157,7 +174,7 @@ const EventContainer = (props) => {
           // loads the week day number from schedulerstartdate 
           // new Date(schedulerStartDate).getDay() will return the weekend count 
           startHour: 1,
-          endHour: 23,
+          endHour: 17,
           step: 30,
           navigation: true,
           cellRenderer: CustomCellRenderer,
@@ -176,16 +193,15 @@ const EventContainer = (props) => {
           setSchedulerEndDate(endDate);
         }}
         events={events}
-        // navigationPickerProps={{
-        //   views: ["week"]
-          
-        // }}
+        
+        // to disable right top menu to switch between views
+        // currently it is set to "" but we need to find a way to disable that 
         translations = {{
           navigation: {
-          today: false,
-          month: false,
-          week: false,
-          day: false
+          today: "",
+          month: "",
+          week: "",
+          day: ""
           }
         }}
       />

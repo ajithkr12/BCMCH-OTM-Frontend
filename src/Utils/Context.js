@@ -1,5 +1,5 @@
 import React,{useEffect, useState, useContext} from 'react'
-import { GetServerDateTime } from '../API/GetMasters';
+import { GetServerDateTime,GetAllMasters } from '../API/GetMasters';
 
 
 
@@ -15,10 +15,16 @@ function  ContextProvider(props) {
         loaded:false
     });
 
-    const [masters,setMasters] = useState();
+    const [masters,setMasters] = useState({
+        operationTheatreList:[ {name:""} ],
+        loaded:false
+    });
+    const [allocatedOperationTheatres,setAllocatedOperationTheatres] = useState([]);
 
 
 
+
+    // LOCAL FUNCTIONS USED IN CONTEXT ONLY START
     const FetchDateTimeToday =async ()=>{
         var _today = await GetServerDateTime();
         var _todaySplitted = _today.split("T");
@@ -28,10 +34,19 @@ function  ContextProvider(props) {
             loaded : true
         });
     }
+    const FetchMasterData = async ()=>{
+        var _data = await GetAllMasters();
+        _data.loaded = true;
+        setMasters(_data)
+    }
+    // FUNCTIONS USED FOR FETCHING IN CONTEXT ONLY END
+
+
 
 
     useEffect(()=>{
-        FetchDateTimeToday();    
+        FetchDateTimeToday();  
+        FetchMasterData();  
     },[]);
 
     
@@ -41,7 +56,9 @@ function  ContextProvider(props) {
         <DataContext.Provider value={{
             test,
             bookingFormOpen , setBookingFormOpen,
-            dbdateTimeToday
+            dbdateTimeToday, 
+            allocatedOperationTheatres,setAllocatedOperationTheatres,
+            masters,
         }}>
 
             {props.children}
