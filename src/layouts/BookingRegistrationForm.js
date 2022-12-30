@@ -84,13 +84,15 @@ const BookingRegistrationForm = (props) => {
         },
     };
 
-    const { register, control, formState: { errors }, handleSubmit } = useForm({
+    const { register, control, formState: { isDirty,isValid,errors }, handleSubmit,watch } = useForm({
         defaultValues: {
             RegistrationNo: props.uhid,
             DoctorId: props.EpId,
 
-        }
+        },
+        mode:'all'
     });
+    const currentFormState = watch();
     // style END
 
 
@@ -127,12 +129,10 @@ const BookingRegistrationForm = (props) => {
     // loads initial value for surgerylist
     //  whem theres no search we need to show a default value
 
-
-
-
-    const onSubmit = async (data) => {
-        data.EmployeeIdArray = [...data.OdEmployeeIdArray, ...data.EmployeeIdArray]
-        navigate("/");
+    const onSave = (data) => {
+        console.log(",,,,,,,,,,,,current",currentFormState)
+        // data.EmployeeIdArray = [...data.OdEmployeeIdArray, ...data.EmployeeIdArray]
+        // navigate("/");
     };
 
     const SelectChange = (e) => {
@@ -224,7 +224,7 @@ const BookingRegistrationForm = (props) => {
         :
         <>
         <DialogContent dividers >
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form>
             
             <Grid container>
 
@@ -471,7 +471,7 @@ const BookingRegistrationForm = (props) => {
                     <TextField
                         label="Doctor ID"
                         variant="outlined"
-                        disabled
+                        
                         style={useStyles.textfield}
                         {...register('DoctorId', { required: true })}
                     />
@@ -788,7 +788,7 @@ const BookingRegistrationForm = (props) => {
         <Grid style={{ flexGrow: 1 }} item></Grid>
         <Grid style={{ align: "right" }} item>
             <Button onClick={() => OnCancel()} variant="outlined" style={{ margin: 12}}>Cancel</Button>
-            <Button onClick={handleSubmit(onSubmit)} type='submit' variant="outlined" style={{ margin: 12}}>Submit</Button>
+            <Button onClick={()=>onSave()} type='submit' variant="outlined" style={{ margin: 12}}>Submit</Button>
         </Grid>
         </Grid>
         </>
