@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useEffect, useContext, useState } from 'react'
 import { useParams } from 'react-router-dom';
 
 import EventContainer from '../layouts/EventContainer';
@@ -17,29 +17,25 @@ import BookingList from '../layouts/BookingList'
 import { ContextConsumer } from '../Utils/Context';
 
 const TabMenu = () => {
-  const useStyles = {
-    textfield: {
-        width: '100%',
-        fontSize: "14px",
-        height:"40px",
-        margin:"4px 0px 4px 0px",
-
-    },
-
-};
   const { allocatedOperationTheatres,masters } = useContext(ContextConsumer);
 
   let { uhid, name } = useParams();
   const [value, setValue] = useState('SCHEDULER');
-  const [OperationTheatreId, setOperationTheatreId] = useState('');
+  const [OperationTheatreId, setOperationTheatreId] = useState();
 
-  const handleChangeOT = (event) => {
-    setOperationTheatreId(event.target.value);
-  };
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
   
+  useEffect ( ()=>{
+    console.log(OperationTheatreId)    
+  },[OperationTheatreId])
+
+  useEffect(()=>{
+    setOperationTheatreId(allocatedOperationTheatres[0])
+  },[allocatedOperationTheatres])
+
   return (
     
     <>
@@ -64,15 +60,17 @@ const TabMenu = () => {
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            // value={OperationTheatreId}
+            value={OperationTheatreId}
             // defaultValue={masters.operationTheatreList[0].name}
-            onChange={handleChangeOT}
-            style={useStyles.textfield}
+            onChange={(event)=>{setOperationTheatreId(event.target.value)}}
+            style={{height:45,width:200}}
           >
             {
               masters.loaded && allocatedOperationTheatres.map((operationTheatre, key)=>{
                   return(
-                    <MenuItem key={key} value={masters.operationTheatreList[operationTheatre-1].name} id={operationTheatre-1} >
+
+                    <MenuItem key={key} 
+                      value={operationTheatre} >
                       {masters.operationTheatreList[operationTheatre-1].name}
                     </MenuItem>
                   )
