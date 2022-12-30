@@ -1,92 +1,90 @@
-import React, { useEffect, useContext, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useContext, useState } from "react";
+import { useParams } from "react-router-dom";
 
-import EventContainer from '../layouts/EventContainer';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import {Grid} from '@mui/material';
-import InputLabel from '@mui/material/InputLabel';
+import EventContainer from "../layouts/EventContainer";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import { Grid } from "@mui/material";
+import MenuItem from "@mui/material/MenuItem";
 
-import Menu, { MenuProps } from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-
-import BookingList from '../layouts/BookingList'
-import { ContextConsumer } from '../Utils/Context';
+import BookingList from "../layouts/BookingList";
+import { ContextConsumer } from "../Utils/Context";
 
 const TabMenu = () => {
-  const { allocatedOperationTheatres,masters } = useContext(ContextConsumer);
+  const { allocatedOperationTheatres, masters } = useContext(ContextConsumer);
 
   let { uhid, name } = useParams();
-  const [value, setValue] = useState('SCHEDULER');
-  const [OperationTheatreId, setOperationTheatreId] = useState();
+  const [value, setValue] = useState("SCHEDULER");
+  const [OperationTheatreId, setOperationTheatreId] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  
-  useEffect ( ()=>{
-    console.log(OperationTheatreId)    
-  },[OperationTheatreId])
+  useEffect(() => {
+    console.log("OperationTheatreId : ", OperationTheatreId);
+  }, [OperationTheatreId]);
 
-  useEffect(()=>{
-    setOperationTheatreId(allocatedOperationTheatres[0])
-  },[allocatedOperationTheatres])
+  useEffect(() => {
+    console.log("allocatedOperationTheatres: ", allocatedOperationTheatres);
+    setOperationTheatreId(allocatedOperationTheatres[0]);
+  }, [allocatedOperationTheatres]);
 
   return (
-    
     <>
-        <Grid  container style={{marginBottom:'2%'}}>
-          <Grid  md={10}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              textColor="secondary"
-              indicatorColor="secondary"
-              aria-label="secondary tabs example"
-            >
-              <Tab value="SCHEDULER" label="scheduler" />
-              <Tab value="SCHEDULELIST" label="Booking List" />
-            </Tabs>
-          </Grid>
-          <Grid  md={2}>
-          <FormControl fullWidth>
-          
-
-
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={OperationTheatreId}
-            // defaultValue={masters.operationTheatreList[0].name}
-            onChange={(event)=>{setOperationTheatreId(event.target.value)}}
-            style={{height:45,width:200}}
+      <Grid container style={{ marginBottom: "2%" }}>
+        <Grid md={10}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            textColor="secondary"
+            indicatorColor="secondary"
+            aria-label="secondary tabs example"
           >
-            {
-              masters.loaded && allocatedOperationTheatres.map((operationTheatre, key)=>{
-                  return(
-
-                    <MenuItem key={key} 
-                      value={operationTheatre} >
-                      {masters.operationTheatreList[operationTheatre-1].name}
-                    </MenuItem>
-                  )
-              })
-            }
-          </Select>
-
-        
-        </FormControl>
-          </Grid>
+            <Tab value="SCHEDULER" label="scheduler" />
+            <Tab value="SCHEDULELIST" label="Booking List" />
+          </Tabs>
         </Grid>
-        {value === "SCHEDULER" && <EventContainer uhid={uhid} EpId={name} />}
-        {value === "SCHEDULELIST" && <BookingList />} 
-    </>  
+        <Grid md={2}>
+          
+          {/*Operation Theatre Id Drop down on top right START*/}
+          <FormControl fullWidth>
+            {OperationTheatreId != 0 && (
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={OperationTheatreId ?? ""}
+                defaultValue={OperationTheatreId}
+                onChange={(event) => {
+                  setOperationTheatreId(event.target.value);
+                }}
+                style={{ height: 45, width: 200 }}
+              >
+                {masters.loaded &&
+                  allocatedOperationTheatres.map((operationTheatre, key) => {
+                    return (
+                      <MenuItem key={key} value={operationTheatre}>
+                        {
+                          masters.operationTheatreList[operationTheatre - 1]
+                            .name
+                        }
+                      </MenuItem>
+                    );
+                  })}
+              </Select>
+            )}
+          </FormControl>
+          {/*Operation Theatre Id Drop down on top right END*/}
 
-  )
-}
+        </Grid>
+      </Grid>
+      {value === "SCHEDULER" && <EventContainer uhid={uhid} EpId={name} />}
+      {value === "SCHEDULELIST" && <BookingList />}
+    </>
+  );
+};
 
-export default TabMenu
+export default TabMenu;
