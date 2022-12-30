@@ -84,12 +84,14 @@ const BookingRegistrationForm = (props) => {
         },
     };
 
-    const { register, control, formState: { errors }, handleSubmit } = useForm({
+    const { register, control, formState: { isDirty,isValid,errors }, handleSubmit,watch } = useForm({
         defaultValues: {
             RegistrationNo: props.uhid,
             DoctorId: props.EpId,
+
         }
     });
+    const currentFormState = watch();
     // style END
 
     // console.log("register====",register)
@@ -128,11 +130,9 @@ const BookingRegistrationForm = (props) => {
 
 
 
-    const OnSubmit = async (data) => {
-        console.log("submit data : " )
-        console.log("submit data : " , data)
+    const onSubmit = async (data) => {
         data.EmployeeIdArray = [...data.OdEmployeeIdArray, ...data.EmployeeIdArray]
-        // navigate("/");
+        navigate("/");
     };
 
     // function handleSubmit(e) {
@@ -231,7 +231,7 @@ const BookingRegistrationForm = (props) => {
         :
         <>
         <DialogContent dividers >
-        <form onSubmit={handleSubmit(()=>{OnSubmit()})}>
+        <form onSubmit={handleSubmit(onSubmit)}>
             
             <Grid container>
 
@@ -478,7 +478,7 @@ const BookingRegistrationForm = (props) => {
                     <TextField
                         label="Doctor ID"
                         variant="outlined"
-                        // disabled
+                        disabled
                         style={useStyles.textfield}
                         {...register('DoctorId', { required: true })}
                     />
@@ -784,21 +784,20 @@ const BookingRegistrationForm = (props) => {
 
             </Grid>
 
-            
-            <Grid style={{ display: 'flex', align: "right" }}>
-            <Grid style={{ flexGrow: 1 }} item></Grid>
-            <Grid style={{ align: "right" }} item>
-                <Button onClick={() => OnCancel()} variant="outlined" style={{ margin: 12}}>Cancel</Button>
-                <Button onClick={handleSubmit(OnSubmit)}  variant="outlined" style={{ margin: 12}}>Submit</Button>
-            </Grid>
-            </Grid>
+         
 
 
 
         </form>
-        </DialogContent >
 
-        
+        </DialogContent >
+        <Grid style={{ display: 'flex', align: "right" }}>
+        <Grid style={{ flexGrow: 1 }} item></Grid>
+        <Grid style={{ align: "right" }} item>
+            <Button onClick={() => OnCancel()} variant="outlined" style={{ margin: 12}}>Cancel</Button>
+            <Button onClick={handleSubmit(onSubmit)} type='submit' variant="outlined" style={{ margin: 12}}>Submit</Button>
+        </Grid>
+        </Grid>
         </>
 
     )
