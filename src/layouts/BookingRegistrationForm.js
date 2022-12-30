@@ -89,10 +89,12 @@ const BookingRegistrationForm = (props) => {
             RegistrationNo: props.uhid,
             DoctorId: props.EpId,
 
-        }
+        },
+        mode:'all'
     });
     const currentFormState = watch();
     // style END
+
 
     // console.log("register====",register)
 
@@ -127,20 +129,11 @@ const BookingRegistrationForm = (props) => {
     // loads initial value for surgerylist
     //  whem theres no search we need to show a default value
 
-
-
-
-    const onSubmit = async (data) => {
-        data.EmployeeIdArray = [...data.OdEmployeeIdArray, ...data.EmployeeIdArray]
-        navigate("/");
+    const onSave = (data) => {
+        console.log(",,,,,,,,,,,,current",currentFormState)
+        // data.EmployeeIdArray = [...data.OdEmployeeIdArray, ...data.EmployeeIdArray]
+        // navigate("/");
     };
-
-    // function handleSubmit(e) {
-    //     e.preventDefault();
-    //     console.log("submit data : " , e)
-    //     // Save values to DB.
-    // } 
-
 
     const SelectChange = (e) => {
         console.log("typing >>>>>>>>> ", e)
@@ -231,7 +224,7 @@ const BookingRegistrationForm = (props) => {
         :
         <>
         <DialogContent dividers >
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form>
             
             <Grid container>
 
@@ -298,7 +291,7 @@ const BookingRegistrationForm = (props) => {
                         value={WardName}
                         disabled
                         style={useStyles.textfield}
-                    // {...register('Ward', { required: true,minLength: 2})}
+                    {...register('Ward', { required: true,minLength: 2})}
                     />
                 </Grid>
                 {/* Patient Ward Field END */}
@@ -478,7 +471,7 @@ const BookingRegistrationForm = (props) => {
                     <TextField
                         label="Doctor ID"
                         variant="outlined"
-                        disabled
+                        
                         style={useStyles.textfield}
                         {...register('DoctorId', { required: true })}
                     />
@@ -795,7 +788,7 @@ const BookingRegistrationForm = (props) => {
         <Grid style={{ flexGrow: 1 }} item></Grid>
         <Grid style={{ align: "right" }} item>
             <Button onClick={() => OnCancel()} variant="outlined" style={{ margin: 12}}>Cancel</Button>
-            <Button onClick={handleSubmit(onSubmit)} type='submit' variant="outlined" style={{ margin: 12}}>Submit</Button>
+            <Button onClick={()=>onSave()} type='submit' variant="outlined" style={{ margin: 12}}>Submit</Button>
         </Grid>
         </Grid>
         </>
