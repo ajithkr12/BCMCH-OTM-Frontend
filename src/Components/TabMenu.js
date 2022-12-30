@@ -17,6 +17,16 @@ import BookingList from '../layouts/BookingList'
 import { ContextConsumer } from '../Utils/Context';
 
 const TabMenu = () => {
+  const useStyles = {
+    textfield: {
+        width: '100%',
+        fontSize: "14px",
+        height:"40px",
+        margin:"4px 0px 4px 0px",
+
+    },
+
+};
   const { allocatedOperationTheatres,masters } = useContext(ContextConsumer);
 
   let { uhid, name } = useParams();
@@ -57,7 +67,7 @@ const TabMenu = () => {
             // value={OperationTheatreId}
             // defaultValue={masters.operationTheatreList[0].name}
             onChange={handleChangeOT}
-            style={{height:45,width:200}}
+            style={useStyles.textfield}
           >
             {
               masters.loaded && allocatedOperationTheatres.map((operationTheatre, key)=>{
