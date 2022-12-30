@@ -1,6 +1,6 @@
 import React,{useEffect, useState, useContext} from 'react'
 import { GetServerDateTime,GetAllMasters } from '../API/GetMasters';
-
+import { GetEventsAndAllocations } from '../API/GetEventsService';
 
 
 const DataContext = React.createContext()
@@ -21,6 +21,7 @@ function  ContextProvider(props) {
     });
     const [allocatedOperationTheatres,setAllocatedOperationTheatres] = useState([]);
 
+    const [EventsAndAllocations,setEventsAndAllocations] =useState({})
 
 
 
@@ -39,6 +40,12 @@ function  ContextProvider(props) {
         _data.loaded = true;
         setMasters(_data)
     }
+
+    const FetchEventsAndAllocationsData = async ()=>{
+        var _data = await GetEventsAndAllocations();
+        _data.loaded = true;
+        setEventsAndAllocations(_data)
+    }
     // FUNCTIONS USED FOR FETCHING IN CONTEXT ONLY END
 
 
@@ -47,6 +54,7 @@ function  ContextProvider(props) {
     useEffect(()=>{
         FetchDateTimeToday();  
         FetchMasterData();  
+        FetchEventsAndAllocationsData();
     },[]);
 
     
@@ -59,6 +67,7 @@ function  ContextProvider(props) {
             dbdateTimeToday, 
             allocatedOperationTheatres,setAllocatedOperationTheatres,
             masters,
+            EventsAndAllocations,
         }}>
 
             {props.children}
