@@ -24,7 +24,7 @@ import { MenuItem, Select } from "@mui/material";
 
 const EventContainer = (props) => {
   let { uhid, EpId } = props;
-  var OtId=4;
+  var OtId=3;
   const [loading, setLoading] = useState(true);
   const [isEventEditor, setIsEventEditor] = useState(false);
 
@@ -65,28 +65,36 @@ const EventContainer = (props) => {
     return bookingsformatted;
   };
 
-  // const EventsDataFilter = allocation.filter(event => {
-  //   console.log("filter data")
-  //   return event.operationTheatreId === OtId;
-  // });
+
   const CustomEventRenderer = (_event) => {
     // renders the event
     // console.log("event : ", _event)
-    // const _event=EventsDataFilter
-    // console.log("event poda : ", _event)
-    var { _eventStyle } = EventTypeCheck(_event.statusName);
-    return (
-      <div
-        style={_eventStyle}
-        onClick={() => {
-          setIsEventEditor(true);
-          setdataToForm(_event);
-          setBookingFormOpen(true);
-        }}
-      >
-        <div>{_event.title}</div>
-      </div>
-    );
+    if(_event.operationTheatreId === OtId){
+      console.log("event poda@@@ : ", _event)
+      var { _eventStyle } = EventTypeCheck(_event.statusName);
+      return (
+     
+            <div
+            style={_eventStyle}
+            onClick={() => {
+              setIsEventEditor(true);
+              setdataToForm(_event);
+              setBookingFormOpen(true);
+            }}
+          >
+            <div>{_event.title}</div>
+            
+          </div>
+     
+      );
+    }
+    else{
+      return (
+        <div>
+        </div>
+      )
+    }
+
   };
 
   const AllocationDataFilter = allocation.filter(allocation => {
@@ -205,7 +213,7 @@ const EventContainer = (props) => {
         }}
         
         eventRenderer={(event) => CustomEventRenderer(event)}
-
+      
         getRemoteEvents={(e) => {
           // this will be called when we press the event date switcher on the top 
           // console.log(e);
