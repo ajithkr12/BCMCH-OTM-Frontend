@@ -14,7 +14,7 @@ import BookingList from "../layouts/BookingList";
 import { ContextConsumer } from "../Utils/Context";
 
 const TabMenu = () => {
-  const { allocatedOperationTheatres, masters } = useContext(ContextConsumer);
+  const { allocatedOperationTheatres, masters,operationTheatreIdTab,setOperationTheatreIdTab } = useContext(ContextConsumer);
 
   let { uhid, name } = useParams();
   const [value, setValue] = useState("SCHEDULER");
@@ -26,6 +26,8 @@ const TabMenu = () => {
 
   useEffect(() => {
     console.log("OperationTheatreId : ", OperationTheatreId);
+    setOperationTheatreIdTab(OperationTheatreId)
+
   }, [OperationTheatreId]);
 
   useEffect(() => {

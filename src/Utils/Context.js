@@ -20,7 +20,7 @@ function  ContextProvider(props) {
         loaded:false
     });
     const [allocatedOperationTheatres,setAllocatedOperationTheatres] = useState([]);
-
+    const [operationTheatreIdTab,setOperationTheatreIdTab] = useState();
 
 
     // LOCAL FUNCTIONS USED IN CONTEXT ONLY START
@@ -59,6 +59,7 @@ function  ContextProvider(props) {
             dbdateTimeToday, 
             allocatedOperationTheatres,setAllocatedOperationTheatres,
             masters,
+            operationTheatreIdTab,setOperationTheatreIdTab
             
         }}>
 

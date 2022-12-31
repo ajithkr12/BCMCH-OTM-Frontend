@@ -24,15 +24,14 @@ import { MenuItem, Select } from "@mui/material";
 
 const EventContainer = (props) => {
   let { uhid, EpId } = props;
-  var OtId=3;
   const [loading, setLoading] = useState(true);
   const [isEventEditor, setIsEventEditor] = useState(false);
 
   const [events, setEvents] = useState([]);
   const [allocation, setAllocation] = useState([]);
 
-  const { bookingFormOpen, setBookingFormOpen, dbdateTimeToday,setAllocatedOperationTheatres } = useContext(ContextConsumer);
-
+  const { bookingFormOpen, setBookingFormOpen, dbdateTimeToday,setAllocatedOperationTheatres,operationTheatreIdTab,setOperationTheatreIdTab } = useContext(ContextConsumer);
+  console.log('from Event Container',operationTheatreIdTab);
   // const InconomingData = {
   //                 Patientid:"1234",
   //                 SurgeonId:"546",
@@ -69,7 +68,7 @@ const EventContainer = (props) => {
   const CustomEventRenderer = (_event) => {
     // renders the event
     // console.log("event : ", _event)
-    if(_event.operationTheatreId === OtId){
+    if(_event.operationTheatreId === operationTheatreIdTab){
       console.log("event poda@@@ : ", _event)
       var { _eventStyle } = EventTypeCheck(_event.statusName);
       return (
@@ -99,7 +98,7 @@ const EventContainer = (props) => {
 
   const AllocationDataFilter = allocation.filter(allocation => {
     // console.log("filter data")
-    return allocation.operationTheatreId === OtId;
+    return allocation.operationTheatreId === operationTheatreIdTab;
   });
 
   const CustomCellRenderer = (props) => {
