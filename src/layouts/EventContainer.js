@@ -68,7 +68,7 @@ const EventContainer = (props) => {
   const CustomEventRenderer = (_event) => {
     // renders the event
     // console.log("event : ", _event)
-    if(_event.operationTheatreId === operationTheatreIdTab){
+    if(_event.operationTheatreId == operationTheatreIdTab){
       console.log("event poda@@@ : ", _event)
       var { _eventStyle } = EventTypeCheck(_event.statusName);
       return (
@@ -98,7 +98,7 @@ const EventContainer = (props) => {
 
   const AllocationDataFilter = allocation.filter(allocation => {
     // console.log("filter data")
-    return allocation.operationTheatreId === operationTheatreIdTab;
+    return allocation.operationTheatreId == operationTheatreIdTab;
   });
 
   const CustomCellRenderer = (props) => {
@@ -168,7 +168,7 @@ const EventContainer = (props) => {
       // fetches the events and allocations
     }
 
-  }, [schedulerStartDate, dbdateTimeToday ]);
+  }, [schedulerStartDate, dbdateTimeToday,operationTheatreIdTab]);
 
 
 
