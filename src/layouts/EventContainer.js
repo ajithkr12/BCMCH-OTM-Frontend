@@ -42,7 +42,7 @@ const EventContainer = (props) => {
 
   const [dataToForm, setdataToForm] = useState({});
   const [schedulerStartDate, setSchedulerStartDate] = useState("");
-  const [schedulerEndDate, setSchedulerEndDate] = useState("2023-01-02");
+  const [schedulerEndDate, setSchedulerEndDate] = useState("");
 
   const LoadEventsAndAllocations = async () => {
     var departmentId = 1;
@@ -73,7 +73,7 @@ const EventContainer = (props) => {
     // renders the event
     // console.log("event : ", _event)
     // const _event=EventsDataFilter
-    console.log("event poda : ", _event)
+    // console.log("event poda : ", _event)
     var { _eventStyle } = EventTypeCheck(_event.statusName);
     return (
       <div
@@ -90,14 +90,14 @@ const EventContainer = (props) => {
   };
 
   const AllocationDataFilter = allocation.filter(allocation => {
-    console.log("filter data")
+    // console.log("filter data")
     return allocation.operationTheatreId === OtId;
   });
 
   const CustomCellRenderer = (props) => {
     // Renders a single cell in scheduler
     const allocationData = AllocationDataFilter;
-    console.log("filter data..",allocationData)
+    // console.log("filter data..",allocationData)
     var { _style, _isallocatedStatus } = CellStatusCheck(
       // allocation,
       allocationData,
@@ -139,7 +139,20 @@ const EventContainer = (props) => {
       // and then is set as schedulerStartDate using SchedulerStartDate
       if(schedulerStartDate==="")
       {
+        // enters here if schedulerStartDate==="" :
+        // this condition is exeutedd when the code is executed first time 
+        // then we loads the date of today from db and set it as scheduler startdate 
+        // so that the we can fetch the events and allocations from that date  
+        var _endDateTime = new Date(dbdateTimeToday.date);
+        // converts sql date formate to js datetime 
+        _endDateTime.setDate(_endDateTime.getDate() + 6) 
+        // ADDS 6 DAYS TO TODAY - to form end date
+        var _endDate = JsDatetimeToSQLDatetTme(_endDateTime);
+        // converts js date time to sql date , then used to fetch data from db after
+
         setSchedulerStartDate(dbdateTimeToday.date);
+        setSchedulerEndDate(_endDate);
+        
       }
       if(schedulerStartDate!="")
       {
@@ -195,7 +208,7 @@ const EventContainer = (props) => {
 
         getRemoteEvents={(e) => {
           // this will be called when we press the event date switcher on the top 
-          console.log(e);
+          // console.log(e);
           var startDate = JsDatetimeToSQLDatetTme(e.start);
           // console.log("startDate : ",startDate)
           var endDate = JsDatetimeToSQLDatetTme(e.end);
