@@ -40,7 +40,7 @@ export const EventTypeCheck = (eventType) => {
     _eventStyle.cursor ="not-allowed";
     return { _eventStyle };
   }
-  _eventStyle.background = "blue";
+  // _eventStyle.background = "blue";
   return { _eventStyle };
 };
 
