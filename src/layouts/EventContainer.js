@@ -136,7 +136,7 @@ const EventContainer = (props) => {
     {
       // executed only if dbdateTimeToday is fetched in the context. 
       // if dbdateTimeToday the dbdateTimeToday.loaded status will be true 
-      // and then is set as schedulerStartDate using SchedulerStartDate
+      // and then is set as schedulerStartDate using SchedulerStartDate 
       if(schedulerStartDate==="")
       {
         // enters here if schedulerStartDate==="" :
