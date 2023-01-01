@@ -63,8 +63,8 @@ export const GetAllocation = async (_departmentId, _fromDate, _toDate) => {
 
 export const GetEventsAndAllocations = async ( _departmentId, _operationTheatreId, _fromDate, _toDate,setLoading) => {
   
-  _fromDate +="T00:00:00.000Z";
-  _toDate   +="T00:00:00.000Z";
+  _fromDate +="T00:00:00.000";
+  _toDate   +="T00:00:00.000";
   console.log("GetEventsAndAllocations _operationTheatreId : ",_operationTheatreId);
   console.log("GetEventsAndAllocations _fromDate : ",_fromDate);
   console.log("GetEventsAndAllocations  _toDate : ", _toDate);
@@ -108,8 +108,8 @@ export const GetEventsAndAllocations = async ( _departmentId, _operationTheatreI
 
 export const GetAllocatedTheatres = async ( _departmentId, _fromDate, _toDate) => {
   
-  _fromDate +="T00:00:00.000Z";
-  _toDate   +="T00:00:00.000Z";
+  _fromDate +="T00:00:00.000";
+  _toDate   +="T00:00:00.000";
 
   
   console.log("GetAllocatedTheatres start : ",_fromDate)

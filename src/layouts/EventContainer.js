@@ -53,7 +53,7 @@ const EventContainer = (props) => {
     setEvents(bookingsformatted);
     console.log("bookings : ", bookings);
     console.log("allocations : ", allocations);
-    return bookingsformatted;
+    // return bookingsformatted;
   };
 
 
@@ -145,11 +145,17 @@ const EventContainer = (props) => {
       }
       if(schedulerStartDate!=="") 
       {
-        if(!allocatedOperationTheatres.loaded){
+        if(!allocatedOperationTheatres.loaded)
+        {
           FetchAllocatedOperationTheatres(schedulerStartDate, schedulerEndDate);
         }
-        else{
-          if(selectedOperationTheatre!=0){
+        else
+        {
+          if(selectedOperationTheatre!=0)
+          {
+            console.log("EVENT LOADING");
+            console.log(schedulerStartDate," : ", schedulerEndDate);
+            console.log("selectedOperationTheatre : ",selectedOperationTheatre);
             LoadEventsAndAllocations();
           } 
         }
@@ -161,9 +167,13 @@ const EventContainer = (props) => {
 
 
   useEffect(()=>{
-      if(schedulerStartDate!==""){
-        FetchAllocatedOperationTheatres(schedulerStartDate, schedulerEndDate);  
-        // LoadEventsAndAllocations();
+      // enters when we switch between date navigator of scheduler.
+      // and fetches the allocated operation theatre in accordance with that start and end dates. 
+      // then it will automatically re render the Tabmenu because there is a useEffect in TabMenu.js 
+      if(schedulerStartDate!=="")
+      {
+        console.log("FetchAllocatedOperationTheatres : " , selectedOperationTheatre);
+        FetchAllocatedOperationTheatres(schedulerStartDate, schedulerEndDate);
       }
   },[schedulerStartDate])
 
@@ -207,17 +217,8 @@ const EventContainer = (props) => {
           // console.log("endDate : ",endDate)
           setSchedulerStartDate(startDate);
           setSchedulerEndDate(endDate);
-          // if(startDate!=""){
+          // console.log("im here")
 
-          // }
-          // const test = ()=>{
-          //   console.log("data")
-          // }
-          // test()
-          // setAllocatedOperationTheatres({
-          //   list:[],
-          //   loaded:false
-          // })
         }}
         events={events}
         

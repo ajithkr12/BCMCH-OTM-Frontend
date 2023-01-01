@@ -31,7 +31,7 @@ const TabMenu = () => {
 
 
   useEffect(() => {
-    if(allocatedOperationTheatres.loaded!=false){
+    if(allocatedOperationTheatres.loaded){
       setSelectedOperationTheatre(allocatedOperationTheatres.list[0]);
     }
   }, [allocatedOperationTheatres]);
