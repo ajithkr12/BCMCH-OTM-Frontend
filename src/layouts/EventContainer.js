@@ -32,7 +32,7 @@ const EventContainer = (props) => {
   const [events, setEvents] = useState([]);
   const [allocation, setAllocation] = useState([]);
 
-  const { bookingFormOpen, setBookingFormOpen, dbdateTimeToday,setAllocatedOperationTheatres,operationTheatreIdTab,allocatedOperationTheatres,selectedOperationTheatre } = useContext(ContextConsumer);
+  const { bookingFormOpen, setBookingFormOpen, dbdateTimeToday,setAllocatedOperationTheatres,allocatedOperationTheatres,selectedOperationTheatre, setSelectedOperationTheatre } = useContext(ContextConsumer);
  
   const [dataToForm, setdataToForm] = useState({});
   const [schedulerStartDate, setSchedulerStartDate] = useState("");
@@ -107,13 +107,15 @@ const EventContainer = (props) => {
 
 
   
-  const FetchAlllocatedOperationTheatres = async(_startDate, _endDate) =>{
+  const FetchAllocatedOperationTheatres = async(_startDate, _endDate) =>{
     var departmentId = 1;
+    // setSelectedOperationTheatre(0);
     var _allocatedTheatres = await GetAllocatedTheatres(departmentId, _startDate, _endDate);
     setAllocatedOperationTheatres({
       list: _allocatedTheatres,
       loaded: true,
     });
+    // setSelectedOperationTheatre(1);
   }
 
 
@@ -140,20 +142,31 @@ const EventContainer = (props) => {
 
         setSchedulerStartDate(dbdateTimeToday.date);
         setSchedulerEndDate(_endDate);
-
-        if(!allocatedOperationTheatres.loaded){
-          FetchAlllocatedOperationTheatres(dbdateTimeToday.date, _endDate);
-        }
-
       }
-      if((schedulerStartDate!=="") && (allocatedOperationTheatres.loaded)&&(selectedOperationTheatre!=0))
+      if(schedulerStartDate!=="") 
       {
-        LoadEventsAndAllocations();
+        if(!allocatedOperationTheatres.loaded){
+          FetchAllocatedOperationTheatres(schedulerStartDate, schedulerEndDate);
+        }
+        else{
+          if(selectedOperationTheatre!=0){
+            LoadEventsAndAllocations();
+          } 
+        }
       }
       // fetches the events and allocations
     }
 
-  }, [schedulerStartDate, dbdateTimeToday,allocatedOperationTheatres,selectedOperationTheatre]);
+  }, [ dbdateTimeToday,allocatedOperationTheatres,selectedOperationTheatre]);
+
+
+  useEffect(()=>{
+      if(schedulerStartDate!==""){
+        FetchAllocatedOperationTheatres(schedulerStartDate, schedulerEndDate);  
+        // LoadEventsAndAllocations();
+      }
+  },[schedulerStartDate])
+
 
 
 
@@ -194,6 +207,17 @@ const EventContainer = (props) => {
           // console.log("endDate : ",endDate)
           setSchedulerStartDate(startDate);
           setSchedulerEndDate(endDate);
+          // if(startDate!=""){
+
+          // }
+          // const test = ()=>{
+          //   console.log("data")
+          // }
+          // test()
+          // setAllocatedOperationTheatres({
+          //   list:[],
+          //   loaded:false
+          // })
         }}
         events={events}
         

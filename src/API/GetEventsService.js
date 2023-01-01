@@ -65,9 +65,9 @@ export const GetEventsAndAllocations = async ( _departmentId, _operationTheatreI
   
   _fromDate +="T00:00:00.000Z";
   _toDate   +="T00:00:00.000Z";
-
-  console.log("_fromDate : ",_fromDate);
-  console.log(" _toDate : ", _toDate);
+  console.log("GetEventsAndAllocations _operationTheatreId : ",_operationTheatreId);
+  console.log("GetEventsAndAllocations _fromDate : ",_fromDate);
+  console.log("GetEventsAndAllocations  _toDate : ", _toDate);
   setLoading(true);
   try {
     const response = await axios.get(
@@ -85,7 +85,7 @@ export const GetEventsAndAllocations = async ( _departmentId, _operationTheatreI
     if (response.data.success === false) {
       throw new Error(response.data.response);
     }
-    console.log(response.data.data)
+    console.log(" GetEventsAndAllocations response : " ,response.data.data)
     return {
       bookings: response.data.data.bookings,
       allocations: response.data.data.allocations,
@@ -106,11 +106,14 @@ export const GetEventsAndAllocations = async ( _departmentId, _operationTheatreI
 
 
 
-export const GetAllocatedTheatres = async ( _departmentId, _fromDate, _toDate,setLoading) => {
+export const GetAllocatedTheatres = async ( _departmentId, _fromDate, _toDate) => {
   
   _fromDate +="T00:00:00.000Z";
   _toDate   +="T00:00:00.000Z";
 
+  
+  console.log("GetAllocatedTheatres start : ",_fromDate)
+  console.log("GetAllocatedTheatres end : ",_toDate )
   try {
     const response = await axios.get(
       ConstantURL.GetAllocatedOperationTheatres,
@@ -126,6 +129,7 @@ export const GetAllocatedTheatres = async ( _departmentId, _fromDate, _toDate,se
     if (response.data.success === false) {
       throw new Error(response.data.response);
     }
+    
     return response.data.data;
   } catch (error) {
     const _error =
@@ -134,5 +138,6 @@ export const GetAllocatedTheatres = async ( _departmentId, _fromDate, _toDate,se
       error.toString();
     console.log("error in GetAllocatedTheatres() : ", _error);
   } finally {
+    
   }
 };
