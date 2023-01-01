@@ -27,16 +27,19 @@ export const EventDataFormatter = async (eventsFetchedFromDb) => {
 export const EventTypeCheck = (eventType) => {
   var _eventStyle = {};
   _eventStyle.height = "100%";
-  _eventStyle.width = "100%";
+  _eventStyle.width = "105%";
   _eventStyle.display = "flex";
   _eventStyle.flexDirection = "column";
-  _eventStyle.justifyContent = "space-between";
+  _eventStyle.justifyContent = "space-around";
+  _eventStyle.alignItems="center";
+  _eventStyle.borderRadius = "4%";
+  _eventStyle.color = "black";
 
   if (eventType === "BOOKED") {
-    _eventStyle.background = "green";
+    _eventStyle.background = "#B6E2A1";
     return { _eventStyle };
   } else if (eventType === "BLOCKED") {
-    _eventStyle.background = "red";
+    _eventStyle.background = "#FF6464";
     _eventStyle.cursor ="not-allowed";
     return { _eventStyle };
   }
@@ -76,12 +79,12 @@ export const IsAllocated = (_allocations, _startTimeToCheck, _endTimeToCheck) =>
     _style.height= "100%";
     
     if(!_isallocatedStatus){
-      _style.background ="#cccc";
+      _style.background ="#D8D9CF";
       _style.cursor ="not-allowed";
       return {_style, _isallocatedStatus};
     }
     
-    _style.background ="white";
+    _style.background ="#FFFFFF";
     _style.cursor ="pointer";
     
 

@@ -61,7 +61,7 @@ const EventContainer = (props) => {
       var { _eventStyle } = EventTypeCheck(_event.statusName);
       return (
      
-            <div
+          <div
             style={_eventStyle}
             onClick={() => {
               setIsEventEditor(true);
@@ -69,7 +69,8 @@ const EventContainer = (props) => {
               setBookingFormOpen(true);
             }}
           >
-            <div>{_event.title}</div>    
+            <p>{_event.title}</p>    
+            <p>{_event.patientRegistrationNo}</p> 
           </div>
       );
     
