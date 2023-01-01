@@ -74,7 +74,7 @@ export const GetServerDateTime = async () => {
     });
 
     if (response.data.success === false) {
-      throw new Error(response.data.response);
+      throw new Error("backenderror,",response.data.response);
     }
     return response.data.data;
   } catch (error) {
@@ -82,8 +82,8 @@ export const GetServerDateTime = async () => {
       (error.response && error.response.data && error.response.data.message) ||
       error.message ||
       error.toString();
-    console.log("error vannu : ", _error);
-    return [];
+    console.log("Fetch Error : ", _error);
+    return "";
   } finally {
     // console.log(
     //   "The Promise is settled, meaning it has been resolved or rejected."

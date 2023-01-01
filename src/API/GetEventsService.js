@@ -61,7 +61,7 @@ export const GetAllocation = async (_departmentId, _fromDate, _toDate) => {
   }
 };
 
-export const GetEventsAndAllocations = async ( _departmentId, _fromDate, _toDate,setLoading) => {
+export const GetEventsAndAllocations = async ( _departmentId, _operationTheatreId, _fromDate, _toDate,setLoading) => {
   
   _fromDate +="T00:00:00.000Z";
   _toDate   +="T00:00:00.000Z";
@@ -75,6 +75,7 @@ export const GetEventsAndAllocations = async ( _departmentId, _fromDate, _toDate
       {
         params: {
           departmentId: _departmentId,
+          operationTheatreId: _operationTheatreId,
           fromDate: _fromDate,
           toDate: _toDate,
         },
@@ -88,7 +89,6 @@ export const GetEventsAndAllocations = async ( _departmentId, _fromDate, _toDate
     return {
       bookings: response.data.data.bookings,
       allocations: response.data.data.allocations,
-      allocatedOperationTheatres: response.data.data.allocatedOperationTheatres,
     };
   } catch (error) {
     const _error =
@@ -101,5 +101,38 @@ export const GetEventsAndAllocations = async ( _departmentId, _fromDate, _toDate
     //   "The Promise is settled, meaning it has been resolved or rejected."
     // );
     setLoading(false);
+  }
+};
+
+
+
+export const GetAllocatedTheatres = async ( _departmentId, _fromDate, _toDate,setLoading) => {
+  
+  _fromDate +="T00:00:00.000Z";
+  _toDate   +="T00:00:00.000Z";
+
+  try {
+    const response = await axios.get(
+      ConstantURL.GetAllocatedOperationTheatres,
+      {
+        params: {
+          departmentId: _departmentId,
+          fromDate: _fromDate,
+          toDate: _toDate,
+        },
+      },
+      { "Content-Type": "application/json", Accept: "*/*" }
+    );
+    if (response.data.success === false) {
+      throw new Error(response.data.response);
+    }
+    return response.data.data;
+  } catch (error) {
+    const _error =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    console.log("error in GetAllocatedTheatres() : ", _error);
+  } finally {
   }
 };

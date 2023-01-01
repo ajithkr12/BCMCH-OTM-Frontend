@@ -7,6 +7,7 @@ import Loader from "../Components/Loader";
 
 import { ContextConsumer } from "../Utils/Context";
 import {
+  GetAllocatedTheatres,
   GetAllocation,
   GetEvents,
   GetEventsAndAllocations,
@@ -22,6 +23,7 @@ import {
 } from "../services/DateTimeServices";
 import { MenuItem, Select } from "@mui/material";
 
+
 const EventContainer = (props) => {
   let { uhid, EpId } = props;
   const [loading, setLoading] = useState(true);
@@ -30,15 +32,8 @@ const EventContainer = (props) => {
   const [events, setEvents] = useState([]);
   const [allocation, setAllocation] = useState([]);
 
-  const { bookingFormOpen, setBookingFormOpen, dbdateTimeToday,setAllocatedOperationTheatres,operationTheatreIdTab,setOperationTheatreIdTab } = useContext(ContextConsumer);
-  console.log('from Event Container',operationTheatreIdTab);
-  // const InconomingData = {
-  //                 Patientid:"1234",
-  //                 SurgeonId:"546",
-  //                 DepartmentId:"546",
-  //               };
-  // console.log("date: ",new Date("02-02-2022"))
-
+  const { bookingFormOpen, setBookingFormOpen, dbdateTimeToday,setAllocatedOperationTheatres,operationTheatreIdTab,allocatedOperationTheatres,selectedOperationTheatre } = useContext(ContextConsumer);
+ 
   const [dataToForm, setdataToForm] = useState({});
   const [schedulerStartDate, setSchedulerStartDate] = useState("");
   const [schedulerEndDate, setSchedulerEndDate] = useState("");
@@ -46,30 +41,23 @@ const EventContainer = (props) => {
   const LoadEventsAndAllocations = async () => {
     var departmentId = 1;
 
-    const { bookings, allocations,allocatedOperationTheatres } = await GetEventsAndAllocations(
+    const { bookings, allocations } = await GetEventsAndAllocations(
                                             departmentId,
+                                            selectedOperationTheatre,
                                             schedulerStartDate,
                                             schedulerEndDate,
                                             setLoading
                                           );
     var bookingsformatted = await EventDataFormatter(bookings);
-
-    setAllocatedOperationTheatres(allocatedOperationTheatres);
     setAllocation(allocations);
     setEvents(bookingsformatted);
     console.log("bookings : ", bookings);
     console.log("allocations : ", allocations);
-    console.log("allocatedOperationTheatres : ", allocatedOperationTheatres);
-    
     return bookingsformatted;
   };
 
 
   const CustomEventRenderer = (_event) => {
-    // renders the event
-    // console.log("event : ", _event)
-    if(_event.operationTheatreId == operationTheatreIdTab){
-      console.log("event poda@@@ : ", _event)
       var { _eventStyle } = EventTypeCheck(_event.statusName);
       return (
      
@@ -81,33 +69,17 @@ const EventContainer = (props) => {
               setBookingFormOpen(true);
             }}
           >
-            <div>{_event.title}</div>
-            
+            <div>{_event.title}</div>    
           </div>
-     
       );
-    }
-    else{
-      return (
-        <div>
-        </div>
-      )
-    }
+    
 
   };
 
-  const AllocationDataFilter = allocation.filter(allocation => {
-    // console.log("filter data")
-    return allocation.operationTheatreId == operationTheatreIdTab;
-  });
 
   const CustomCellRenderer = (props) => {
-    // Renders a single cell in scheduler
-    const allocationData = AllocationDataFilter;
-    // console.log("filter data..",allocationData)
     var { _style, _isallocatedStatus } = CellStatusCheck(
-      // allocation,
-      allocationData,
+      allocation,
       props.start,
       props.end
     );
@@ -134,12 +106,21 @@ const EventContainer = (props) => {
   };
 
 
+  
+  const FetchAlllocatedOperationTheatres = async(_startDate, _endDate) =>{
+    var departmentId = 1;
+    var _allocatedTheatres = await GetAllocatedTheatres(departmentId, _startDate, _endDate);
+    setAllocatedOperationTheatres({
+      list: _allocatedTheatres,
+      loaded: true,
+    });
+  }
 
 
   
   useEffect(() => {
     // executes whenever there is a change in schedulerStartDate, dbdateTimeToday
-    if (dbdateTimeToday.loaded === true) 
+    if ((dbdateTimeToday.loaded === true)) 
     {
       // executed only if dbdateTimeToday is fetched in the context. 
       // if dbdateTimeToday the dbdateTimeToday.loaded status will be true 
@@ -159,16 +140,20 @@ const EventContainer = (props) => {
 
         setSchedulerStartDate(dbdateTimeToday.date);
         setSchedulerEndDate(_endDate);
-        
+
+        if(!allocatedOperationTheatres.loaded){
+          FetchAlllocatedOperationTheatres(dbdateTimeToday.date, _endDate);
+        }
+
       }
-      if(schedulerStartDate!="")
+      if((schedulerStartDate!=="") && (allocatedOperationTheatres.loaded)&&(selectedOperationTheatre!=0))
       {
         LoadEventsAndAllocations();
       }
       // fetches the events and allocations
     }
 
-  }, [schedulerStartDate, dbdateTimeToday,operationTheatreIdTab]);
+  }, [schedulerStartDate, dbdateTimeToday,allocatedOperationTheatres,selectedOperationTheatre]);
 
 
 
@@ -178,19 +163,6 @@ const EventContainer = (props) => {
   (
     <>
 
-{/*  */}
-      {/* <Select
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
-        // value={OperationTheatreId}
-        // onChange={handleChangeOT}
-        style={{height:45,width:200, alignContent:"right", alignSelf:"right"}}
-      >
-        <MenuItem value={10}>Ten</MenuItem>
-        <MenuItem value={20}>Twenty</MenuItem>
-        <MenuItem value={30}>Thirty</MenuItem>
-      </Select> */}
-{/*  */}
     
       <Scheduler
         loading={loading}

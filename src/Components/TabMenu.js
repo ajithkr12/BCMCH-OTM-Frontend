@@ -14,25 +14,26 @@ import BookingList from "../layouts/BookingList";
 import { ContextConsumer } from "../Utils/Context";
 
 const TabMenu = () => {
-  const { allocatedOperationTheatres, masters,operationTheatreIdTab,setOperationTheatreIdTab } = useContext(ContextConsumer);
+  const { allocatedOperationTheatres, masters,selectedOperationTheatre, setSelectedOperationTheatre } = useContext(ContextConsumer);
 
   let { uhid, name } = useParams();
   const [value, setValue] = useState("SCHEDULER");
-  const [OperationTheatreId, setOperationTheatreId] = useState(0);
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  useEffect(() => {
-    console.log("OperationTheatreId : ", OperationTheatreId);
-    setOperationTheatreIdTab(OperationTheatreId)
+  // useEffect(() => {
+  //   console.log("selectedOperationTheatre : ", selectedOperationTheatre);
+  //   setSelectedOperationTheatre(selectedOperationTheatre)
+  // }, [selectedOperationTheatre]);
 
-  }, [OperationTheatreId]);
 
   useEffect(() => {
-    console.log("allocatedOperationTheatres: ", allocatedOperationTheatres);
-    setOperationTheatreId(allocatedOperationTheatres[0]);
+    if(allocatedOperationTheatres.loaded!=false){
+      setSelectedOperationTheatre(allocatedOperationTheatres.list[0]);
+    }
   }, [allocatedOperationTheatres]);
 
   return (
@@ -54,19 +55,19 @@ const TabMenu = () => {
           
           {/*Operation Theatre Id Drop down on top right START*/}
           <FormControl fullWidth>
-            {OperationTheatreId != 0 && (
+            {selectedOperationTheatre !== 0 && (
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={OperationTheatreId ?? ""}
-                defaultValue={OperationTheatreId}
+                value={selectedOperationTheatre ?? ""}
+                defaultValue={selectedOperationTheatre}
                 onChange={(event) => {
-                  setOperationTheatreId(event.target.value);
+                  setSelectedOperationTheatre(event.target.value);
                 }}
                 style={{ height: 45, width: 200 }}
               >
                 {masters.loaded &&
-                  allocatedOperationTheatres.map((operationTheatre, key) => {
+                  allocatedOperationTheatres.list.map((operationTheatre, key) => {
                     return (
                       <MenuItem key={key} value={operationTheatre}>
                         {
