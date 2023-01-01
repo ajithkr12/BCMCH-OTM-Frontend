@@ -116,7 +116,9 @@ const EventContainer = (props) => {
       list: _allocatedTheatres,
       loaded: true,
     });
-    // setSelectedOperationTheatre(1);
+    // set the selectedoperation theatre as the first otid of the allocated theatres array
+    setSelectedOperationTheatre(_allocatedTheatres[0]);
+    // by doing this we set the default value to the ot selector drop down
   }
 
 
@@ -175,6 +177,7 @@ const EventContainer = (props) => {
       {
         console.log("FetchAllocatedOperationTheatres : " , selectedOperationTheatre);
         FetchAllocatedOperationTheatres(schedulerStartDate, schedulerEndDate);
+        
       }
   },[schedulerStartDate])
 

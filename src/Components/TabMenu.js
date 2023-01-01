@@ -30,12 +30,14 @@ const TabMenu = () => {
   // }, [selectedOperationTheatre]);
 
 
-  useEffect(() => {
-    if(allocatedOperationTheatres.loaded){
-      setSelectedOperationTheatre(allocatedOperationTheatres.list[0]);
-    }
-  }, [allocatedOperationTheatres]);
+  // useEffect(() => {
+  //   if(allocatedOperationTheatres.loaded){
+  //     console.log("changed here ");
+  //     setSelectedOperationTheatre(allocatedOperationTheatres.list[0]);
+  //   }
+  // }, [allocatedOperationTheatres]);
 
+  
   return (
     <>
       <Grid container style={{ marginBottom: "2%" }}>
