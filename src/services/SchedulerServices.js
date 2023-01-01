@@ -30,13 +30,16 @@ export const EventTypeCheck = (eventType) => {
   _eventStyle.width = "100%";
   _eventStyle.display = "flex";
   _eventStyle.flexDirection = "column";
-  _eventStyle.justifyContent = "space-between";
+  _eventStyle.justifyContent = "center";
+  _eventStyle.alignItems="center";
+  _eventStyle.borderRadius = "4%";
+  _eventStyle.color = "black";
 
   if (eventType === "BOOKED") {
-    _eventStyle.background = "green";
+    _eventStyle.background = "#B6E2A1";
     return { _eventStyle };
   } else if (eventType === "BLOCKED") {
-    _eventStyle.background = "red";
+    _eventStyle.background = "#CB1C8D";
     _eventStyle.cursor ="not-allowed";
     return { _eventStyle };
   }
@@ -76,12 +79,12 @@ export const IsAllocated = (_allocations, _startTimeToCheck, _endTimeToCheck) =>
     _style.height= "100%";
     
     if(!_isallocatedStatus){
-      _style.background ="#cccc";
+      _style.background ="#62B6B7";
       _style.cursor ="not-allowed";
       return {_style, _isallocatedStatus};
     }
     
-    _style.background ="white";
+    _style.background ="#3F3B6C";
     _style.cursor ="pointer";
     
 
