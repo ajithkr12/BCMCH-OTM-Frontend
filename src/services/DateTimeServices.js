@@ -11,16 +11,9 @@ export const JsDatetimeToSQLDatetTme = (_datetime) => {
 
 
 export const DateOnly = (_datetime) =>{
-    var startDay =("0" + (_datetime.getDate())).slice(-2)
-    // if(startDay.length===1){
-    //     startDay= "0"+String(startDay);
-    // }
-    var startMonth =("0" + (_datetime.getMonth())).slice(-2)
-    // var startMonth = _datetime.getMonth() + 1;
-    // if(startMonth.length===1){
-    //     startMonth= "0"+String(startMonth);
-    // }
-    var startYear = _datetime.getFullYear();
-    var startDate =startYear + "-"+ startMonth + "-"  + startDay;
-    return startDate
+    var Day =("0" + (_datetime.getDate())).slice(-2)
+    var Month =("0" + (_datetime.getMonth())).slice(-2)
+    var Year = _datetime.getFullYear();
+    var Date =Year + "-"+ Month + "-"  + Day;
+    return Date
 }
