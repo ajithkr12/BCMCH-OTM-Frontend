@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import EventContainer from "../layouts/EventContainer";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { Grid } from "@mui/material";
+import { createMuiTheme, Grid } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 
 import FormControl from "@mui/material/FormControl";
@@ -12,6 +12,7 @@ import Select from "@mui/material/Select";
 
 import BookingList from "../layouts/BookingList";
 import { ContextConsumer } from "../Utils/Context";
+import { Colors } from "../Constants/Colors";
 
 const TabMenu = () => {
   const { allocatedOperationTheatres, masters,selectedOperationTheatre, setSelectedOperationTheatre } = useContext(ContextConsumer);
@@ -37,6 +38,7 @@ const TabMenu = () => {
   //   }
   // }, [allocatedOperationTheatres]);
 
+
   
   return (
     <>
@@ -45,11 +47,9 @@ const TabMenu = () => {
           <Tabs
             value={value}
             onChange={handleChange}
-            textColor="secondary"
-            indicatorColor="secondary"
             aria-label="secondary tabs example"
           >
-            <Tab value="SCHEDULER" label="scheduler" />
+            <Tab value="SCHEDULER" label="Scheduler" />
             <Tab value="SCHEDULELIST" label="Booking List" />
           </Tabs>
         </Grid>

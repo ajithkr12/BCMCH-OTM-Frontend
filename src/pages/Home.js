@@ -34,7 +34,6 @@ const Home = () => {
 
   return (
     <div>
-
       <Header open={open} setOpen={setOpen}/>
       <SideMenu open={open} setOpen={setOpen}/>
       <Main open={open}>
