@@ -177,7 +177,6 @@ const EventContainer = (props) => {
       {
         console.log("FetchAllocatedOperationTheatres : " , selectedOperationTheatre);
         FetchAllocatedOperationTheatres(schedulerStartDate, schedulerEndDate);
-        
       }
   },[schedulerStartDate])
 
