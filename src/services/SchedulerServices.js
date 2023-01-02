@@ -32,7 +32,7 @@ export const EventTypeCheck = (eventType) => {
   _eventStyle.flexDirection = "column";
   _eventStyle.justifyContent = "space-around";
   _eventStyle.alignItems="center";
-  _eventStyle.borderRadius = "4%";
+  _eventStyle.borderRadius = "8px";
   _eventStyle.color = "black";
 
   if (eventType === "BOOKED") {
