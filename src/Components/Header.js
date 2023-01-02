@@ -9,7 +9,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Stack, Avatar } from "@mui/material";
 import { Colors } from "../Constants/Colors";
 
-const drawerWidth = 240;
+const drawerWidth = 220;
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -17,13 +17,17 @@ const AppBar = styled(MuiAppBar, {
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
+  
+  
   }),
   ...(open && {
-    width: `calc(100% - ${drawerWidth}px)`,
+   
     marginLeft: `${drawerWidth}px`,
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
+      
+
     }),
   }),
 }));
@@ -32,7 +36,7 @@ const Header = (props) => {
   const { open, setOpen } = props;
 
   const handleDrawerOpen = () => {
-    setOpen(true);
+    setOpen(!open);
   };
 
   return (
@@ -40,7 +44,7 @@ const Header = (props) => {
       position="fixed"
       open={open}
       elevation={0}
-      style={{ background: Colors.PrimaryBlue, boxShadow: 0 }}
+      style={{ background: Colors.PrimaryBlue, boxShadow: 0 ,zIndex:2000}}
     >
       <Toolbar>
         <IconButton
@@ -48,7 +52,7 @@ const Header = (props) => {
           aria-label="open drawer"
           onClick={handleDrawerOpen}
           edge="start"
-          sx={{ mr: 2, ...(open && { display: "none" }) }}
+          sx={{ mr: 2,}}
         >
           <MenuIcon />
         </IconButton>
@@ -64,3 +68,6 @@ const Header = (props) => {
   );
 };
 export default Header;
+
+// sx={{ mr: 2, ...(open && { display: "none" }) }}
+
