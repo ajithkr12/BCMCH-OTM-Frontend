@@ -14,9 +14,23 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { styled } from '@mui/material/styles';
 
 import Dots from '../Components/Dots';
+import { Colors } from "../Constants/Colors";
 
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: '#FFFFFF',
+  },
+  '&:nth-of-type(even)': {
+    backgroundColor: '#D7E9B9',
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
 function createData(uhid, patientName, surgeonName, surgeryName, pac,admit,ready) {
   return {
     uhid, 
@@ -51,14 +65,15 @@ function EnhancedTableHead(props) {
   // const createSortHandler = (property) => (event) => {
   //   onRequestSort(event, property);
   // };
+  console.log("row count",rowCount)
 
   return (
-    <TableHead>
+    <TableHead style={{backgroundColor:Colors.SecondaryBlue, color: 'white'}}>
       <TableRow>
         <TableCell padding="checkbox">
         <IconButton>
         <DeleteIcon />
-      </IconButton>
+        </IconButton>
         </TableCell>
         <TableCell padding="checkbox">
         <Checkbox
@@ -71,13 +86,13 @@ function EnhancedTableHead(props) {
           }}
         />
       </TableCell>
-        <TableCell align="center">Patient's UHID</TableCell>
-        <TableCell align="center">Patient's Name</TableCell>
-        <TableCell align="center">Surgeon's Name</TableCell>
-        <TableCell align="center">Surgery's Name</TableCell>
-        <TableCell align="center">PAC Status</TableCell>
-        <TableCell align="center">Admit Status</TableCell>
-        <TableCell align="center">Ready Status</TableCell>
+        <TableCell align="center" style={{fontWeight:800}}>Patient's UHID</TableCell>
+        <TableCell align="center" style={{fontWeight:800}}>Patient's Name</TableCell>
+        <TableCell align="center" style={{fontWeight:800}}>Surgeon's Name</TableCell>
+        <TableCell align="center" style={{fontWeight:800}}>Surgery's Name</TableCell>
+        <TableCell align="center" style={{fontWeight:800}}>PAC Status</TableCell>
+        <TableCell align="center" style={{fontWeight:800}}>Admit Status</TableCell>
+        <TableCell align="center" style={{fontWeight:800}}>Ready Status</TableCell>
       </TableRow>
     </TableHead>
   );
@@ -94,7 +109,6 @@ EnhancedTableHead.propTypes = {
 
 function EnhancedTableToolbar(props) {
   const { numSelected } = props;
-
   return (
     <Toolbar
       sx={{
@@ -122,7 +136,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Lists
+          
         </Typography>
       )}
 
@@ -173,7 +187,6 @@ export default function EnhancedTable() {
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -195,7 +208,7 @@ export default function EnhancedTable() {
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
-                    <TableRow
+                    <StyledTableRow
                       hover
                       onClick={(event) => handleClick(event, row.name)}
                       role="checkbox"
@@ -233,7 +246,7 @@ export default function EnhancedTable() {
                       <TableCell align="center"><Dots/></TableCell>
                       <TableCell align="center"><Dots/></TableCell>
                       <TableCell align="center"><Dots/></TableCell>
-                    </TableRow>
+                    </StyledTableRow>
                   );
                 })}
 
@@ -245,5 +258,4 @@ export default function EnhancedTable() {
     </Box>
   );
 }
-
 
