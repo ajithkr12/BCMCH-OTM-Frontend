@@ -42,7 +42,7 @@ const TabMenu = () => {
   
   return (
     <>
-      <Grid container style={{ marginBottom: "2%" }}>
+      <Grid container md={12} style={{ marginBottom: "2%",backgroundColor:"#FFFFFF",paddingTop:"40px"}} >
         <Grid md={10}>
           <Tabs
             value={value}
@@ -66,7 +66,7 @@ const TabMenu = () => {
                 onChange={(event) => {
                   setSelectedOperationTheatre(event.target.value);
                 }}
-                style={{ height: 45, width: 200 }}
+                style={{ height: 45, width: "100%" }}
               >
                 {masters.loaded &&
                   allocatedOperationTheatres.list.map((operationTheatre, key) => {

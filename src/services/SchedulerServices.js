@@ -8,6 +8,7 @@ export const EventDataFormatter = async (eventsFetchedFromDb) => {
   try {
     var reformattedArray = await eventsFetchedFromDb.map(
       ({ event_id, startDate, endDate, ...props }) => ({
+        ["event_id"]:event_id,
         ["title"]: "event " + event_id,
         ["start"]: new Date(startDate),
         ["end"]: new Date(endDate),

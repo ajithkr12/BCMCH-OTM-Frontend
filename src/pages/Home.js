@@ -11,7 +11,8 @@ const drawerWidth = 240;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
       flexGrow: 1,
-      padding: theme.spacing(3),
+      // padding: theme.spacing(2),
+      padding: "0px 20px 20px 20px",
       transition: theme.transitions.create('margin', {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
@@ -25,6 +26,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
         marginLeft: `${drawerWidth}px`,
       }),
       marginTop:60,
+      backgroundColor:"#FFFFFF"
       
     }),
   );

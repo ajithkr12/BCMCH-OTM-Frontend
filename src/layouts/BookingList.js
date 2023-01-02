@@ -85,7 +85,7 @@ function EnhancedTableHead(props) {
 
   return (
     <TableHead
-      style={{ backgroundColor: Colors.SecondaryBlue, color: "white" }}
+      style={{ backgroundColor: Colors.SecondaryBlue, color: "white"}}
     >
       <TableRow>
         <TableCell padding="checkbox">
@@ -215,7 +215,7 @@ export default function EnhancedTable() {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "100%" }} style={{marginTop:""}}>
       <DateNavigator
         selectedDate={new Date()}
         onChange={(e) => {
