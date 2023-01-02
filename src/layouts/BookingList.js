@@ -216,7 +216,6 @@ export default function EnhancedTable() {
 
   return (
     <Box sx={{ width: "100%" }}>
-
       <DateNavigator
         selectedDate={new Date()}
         onChange={(e) => {
