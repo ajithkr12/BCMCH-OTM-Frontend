@@ -64,6 +64,9 @@ const EventContainer = (props) => {
           <div
             style={_eventStyle}
             onClick={() => {
+              if (_event.statusName=="BLOCKED") {
+                return "";
+              }
               setIsEventEditor(true);
               setdataToForm(_event);
               setBookingFormOpen(true);
