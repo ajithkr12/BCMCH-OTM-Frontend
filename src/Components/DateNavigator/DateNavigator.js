@@ -9,15 +9,17 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
-const WeekDateBtn = (props) => {
+const DateNavigator = (props) => {
 
+    const {selectedDate,onChange} = props;
+    
     const AddSevenDays = (_datetoadd, _daysToAdd) =>{
         var _date = new Date(_datetoadd);
         _date.setDate(_date.getDate() + _daysToAdd) ;
         return _date;
     }
     
-    const {selectedDate,onChange} = props.props;
+    
 
     const [startDate, setStartDate] = useState(selectedDate);
     const [endDate, setEndDate] = useState(AddSevenDays(startDate,6));
@@ -50,7 +52,14 @@ const WeekDateBtn = (props) => {
     },[endDate])
 
   return (
-    <>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      <div data-testid="date-navigator">
       <LocaleArrow type="prev" onClick={handlePrev} />
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
@@ -70,10 +79,10 @@ const WeekDateBtn = (props) => {
             )}
         />
       </LocalizationProvider>
-
       <LocaleArrow type="next" onClick={handleNext} />
-    </>
+    </div>
+    </div>
   );
 };
 
-export default WeekDateBtn;
+export default DateNavigator;

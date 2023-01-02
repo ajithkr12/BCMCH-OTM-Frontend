@@ -18,7 +18,8 @@ import { styled } from "@mui/material/styles";
 
 import Dots from "../Components/Dots";
 import { Colors } from "../Constants/Colors";
-import DateNav from "../Components/DateNavigator/DateNav";
+import DateNavigator from "../Components/DateNavigator/DateNavigator";
+// import WeekDateBtn from "../Components/DateNavigator/WeekDateBtn"
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
@@ -215,8 +216,8 @@ export default function EnhancedTable() {
 
   return (
     <Box sx={{ width: "100%" }}>
-      
-      <DateNav
+
+      <DateNavigator
         selectedDate={new Date()}
         onChange={(e) => {
           console.log("handle here :", e);
