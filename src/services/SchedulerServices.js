@@ -28,7 +28,7 @@ export const EventDataFormatter = async (eventsFetchedFromDb) => {
 export const EventTypeCheck = (eventType) => {
   var _eventStyle = {};
   _eventStyle.height = "100%";
-  _eventStyle.width = "105%";
+  // _eventStyle.width = "105%";
   _eventStyle.display = "flex";
   _eventStyle.flexDirection = "column";
   _eventStyle.justifyContent = "space-around";

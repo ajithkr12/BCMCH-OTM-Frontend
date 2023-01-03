@@ -40,8 +40,7 @@ const Home = () => {
       <SideMenu open={open} setOpen={setOpen}/>
       <Main open={open}>
         <TabMenu />
-      </Main>
-      
+      </Main> 
     </div>
   )
 }

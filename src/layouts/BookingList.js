@@ -20,6 +20,7 @@ import Dots from "../Components/Dots";
 import { Colors } from "../Constants/Colors";
 import DateNavigator from "../Components/DateNavigator/DateNavigator";
 // import WeekDateBtn from "../Components/DateNavigator/WeekDateBtn"
+import DetailedSideView from "../Components/DetailedSideView"
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
@@ -182,6 +183,7 @@ EnhancedTableToolbar.propTypes = {
 
 export default function EnhancedTable() {
   const [selected, setSelected] = React.useState([]);
+  const [openDetailed, setOpenDetailed] = React.useState(false);
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -195,6 +197,7 @@ export default function EnhancedTable() {
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
+    setOpenDetailed(!openDetailed)
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
@@ -215,7 +218,8 @@ export default function EnhancedTable() {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   return (
-    <Box sx={{ width: "100%" }} style={{marginTop:""}}>
+    <Box sx={{ width: "100%" }}>
+    <DetailedSideView openDetailed={openDetailed} setOpenDetailed={setOpenDetailed}/>
       <DateNavigator
         selectedDate={new Date()}
         onChange={(e) => {
@@ -273,6 +277,7 @@ export default function EnhancedTable() {
                       scope="row"
                       padding="none"
                       align="center"
+                      // onClick={(event) => handleClick(event, row.name)}
                     >
                       {row.uhid}
                     </TableCell>
