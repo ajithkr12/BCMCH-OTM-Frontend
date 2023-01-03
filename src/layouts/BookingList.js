@@ -284,6 +284,7 @@ export default function EnhancedTable() {
                       padding="none"
                       align="center"
                       onClick={(event) => OpenDetailedClick(event, row.uhid)}
+                      style={{cursor:"pointer",textDecoration:"underline"}}
                     >
                       {row.uhid}
                     </TableCell>
