@@ -55,19 +55,19 @@ function createData(
 }
 
 const rows = [
+  createData("ABGTH1245681", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
+  createData("ABGTH1245682", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
+  createData("ABGTH1245683", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
+  createData("ABGTH1245684", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
+  createData("ABGTH1245685", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
+  createData("ABGTH1245686", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
   createData("ABGTH1245687", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
-  createData("ABGTH1245687", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
-  createData("ABGTH1245687", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
-  createData("ABGTH1245687", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
-  createData("ABGTH1245687", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
-  createData("ABGTH1245687", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
-  createData("ABGTH1245687", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
-  createData("ABGTH1245687", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
-  createData("ABGTH1245687", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
-  createData("ABGTH1245687", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
-  createData("ABGTH1245687", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
-  createData("ABGTH1245687", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
-  createData("ABGTH1245687", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
+  createData("ABGTH1245688", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
+  createData("ABGTH1245689", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
+  createData("ABGTH1245610", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
+  createData("ABGTH1245611", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
+  createData("ABGTH1245612", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
+  createData("ABGTH1245613", "Ravi Shangar", "Alex", "Xyz abc", "Y", "Y", "Y"),
 ];
 
 function EnhancedTableHead(props) {
@@ -187,20 +187,20 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
+      const newSelected = rows.map((n) => n.uhid);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, uhid) => {
+    const selectedIndex = selected.indexOf(uhid);
     let newSelected = [];
-    setOpenDetailed(!openDetailed)
+   
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, uhid);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -215,7 +215,11 @@ export default function EnhancedTable() {
     setSelected(newSelected);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  const OpenDetailedClick = (event, uhid) => {
+    setOpenDetailed(!openDetailed)
+  };
+
+  const isSelected = (uhid) => selected.indexOf(uhid) !== -1;
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -244,17 +248,18 @@ export default function EnhancedTable() {
             />
             <TableBody>
               {rows.map((row, index) => {
-                const isItemSelected = isSelected(row.name);
+                const isItemSelected = isSelected(row.uhid);
+                console.log('row number',row.uhid,"----",index)
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
                   <StyledTableRow
                     hover
-                    onClick={(event) => handleClick(event, row.name)}
+                    // onClick={(event) => handleClick(event, row.uhid)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.name}
+                    key={row.uhid}
                     selected={isItemSelected}
                   >
                     <TableCell padding="checkbox">
@@ -266,6 +271,7 @@ export default function EnhancedTable() {
                       <Checkbox
                         color="primary"
                         checked={isItemSelected}
+                        onClick={(event) => handleClick(event, row.uhid)}
                         inputProps={{
                           "aria-labelledby": labelId,
                         }}
@@ -277,7 +283,7 @@ export default function EnhancedTable() {
                       scope="row"
                       padding="none"
                       align="center"
-                      // onClick={(event) => handleClick(event, row.name)}
+                      onClick={(event) => OpenDetailedClick(event, row.uhid)}
                     >
                       {row.uhid}
                     </TableCell>
