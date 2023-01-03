@@ -14,6 +14,7 @@ import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from '@mui/icons-material/Edit';
 import { styled } from "@mui/material/styles";
 
 import Dots from "../Components/Dots";
@@ -94,6 +95,11 @@ function EnhancedTableHead(props) {
             <DeleteIcon />
           </IconButton>
         </TableCell>
+
+        <TableCell padding="checkbox">
+
+        </TableCell>
+
         <TableCell padding="checkbox">
           <Checkbox
             color="primary"
@@ -219,6 +225,13 @@ export default function EnhancedTable() {
     setOpenDetailed(!openDetailed)
   };
 
+  const EditClick = (event, uhid) => {
+    console.log("edit")
+  };
+  const DeleteClick = (event, uhid) => {
+    console.log("delete")
+  };
+
   const isSelected = (uhid) => selected.indexOf(uhid) !== -1;
 
   return (
@@ -264,9 +277,16 @@ export default function EnhancedTable() {
                   >
                     <TableCell padding="checkbox">
                       <IconButton>
-                        <DeleteIcon />
+                        <DeleteIcon nClick={(event) => DeleteClick(event, row.uhid)}/>
                       </IconButton>
                     </TableCell>
+
+                    <TableCell padding="checkbox">
+                    <IconButton>
+                      <EditIcon onClick={(event) => EditClick(event, row.uhid)}/>
+                    </IconButton>
+                    </TableCell>
+
                     <TableCell padding="checkbox">
                       <Checkbox
                         color="primary"

@@ -45,35 +45,16 @@ const DetailedSideView = (props) => {
     <ClearOutlinedIcon /> 
   </IconButton>
   </DrawerHeader>
-  <Typography paragraph>
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non
-  enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus
-  imperdiet. Semper risus in hendrerit gravida rutrum quisque non tellus.
-  Convallis convallis tellus id interdum velit laoreet id donec ultrices.
-  Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-  adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra
-  nibh cras. Metus vulputate eu scelerisque felis imperdiet proin fermentum
-  leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt lobortis
-  feugiat vivamus at augue. At augue eget arcu dictum varius duis at
-  consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa
-  sapien faucibus et molestie ac.
-</Typography>
-<Typography paragraph>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non
-enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus
-imperdiet. Semper risus in hendrerit gravida rutrum quisque non tellus.
-Convallis convallis tellus id interdum velit laoreet id donec ultrices.
-Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra
-nibh cras. Metus vulputate eu scelerisque felis imperdiet proin fermentum
-leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt lobortis
-feugiat vivamus at augue. At augue eget arcu dictum varius duis at
-consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa
-sapien faucibus et molestie ac.
-</Typography>
-
+  <Typography >Patient's UHID:AGTRW14644</Typography>
+  <Typography >Patient's Name:Hari Shander</Typography>
+  <Typography >Patient's Ward:1</Typography>
+  <Typography >Patient's PhoneNumber:+91 9497086676</Typography>
+  <Typography >Surgery's Name:dfgfgfh</Typography>
+  <Typography >Surgeon's Name:Alex</Typography>
+  <Typography >Surgery's Date&Time : 12/01/2023-1:00pm-5:00pm</Typography>
+  <Typography >Anesthesia Type:hfhgghgg</Typography>
+  <Typography >Instructions for Nurse:afd g gyftr gytryr gytrytrt fytr5e gftv ftrdrdrt</Typography>
+  <Typography >Instructions:dds dfds drse drre dreswe uytyt</Typography>
   </Drawer>
   )
 }
