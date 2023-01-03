@@ -185,8 +185,12 @@ const EventContainer = (props) => {
   return loading ? (
     <Loader />
   ) : (
-    <>
-      <div style={{ overflow: "auto", height: "850px" }} >
+    // <>
+      <div style={{
+        //  overflow: "auto", 
+        //  height: "850px" 
+        }}
+          >
         <Scheduler
           loading={loading}
           view="week"
@@ -230,12 +234,14 @@ const EventContainer = (props) => {
             },
           }}
         />
-      </div>
+      
 
       {bookingFormOpen && (
         <PopUp dataToForm={dataToForm} isEventEditor={isEventEditor} />
       )}
-    </>
+      </div>
+
+    // </>
   );
 };
 

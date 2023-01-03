@@ -18,7 +18,7 @@ import { GetAllMasters, GetOtherDepartmentSurgeons, GetSurgeryList } from '../AP
 import Loader from "../Components/Loader";
 
 const BookingRegistrationForm = (props) => {
-
+    
     console.log("props: ", props );
 
     ///////////////////////////////////////
