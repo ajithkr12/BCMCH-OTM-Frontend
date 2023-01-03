@@ -24,6 +24,7 @@ import {
 import { MenuItem, Select } from "@mui/material";
 
 const EventContainer = (props) => {
+
   let { uhid, EpId } = props;
   const [loading, setLoading] = useState(true);
   const [isEventEditor, setIsEventEditor] = useState(false);
@@ -185,48 +186,51 @@ const EventContainer = (props) => {
     <Loader />
   ) : (
     <>
-      <Scheduler
-        loading={loading}
-        view="week"
-        navigationPickerProps={{ navigation: { month: false } }}
-        selectedDate={new Date(schedulerStartDate)}
-        week={{
-          weekDays: [0, 1, 2, 3, 4, 5, 6],
-          weekStartOn: new Date(schedulerStartDate).getDay(),
-          // weekStartOn defines wihich day we want to show as scheduler start day
-          // if weekStartOn=0 then calendar will start on sunday
-          // loads the week day number from schedulerstartdate
-          // new Date(schedulerStartDate).getDay() will return the weekend count
-          startHour: 1,
-          endHour: 17,
-          step: 30,
-          navigation: true,
-          cellRenderer: CustomCellRenderer,
-        }}
-        eventRenderer={(event) => CustomEventRenderer(event)}
-        getRemoteEvents={(e) => {
-          // this will be called when we press the event date switcher on the top
-          // console.log(e);
-          var startDate = JsDatetimeToSQLDatetTme(e.start);
-          // console.log("startDate : ",startDate)
-          var endDate = JsDatetimeToSQLDatetTme(e.end);
-          // console.log("endDate : ",endDate)
-          setSchedulerStartDate(startDate);
-          setSchedulerEndDate(endDate);
-          // console.log("im here")
-        }}
-        events={events}
-        // to disable right top menu to switch between views
-        // currently it is set to "" but we need to find a way to disable that
-        translations={{
-          navigation: {
-            today: "",
-            month: "",
-            week: "",
-            day: "",
-          },
-        }}
-      />
+      <div style={{ overflow: "auto", height: "850px" }} >
+        <Scheduler
+          loading={loading}
+          view="week"
+          navigationPickerProps={{ navigation: { month: false } }}
+          selectedDate={new Date(schedulerStartDate)}
+          week={{
+            weekDays: [0, 1, 2, 3, 4, 5, 6],
+            weekStartOn: new Date(schedulerStartDate).getDay(),
+            // weekStartOn defines wihich day we want to show as scheduler start day
+            // if weekStartOn=0 then calendar will start on sunday
+            // loads the week day number from schedulerstartdate
+            // new Date(schedulerStartDate).getDay() will return the weekend count
+            disableGoToDay: false,
+            startHour: 1,
+            endHour: 17,
+            step: 30,
+            navigation: true,
+            cellRenderer: CustomCellRenderer,
+          }}
+          eventRenderer={(event) => CustomEventRenderer(event)}
+          getRemoteEvents={(e) => {
+            // this will be called when we press the event date switcher on the top
+            // console.log(e);
+            var startDate = JsDatetimeToSQLDatetTme(e.start);
+            // console.log("startDate : ",startDate)
+            var endDate = JsDatetimeToSQLDatetTme(e.end);
+            // console.log("endDate : ",endDate)
+            setSchedulerStartDate(startDate);
+            setSchedulerEndDate(endDate);
+            // console.log("im here")
+          }}
+          events={events}
+          // to disable right top menu to switch between views
+          // currently it is set to "" but we need to find a way to disable that
+          translations={{
+            navigation: {
+              today: "",
+              month: "",
+              week: "",
+              day: "",
+            },
+          }}
+        />
+      </div>
 
       {bookingFormOpen && (
         <PopUp dataToForm={dataToForm} isEventEditor={isEventEditor} />
