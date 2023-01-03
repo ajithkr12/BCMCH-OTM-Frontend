@@ -28,7 +28,6 @@ export const EventDataFormatter = async (eventsFetchedFromDb) => {
 export const EventTypeCheck = (eventType) => {
   var _eventStyle = {};
   _eventStyle.height = "100%";
-  // _eventStyle.width = "105%";
   _eventStyle.display = "flex";
   _eventStyle.flexDirection = "column";
   _eventStyle.justifyContent = "space-around";
@@ -37,9 +36,11 @@ export const EventTypeCheck = (eventType) => {
   _eventStyle.color = "black";
 
   if (eventType === "BOOKED") {
+    // _eventStyle.width = "105%";
     _eventStyle.background = "#B6E2A1";
     return { _eventStyle };
   } else if (eventType === "BLOCKED") {
+    // _eventStyle.width = "50%";
     _eventStyle.background = "#FF6464";
     _eventStyle.cursor ="not-allowed";
     return { _eventStyle };

@@ -32,7 +32,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   );
 const Home = () => {
 
-  const [open, setOpen]=useState(false);
+  const [open, setOpen]=useState(true);
 
   return (
     <div>
