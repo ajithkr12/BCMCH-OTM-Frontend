@@ -30,13 +30,21 @@ const DateNavigator = (props) => {
 
   const [startDate, setStartDate] = useState(selectedDate);
   const [endDate, setEndDate] = useState(AddSevenDays(startDate, 6));
+  
+  const [dates, setDates] = useState({
+    selectedDate:selectedDate,
+    selectedDate:AddSevenDays(startDate, 6)
+  });
+
 
   const [open, setOpen] = useState(false);
   const toggleDialog = () => setOpen(!open);
 
   const handlePrev = () => {
     var _newEnddDate = AddSevenDays(startDate, -1);
-    var _newStartDate = AddSevenDays(_newEnddDate, -6);
+    var _newStartDate = AddSevenDays(_newEnddDate, -7);
+    console.log("handlePrev _newStartDate: ", _newStartDate)
+    console.log("handlePrev _newEnddDate: ", _newEnddDate)
     setStartDate(_newStartDate);
     setEndDate(_newEnddDate);
   };
@@ -48,8 +56,8 @@ const DateNavigator = (props) => {
   };
   const handleChange = (e) => {
     console.log("handleChange : ", e.$d);
-    setStartDate(e.$d);
-    setEndDate(AddSevenDays(e.$d));
+    setStartDate(AddSevenDays(e.$d, -6));
+    setEndDate(e.$d);
   };
 
   useEffect(() => {

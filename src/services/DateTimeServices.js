@@ -10,10 +10,6 @@ export const JsDatetimeToSQLDatetTme = (_datetime) => {
 
 
 
-export const DateOnly = (_datetime) =>{
-    var Day =("0" + (_datetime.getDate())).slice(-2)
-    var Month =("0" + (_datetime.getMonth())).slice(-2)
-    var Year = _datetime.getFullYear();
-    var Date =Year + "-"+ Month + "-"  + Day;
-    return Date
+export const GetTimeFromJsDateTime = (_datetime) =>{
+    return _datetime.toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit', hour12: true});
 }

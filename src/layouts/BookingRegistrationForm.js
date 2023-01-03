@@ -227,9 +227,6 @@ const BookingRegistrationForm = (props) => {
         <form>
             
             <Grid container>
-
-
-
                 {/* UHID Field START */}
                 <Grid item={true} md={3} style={useStyles.root}>
                     <TextField

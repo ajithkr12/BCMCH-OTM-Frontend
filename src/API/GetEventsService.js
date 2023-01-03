@@ -129,7 +129,7 @@ export const GetAllocatedTheatres = async ( _departmentId, _fromDate, _toDate) =
     if (response.data.success === false) {
       throw new Error(response.data.response);
     }
-    
+    console.log("GetAllocatedTheatres response.data : ",response.data.data )
     return response.data.data;
   } catch (error) {
     const _error =

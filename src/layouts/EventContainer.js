@@ -125,7 +125,7 @@ const EventContainer = (props) => {
       loaded: true,
     });
     // set the selectedoperation theatre as the first otid of the allocated theatres array
-    setSelectedOperationTheatre(_allocatedTheatres[0]);
+    setSelectedOperationTheatre(_allocatedTheatres[0]??0);
     // by doing this we set the default value to the ot selector drop down
   };
 
@@ -187,7 +187,7 @@ const EventContainer = (props) => {
   ) : (
     // <>
       <div style={{
-        //  overflow: "auto", 
+         overflow: "auto", 
         //  height: "850px" 
         }}
           >
