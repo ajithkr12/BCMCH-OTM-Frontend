@@ -193,6 +193,7 @@ const EventContainer = (props) => {
         //  height: "850px"
       }}
     >
+      
       <Scheduler
         loading={loading}
         view="week"
@@ -205,7 +206,7 @@ const EventContainer = (props) => {
           // loads the week day number from schedulerstartdate
           // new Date(schedulerStartDate).getDay() will return the weekend count
           disableGoToDay: false,
-          startHour: 1,
+          startHour: 7,
           endHour: 17,
           step: 30,
           navigation: true,
