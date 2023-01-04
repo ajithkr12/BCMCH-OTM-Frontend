@@ -25,9 +25,6 @@ export const GetEvents = async (_operationTheatreId, _fromDate, _toDate) => {
       error.toString();
     console.log("error vannu : ", _error);
   } finally {
-    // console.log(
-    //   "The Promise is settled, meaning it has been resolved or rejected."
-    // );
   }
 };
 
@@ -45,7 +42,7 @@ export const GetAllocation = async (_departmentId, _fromDate, _toDate) => {
       { "Content-Type": "application/json", Accept: "*/*" }
     );
     if (response.data.success === false) {
-      throw new Error(response.data.response);
+      throw new Error("backend :",response.data.response);
     }
     return response.data.data;
   } catch (error) {
@@ -53,7 +50,7 @@ export const GetAllocation = async (_departmentId, _fromDate, _toDate) => {
       (error.response && error.response.data && error.response.data.message) ||
       error.message ||
       error.toString();
-    console.log("error vannu : ", _error);
+    console.log("error : ", _error);
   } finally {
     // console.log(
     //   "The Promise is settled, meaning it has been resolved or rejected."
@@ -65,9 +62,9 @@ export const GetEventsAndAllocations = async ( _departmentId, _operationTheatreI
   
   _fromDate +="T00:00:00.000";
   _toDate   +="T00:00:00.000";
-  console.log("GetEventsAndAllocations _operationTheatreId : ",_operationTheatreId);
-  console.log("GetEventsAndAllocations _fromDate : ",_fromDate);
-  console.log("GetEventsAndAllocations  _toDate : ", _toDate);
+  // console.log("GetEventsAndAllocations _operationTheatreId : ",_operationTheatreId);
+  // console.log("GetEventsAndAllocations _fromDate : ",_fromDate);
+  // console.log("GetEventsAndAllocations  _toDate : ", _toDate);
   setLoading(true);
   try {
     const response = await axios.get(
@@ -85,7 +82,7 @@ export const GetEventsAndAllocations = async ( _departmentId, _operationTheatreI
     if (response.data.success === false) {
       throw new Error(response.data.response);
     }
-    console.log(" GetEventsAndAllocations response : " ,response.data.data)
+    // console.log(" GetEventsAndAllocations response : " ,response.data.data)
     return {
       bookings: response.data.data.bookings,
       allocations: response.data.data.allocations,
@@ -112,8 +109,8 @@ export const GetAllocatedTheatres = async ( _departmentId, _fromDate, _toDate) =
   _toDate   +="T00:00:00.000";
 
   
-  console.log("GetAllocatedTheatres start : ",_fromDate)
-  console.log("GetAllocatedTheatres end : ",_toDate )
+  // console.log("GetAllocatedTheatres start : ",_fromDate)
+  // console.log("GetAllocatedTheatres end : ",_toDate )
   try {
     const response = await axios.get(
       ConstantURL.GetAllocatedOperationTheatres,
@@ -129,7 +126,7 @@ export const GetAllocatedTheatres = async ( _departmentId, _fromDate, _toDate) =
     if (response.data.success === false) {
       throw new Error(response.data.response);
     }
-    console.log("GetAllocatedTheatres response.data : ",response.data.data )
+    // console.log("GetAllocatedTheatres response.data : ",response.data.data )
     return response.data.data;
   } catch (error) {
     const _error =

@@ -51,14 +51,20 @@ export const EventTypeCheck = (eventType) => {
 
 
 export const IsAllocated = (_allocations, _startTimeToCheck, _endTimeToCheck) => {
+    // ** 
+    // * @_allocations - holds the list of allocations.
+    // * @_startTimeToCheck - holds start time to check
+    // * @_endTimeToCheck - holds the end time to check
+    // ** 
+    
+    // this function returns true if the 
+    // given start time and end time is allocated
     var _allocationStatus = false;
-
     _allocations.map((_allocation)=>{
       var _allocationStartDate  = new Date (_allocation.startDate);
       var _allocationEndDate    = new Date (_allocation.endDate);
       var _startDateTimeToCheck = new Date (_startTimeToCheck);
       var _endDateTimeToCheck   = new Date (_endTimeToCheck);
-      
       
       if( (_startDateTimeToCheck >= _allocationStartDate)  )
       {
@@ -74,6 +80,39 @@ export const IsAllocated = (_allocations, _startTimeToCheck, _endTimeToCheck) =>
     })
     return _allocationStatus;
   };
+
+
+export const IsBooked = (_events, _startTimeToCheck, _endTimeToCheck) => {
+    // ** 
+    // * @_events - holds the booking list/ event list
+    // * @_startTimeToCheck - holds start time to check
+    // * @_endTimeToCheck - holds the end time to check
+    // ** 
+
+    // this function returns true if the 
+    // given start time and end time is booked (or there is an event in this time )
+    var _isBookedStatus = false;
+    _events.map((_event)=>{
+      var _allocationStartDate  = new Date (_event.start);
+      var _allocationEndDate    = new Date (_event.end);
+      var _startDateTimeToCheck = new Date (_startTimeToCheck);
+      var _endDateTimeToCheck   = new Date (_endTimeToCheck);
+      
+      
+      if( (_startDateTimeToCheck >= _allocationStartDate)  )
+      {
+        if(_startDateTimeToCheck <= _allocationEndDate){
+          if(_endDateTimeToCheck <= _allocationEndDate){
+            _isBookedStatus = true;
+            // console.log("booked : ", _startTimeToCheck, ":",_endTimeToCheck," , " ,_event)
+          }
+        }
+      }
+    })
+    return _isBookedStatus;
+  };
+
+
 
   export const CellStatusCheck = (allocation, start,end)=>{
     var _isallocatedStatus = IsAllocated(allocation, start, end)

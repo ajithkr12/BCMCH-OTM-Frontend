@@ -38,7 +38,7 @@ function  ContextProvider(props) {
     const FetchDateTimeToday =async ()=>{
         var _today = await GetServerDateTime();
         var _todaySplitted = _today.split("T");
-        console.log("FetchDateTimeToday : ", _today);
+        // console.log("FetchDateTimeToday : ", _today);
         setDbdateTimeToday({
             date : _todaySplitted[0],
             time : _todaySplitted[1],

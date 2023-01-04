@@ -28,6 +28,7 @@ const TableHeader = (props) => {
     numSelected,
     rowCount,
     onRequestSort,
+    TableHeaderArray,
   } = props;
 
   return (
@@ -35,6 +36,7 @@ const TableHeader = (props) => {
       style={{ backgroundColor: Colors.SecondaryBlue, color: "white" }}
     >
       <TableRow>
+        
         <TableCell padding="checkbox">
           <IconButton>
             <DeleteIcon />
@@ -54,36 +56,13 @@ const TableHeader = (props) => {
             }}
           />
         </TableCell>
-        <TableCell align="center" style={{ fontWeight: 800 }}>
-          Patient's UHID
-        </TableCell>
-        <TableCell align="center" style={{ fontWeight: 800 }}>
-          Patient's Name
-        </TableCell>
-        <TableCell align="center" style={{ fontWeight: 800 }}>
-          Surgeon's Name
-        </TableCell>
-        <TableCell align="center" style={{ fontWeight: 800 }}>
-          Surgery's Name
-        </TableCell>
-        <TableCell align="center" style={{ fontWeight: 800 }}>
-          Date
-        </TableCell>
-        <TableCell align="center" style={{ fontWeight: 800 }}>
-          Start Time
-        </TableCell>
-        <TableCell align="center" style={{ fontWeight: 800 }}>
-          End Time
-        </TableCell>
-        <TableCell align="center" style={{ fontWeight: 800 }}>
-          PAC Status
-        </TableCell>
-        <TableCell align="center" style={{ fontWeight: 800 }}>
-          Admit Status
-        </TableCell>
-        <TableCell align="center" style={{ fontWeight: 800 }}>
-          Ready Status
-        </TableCell>
+        {
+          TableHeaderArray.map((head,key)=>
+            <TableCell key={key} align="center" style={{ fontWeight: 800 }}>
+              {head}
+            </TableCell>
+          )
+        }
       </TableRow>
     </TableHead>
   );

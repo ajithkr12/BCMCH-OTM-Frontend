@@ -23,7 +23,7 @@ const TabMenu = () => {
   } = useContext(ContextConsumer);
 
   let { uhid, name } = useParams();
-  const [value, setValue] = useState("SCHEDULELIST");
+  const [value, setValue] = useState("SCHEDULER");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

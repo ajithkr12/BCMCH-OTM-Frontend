@@ -150,7 +150,7 @@ export default function EnhancedTable() {
         if (!allocatedOperationTheatres.loaded) {
           FetchAllocatedOperationTheatres(schedulerStartDate, schedulerEndDate);
         } else {
-          if (selectedOperationTheatre != 0) {
+          if (selectedOperationTheatre !== 0) {
             // console.log("EVENT LOADING");
             // console.log(schedulerStartDate, " : ", schedulerEndDate);
             // console.log(
@@ -168,6 +168,19 @@ export default function EnhancedTable() {
       }
     }
   }, [dbdateTimeToday, allocatedOperationTheatres, selectedOperationTheatre]);
+
+  const TableHeaderArray = [
+  "Patient's UHID",
+  "Patient",
+  "Surgeon",
+  "Surgery",
+  "Date",
+  "Start Time",
+  "End Time",
+  "PAC Status",
+  "Admit Status",
+  "Ready Status"
+  ]
 
   useEffect(() => {
     // enters when we switch between date navigator of scheduler.
@@ -241,6 +254,7 @@ export default function EnhancedTable() {
             size="medium"
           >
             <TableHeader
+              TableHeaderArray={TableHeaderArray}
               numSelected={selected.length}
               // order={order}
               // orderBy={orderBy}

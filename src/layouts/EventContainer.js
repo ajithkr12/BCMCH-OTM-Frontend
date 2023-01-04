@@ -16,6 +16,7 @@ import {
   EventTypeCheck,
   CellStatusCheck,
   EventDataFormatter,
+  IsBooked,
 } from "../services/SchedulerServices";
 import {
   JsDatetimeToSQLDatetTme,
@@ -24,7 +25,6 @@ import {
 import { MenuItem, Select } from "@mui/material";
 
 const EventContainer = (props) => {
-
   let { uhid, EpId } = props;
   const [loading, setLoading] = useState(true);
   const [isEventEditor, setIsEventEditor] = useState(false);
@@ -59,8 +59,8 @@ const EventContainer = (props) => {
     var bookingsformatted = await EventDataFormatter(bookings);
     setAllocation(allocations);
     setEvents(bookingsformatted);
-    console.log("bookings : ", bookings);
-    console.log("allocations : ", allocations);
+    // console.log("bookings : ", bookings);
+    // console.log("allocations : ", allocations);
     // return bookingsformatted;
   };
 
@@ -70,7 +70,7 @@ const EventContainer = (props) => {
       <div
         style={_eventStyle}
         onClick={() => {
-          if (_event.statusName == "BLOCKED") {
+          if (_event.statusName === "BLOCKED") {
             return "";
           }
           setIsEventEditor(true);
@@ -79,7 +79,7 @@ const EventContainer = (props) => {
         }}
       >
         <p>{_event.title}</p>
-        <p>{_event.patientRegistrationNo}</p>
+        {/* <p>{_event.patientRegistrationNo}</p> */}
       </div>
     );
   };
@@ -93,19 +93,20 @@ const EventContainer = (props) => {
     // The above function returns the style of a cell in accordance with its allocation table
     // if is allocacted then the mouse pointer will be clickable and also the background is white
     // else the mouse pointer is not clickable and background will be a disabled color
+
+    var _isBooked = IsBooked(events,props.start, props.end );
+    // The above function returns the status of the current cell is booked or not. 
+    // if it is booked then we set it as not clickable . Because we dont need to add more events
+    // else if the cell is not booked we set it as clickable 
     return (
       <div
         style={_style}
         onClick={(e) => {
-          if (!_isallocatedStatus) {
+          if (!_isallocatedStatus || _isBooked ) {
             return "";
           }
           setIsEventEditor(false);
-          setdataToForm({
-            props,
-            // start: props.start,
-            // otherData: props,
-          });
+          setdataToForm({ props });
           setBookingFormOpen(true);
         }}
       ></div>
@@ -125,7 +126,7 @@ const EventContainer = (props) => {
       loaded: true,
     });
     // set the selectedoperation theatre as the first otid of the allocated theatres array
-    setSelectedOperationTheatre(_allocatedTheatres[0]??0);
+    setSelectedOperationTheatre(_allocatedTheatres[0] ?? 0);
     // by doing this we set the default value to the ot selector drop down
   };
 
@@ -154,13 +155,13 @@ const EventContainer = (props) => {
         if (!allocatedOperationTheatres.loaded) {
           FetchAllocatedOperationTheatres(schedulerStartDate, schedulerEndDate);
         } else {
-          if (selectedOperationTheatre != 0) {
-            console.log("EVENT LOADING");
-            console.log(schedulerStartDate, " : ", schedulerEndDate);
-            console.log(
-              "selectedOperationTheatre : ",
-              selectedOperationTheatre
-            );
+          if (selectedOperationTheatre !== 0) {
+            // console.log("EVENT LOADING");
+            // console.log(schedulerStartDate, " : ", schedulerEndDate);
+            // console.log(
+            //   "selectedOperationTheatre : ",
+            //   selectedOperationTheatre
+            // );
             LoadEventsAndAllocations();
           }
         }
@@ -174,10 +175,10 @@ const EventContainer = (props) => {
     // and fetches the allocated operation theatre in accordance with that start and end dates.
     // then it will automatically re render the Tabmenu because there is a useEffect in TabMenu.js
     if (schedulerStartDate !== "") {
-      console.log(
-        "FetchAllocatedOperationTheatres : ",
-        selectedOperationTheatre
-      );
+      // console.log(
+      //   "FetchAllocatedOperationTheatres : ",
+      //   selectedOperationTheatre
+      // );
       FetchAllocatedOperationTheatres(schedulerStartDate, schedulerEndDate);
     }
   }, [schedulerStartDate]);
@@ -186,60 +187,59 @@ const EventContainer = (props) => {
     <Loader />
   ) : (
     // <>
-      <div style={{
-         overflow: "auto", 
-        //  height: "850px" 
+    <div
+      style={{
+        overflow: "auto",
+        //  height: "850px"
+      }}
+    >
+      <Scheduler
+        loading={loading}
+        view="week"
+        selectedDate={new Date(schedulerStartDate)}
+        week={{
+          weekDays: [0, 1, 2, 3, 4, 5, 6],
+          weekStartOn: new Date(schedulerStartDate).getDay(),
+          // weekStartOn defines wihich day we want to show as scheduler start day
+          // if weekStartOn=0 then calendar will start on sunday
+          // loads the week day number from schedulerstartdate
+          // new Date(schedulerStartDate).getDay() will return the weekend count
+          disableGoToDay: false,
+          startHour: 1,
+          endHour: 17,
+          step: 30,
+          navigation: true,
+          cellRenderer: CustomCellRenderer,
         }}
-          >
-        <Scheduler
-          loading={loading}
-          view="week"
-          navigationPickerProps={{ navigation: { month: false } }}
-          selectedDate={new Date(schedulerStartDate)}
-          week={{
-            weekDays: [0, 1, 2, 3, 4, 5, 6],
-            weekStartOn: new Date(schedulerStartDate).getDay(),
-            // weekStartOn defines wihich day we want to show as scheduler start day
-            // if weekStartOn=0 then calendar will start on sunday
-            // loads the week day number from schedulerstartdate
-            // new Date(schedulerStartDate).getDay() will return the weekend count
-            disableGoToDay: false,
-            startHour: 1,
-            endHour: 17,
-            step: 30,
-            navigation: true,
-            cellRenderer: CustomCellRenderer,
-          }}
-          eventRenderer={(event) => CustomEventRenderer(event)}
-          getRemoteEvents={(e) => {
-            // this will be called when we press the event date switcher on the top
-            // console.log(e);
-            var startDate = JsDatetimeToSQLDatetTme(e.start);
-            // console.log("startDate : ",startDate)
-            var endDate = JsDatetimeToSQLDatetTme(e.end);
-            // console.log("endDate : ",endDate)
-            setSchedulerStartDate(startDate);
-            setSchedulerEndDate(endDate);
-            // console.log("im here")
-          }}
-          events={events}
-          // to disable right top menu to switch between views
-          // currently it is set to "" but we need to find a way to disable that
-          translations={{
-            navigation: {
-              today: "",
-              month: "",
-              week: "",
-              day: "",
-            },
-          }}
-        />
-      
+        eventRenderer={(event) => CustomEventRenderer(event)}
+        getRemoteEvents={(e) => {
+          // this will be called when we press the event date switcher on the top
+          // console.log(e);
+          var startDate = JsDatetimeToSQLDatetTme(e.start);
+          // console.log("startDate : ",startDate)
+          var endDate = JsDatetimeToSQLDatetTme(e.end);
+          // console.log("endDate : ",endDate)
+          setSchedulerStartDate(startDate);
+          setSchedulerEndDate(endDate);
+          // console.log("im here")
+        }}
+        events={events}
+        // to disable right top menu to switch between views
+        // currently it is set to "" but we need to find a way to disable that
+        translations={{
+          navigation: {
+            today: "",
+            month: "",
+            week: "",
+            day: "",
+          },
+        }}
+      />
 
       {bookingFormOpen && (
         <PopUp dataToForm={dataToForm} isEventEditor={isEventEditor} />
       )}
-      </div>
+    </div>
 
     // </>
   );
