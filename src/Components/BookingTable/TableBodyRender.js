@@ -103,7 +103,6 @@ const TableBodyRender = (props) => {
                     <TableCell align="center">{event.patientName}</TableCell>
                     {/* patientName END */}
                     
-                    
                     {/* Surgeon Name Section START  */}
                     <TableCell align="center">
                       {event.bookedByDoctorFirstName !== null ? (
@@ -119,7 +118,7 @@ const TableBodyRender = (props) => {
                     {/* Surgeon Name Section START  */}
 
                     {/* Surgery Name START */}
-                    <TableCell align="center">{event.SurgeryPrintName}</TableCell>
+                    <TableCell align="center">{event.surgeryPrintName}</TableCell>
                     {/* Surgery Name END */}
 
 

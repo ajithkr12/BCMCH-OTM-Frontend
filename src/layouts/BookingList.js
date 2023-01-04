@@ -32,6 +32,7 @@ import {
 import { GetEventsAndAllocations } from "../API/GetEventsService";
 import { EventDataFormatter } from "../services/SchedulerServices";
 import { GetAllocatedTheatres } from "../API/GetEventsService";
+import { DeleteEvents } from "../API/UpdateEventServices";
 
 import TableHeader from "../Components/BookingTable/TableHeader";
 import TableToolBar from "../Components/BookingTable/TableToolBar";
@@ -226,14 +227,21 @@ export default function EnhancedTable() {
   const EditClick = (event) => {
     console.log("edit : ", event);
   };
-  const DeleteClick = (event) => {
+  const DeleteClick = async (event) => {
     console.log("delete : ",event);
+    var selectedArray = [event.event_id];
+
+    await DeleteEvents(selectedArray);
+    await LoadEventsAndAllocations();
   };
+
   const isSelected = (event_id) => {
     return selected.indexOf(event_id) !== -1
   };
-  const deleteButtonClick = () =>{
+  const deleteButtonClick =async () =>{
     console.log("Main Delete : ",selected)
+    await DeleteEvents(selected);
+    await LoadEventsAndAllocations();
   }
   // Table Handlers END
 
