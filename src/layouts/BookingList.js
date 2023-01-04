@@ -33,12 +33,9 @@ import { GetEventsAndAllocations } from "../API/GetEventsService";
 import { EventDataFormatter } from "../services/SchedulerServices";
 import { GetAllocatedTheatres } from "../API/GetEventsService";
 
-
 import TableHeader from "../Components/BookingTable/TableHeader";
 import TableToolBar from "../Components/BookingTable/TableToolBar";
-import TableBody from "../Components/BookingTable/TableBodyRender";
-
-
+import TableBodyRender from "../Components/BookingTable/TableBodyRender";
 
 // Props for table START
 TableHeader.propTypes = {
@@ -121,10 +118,30 @@ export default function EnhancedTable() {
       loaded: true,
     });
     // set the selectedoperation theatre as the first otid of the allocated theatres array
-    setSelectedOperationTheatre(_allocatedTheatres[0]??0);
+    setSelectedOperationTheatre(_allocatedTheatres[0] ?? 0);
     // by doing this we set the default value to the ot selector drop down
   };
   // **** LOCAL FUNCTIONS END ****
+
+
+
+  // The head of table START
+  const TableHeaderArray = [
+    "Patient's UHID",
+    "Patient",
+    "Surgeon",
+    "Surgery",
+    "Date",
+    "Start Time",
+    "End Time",
+    "PAC Status",
+    "Admit Status",
+    "Ready Status",
+  ];
+  // The head of table END
+
+
+
 
   useEffect(() => {
     if (dbdateTimeToday.loaded === true) {
@@ -158,29 +175,14 @@ export default function EnhancedTable() {
             //   selectedOperationTheatre
             // );
             LoadEventsAndAllocations();
-          }
-           else {
+          } else {
             // setAllocation([]);
             setEvents([]);
           }
-
         }
       }
     }
   }, [dbdateTimeToday, allocatedOperationTheatres, selectedOperationTheatre]);
-
-  const TableHeaderArray = [
-  "Patient's UHID",
-  "Patient",
-  "Surgeon",
-  "Surgery",
-  "Date",
-  "Start Time",
-  "End Time",
-  "PAC Status",
-  "Admit Status",
-  "Ready Status"
-  ]
 
   useEffect(() => {
     // enters when we switch between date navigator of scheduler.
@@ -194,13 +196,16 @@ export default function EnhancedTable() {
 
 
 
-
-  const handleClick = (event, uhid) => {
-    const selectedIndex = selected.indexOf(uhid);
+  // Table Handlers START
+  const handleMarkClick = (event) => {
+    // console.log("handleMarkClick : ", event)
+    // console.log("handleMarkClick : ", event_id)
+    const event_id = event.event_id;
+    const selectedIndex = selected.indexOf(event_id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, uhid);
+      newSelected = newSelected.concat(selected, event_id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -212,20 +217,29 @@ export default function EnhancedTable() {
       );
     }
     setSelected(newSelected);
+    console.log("newSelected : ",newSelected)
   };
 
-  const OpenDetailedClick = (event, uhid) => {
+  const OpenDetailedClick = (event) => {
     setOpenDetailed(!openDetailed);
   };
-
-  const EditClick = (event, uhid) => {
-    console.log("edit");
+  const EditClick = (event) => {
+    console.log("edit : ", event);
   };
-  const DeleteClick = (event, uhid) => {
-    console.log("delete");
+  const DeleteClick = (event) => {
+    console.log("delete : ",event);
   };
+  const isSelected = (event_id) => {
+    return selected.indexOf(event_id) !== -1
+  };
+  const deleteButtonClick = () =>{
+    console.log("Main Delete : ",selected)
+  }
+  // Table Handlers END
 
-  const isSelected = (uhid) => selected.indexOf(uhid) !== -1;
+
+
+
 
   return loading ? (
     <Loader />
@@ -256,20 +270,21 @@ export default function EnhancedTable() {
             <TableHeader
               TableHeaderArray={TableHeaderArray}
               numSelected={selected.length}
+              deleteButtonClick={deleteButtonClick}
               // order={order}
               // orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               // onRequestSort={handleRequestSort}
               rowCount={events.length}
             />
-            
-            <TableBody 
-              events={events} 
-              DeleteClick = {DeleteClick}
-              EditClick = {EditClick}
-              handleClick = {handleClick}
-              OpenDetailedClick = {OpenDetailedClick}
-              isSelected = {isSelected}
+
+            <TableBodyRender
+              events={events}
+              DeleteClick={DeleteClick}
+              EditClick={EditClick}
+              handleMarkClick={handleMarkClick}
+              OpenDetailedClick={OpenDetailedClick}
+              isSelected={isSelected}
             />
 
           </Table>

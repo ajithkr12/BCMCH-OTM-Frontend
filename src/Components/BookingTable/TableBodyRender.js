@@ -26,10 +26,9 @@ const TableBodyRender = (props) => {
     const {events,
         DeleteClick,
         EditClick,
-        handleClick,
+        handleMarkClick,
         OpenDetailedClick ,
         isSelected,
-
     } = props;
 
 
@@ -54,7 +53,7 @@ const TableBodyRender = (props) => {
                 return (
                   <StyledTableRow
                     hover
-                    // onClick={(event) => handleClick(event, event.uhid)}
+                    // onClick={(event) => handleMarkClick(event, event.uhid)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
@@ -62,13 +61,13 @@ const TableBodyRender = (props) => {
                     selected={isItemSelected}
                   >
                     <TableCell padding="checkbox">
-                      <IconButton onClick={(e) => DeleteClick(e, event.event_id)}>
+                      <IconButton onClick={() => DeleteClick(event)}>
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>
 
                     <TableCell padding="checkbox">
-                      <IconButton onClick={(e) => EditClick(e, event.event_id)}>
+                      <IconButton onClick={() => EditClick(event)}>
                         <EditIcon />
                       </IconButton>
                     </TableCell>
@@ -77,7 +76,7 @@ const TableBodyRender = (props) => {
                       <Checkbox
                         color="primary"
                         checked={isItemSelected}
-                        onClick={(e) => handleClick(e, event.event_id)}
+                        onClick={() => handleMarkClick(event)}
                         inputProps={{
                           "aria-labelledby": labelId,
                         }}

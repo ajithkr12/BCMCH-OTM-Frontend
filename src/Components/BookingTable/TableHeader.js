@@ -29,6 +29,7 @@ const TableHeader = (props) => {
     rowCount,
     onRequestSort,
     TableHeaderArray,
+    deleteButtonClick,
   } = props;
 
   return (
@@ -38,7 +39,7 @@ const TableHeader = (props) => {
       <TableRow>
         
         <TableCell padding="checkbox">
-          <IconButton>
+          <IconButton onClick={()=>{deleteButtonClick()}} >
             <DeleteIcon />
           </IconButton>
         </TableCell>
