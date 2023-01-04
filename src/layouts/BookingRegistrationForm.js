@@ -248,7 +248,7 @@ const BookingRegistrationForm = (props) => {
 
 
                 {/* Patient Name Field START */}
-                <Grid md={3} style={useStyles.root}>
+                <Grid item md ={3} style={useStyles.root}>
                     <TextField
                         label="Patient's Name"
                         variant="outlined"
@@ -265,7 +265,7 @@ const BookingRegistrationForm = (props) => {
 
 
                 {/* OT ID Field START */}
-                <Grid md={3} style={useStyles.root}>
+                <Grid item md ={3} style={useStyles.root}>
                     <TextField
                         label="OT Name"
                         variant="outlined"
@@ -281,7 +281,7 @@ const BookingRegistrationForm = (props) => {
 
 
                 {/* Patient Ward Field START */}
-                <Grid md={3} style={useStyles.root}>
+                <Grid item md ={3} style={useStyles.root}>
                     <TextField
                         label="Patient's Ward"
                         variant="outlined"
@@ -299,7 +299,7 @@ const BookingRegistrationForm = (props) => {
 
 
                 {/* Select Date Picker START */}
-                <Grid md={3} style={useStyles.root}>
+                <Grid item md ={3} style={useStyles.root}>
                     <LocalizationProvider dateAdapter={AdapterMoment}>
                         <DesktopDatePicker
                             label="Date "
@@ -324,7 +324,7 @@ const BookingRegistrationForm = (props) => {
 
 
                 {/* Start Time Picker START */}
-                <Grid md={3} style={useStyles.root}>
+                <Grid item md ={3} style={useStyles.root}>
                     <LocalizationProvider dateAdapter={AdapterMoment}>
                         <TimePicker
                             label="Start time"
@@ -347,7 +347,7 @@ const BookingRegistrationForm = (props) => {
 
 
                 {/* End Time Picker START */}
-                <Grid md={3} style={useStyles.root}>
+                <Grid item md ={3} style={useStyles.root}>
                     <LocalizationProvider dateAdapter={AdapterMoment}>
                         <TimePicker
                             label="End time"
@@ -374,7 +374,7 @@ const BookingRegistrationForm = (props) => {
 
 
                 {/* Surgery Type Selector START */}
-                <Grid md={3} style={useStyles.root}>
+                <Grid item md ={3} style={useStyles.root}>
                     <Autocomplete
                         loading={surgeryListLoading}
                         id="surgeryList"
@@ -464,7 +464,7 @@ const BookingRegistrationForm = (props) => {
 
 
                 {/* Doctor ID Field START */}
-                <Grid md={3} style={useStyles.root}>
+                <Grid item md ={3} style={useStyles.root}>
                     <TextField
                         label="Doctor ID"
                         variant="outlined"
@@ -483,7 +483,7 @@ const BookingRegistrationForm = (props) => {
 
 
                 {/* Employee name selector START */}
-                <Grid md={3} style={useStyles.root}>
+                <Grid item md ={3} style={useStyles.root}>
                     <Autocomplete
                         disablePortal
                         id="AdditionalSurgeon"
@@ -527,7 +527,7 @@ const BookingRegistrationForm = (props) => {
 
 
                 {/* Anesthesia Type Selector START */}
-                <Grid md={3} style={useStyles.root}>
+                <Grid item md ={3} style={useStyles.root}>
                     <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">Anesthesia Type</InputLabel>
                         <Select
@@ -555,7 +555,7 @@ const BookingRegistrationForm = (props) => {
 
 
                 {/* Anasthetist Selector START */}
-                <Grid md={3} style={useStyles.root}>
+                <Grid item md ={3} style={useStyles.root}>
                     <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">Preffered Anasthetist</InputLabel>
                         <Select
@@ -583,7 +583,7 @@ const BookingRegistrationForm = (props) => {
 
 
                 {/* Other Department Selector START*/}
-                <Grid md={3} style={useStyles.root}>
+                <Grid item md ={3} style={useStyles.root}>
                     <Controller
                         name="DepartmentId"
                         control={control}
@@ -632,7 +632,7 @@ const BookingRegistrationForm = (props) => {
 
 
                 {/* Other department employee selector START */}
-                <Grid md={3} style={useStyles.root}>
+                <Grid item md ={3} style={useStyles.root}>
                     <Controller
                         name="OtherDepartmentEmployeeIdArray"
                         control={control}
@@ -679,7 +679,7 @@ const BookingRegistrationForm = (props) => {
 
 
                 {/* Equipments list START */}
-                <Grid md={3} style={useStyles.root}>
+                <Grid item md ={3} style={useStyles.root}>
                     <Controller
                         name="EquipmentsIdArray"
                         control={control}
@@ -722,7 +722,7 @@ const BookingRegistrationForm = (props) => {
 
 
 
-                <Grid md={3} style={useStyles.root}>
+                <Grid item md ={3} style={useStyles.root}>
                     <TextField
                         label="Instructions for Nurses"
                         variant="outlined"
@@ -735,7 +735,7 @@ const BookingRegistrationForm = (props) => {
                     {/* {errors.InstructionToNurse && errors.InstructionToNurse.type === "required" && <p style={useStyles.errortext}>Instructions is required.</p>} */}
                 </Grid>
 
-                <Grid md={3} style={useStyles.root}>
+                <Grid item md ={3} style={useStyles.root}>
                     <TextField
                         label="Instructions for anaesthetist"
                         variant="outlined"
@@ -747,7 +747,7 @@ const BookingRegistrationForm = (props) => {
                     />
                 </Grid>
 
-                <Grid md={3} style={useStyles.root}>
+                <Grid item md ={3} style={useStyles.root}>
                     <TextField
                         label="Instructions for OT Person"
                         variant="outlined"
@@ -759,7 +759,7 @@ const BookingRegistrationForm = (props) => {
                     />
                 </Grid>
 
-                <Grid md={3} style={useStyles.root}>
+                <Grid item md ={3} style={useStyles.root}>
                     <TextField
                         label="Special Material Requests"
                         variant="outlined"

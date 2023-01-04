@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
+// import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
@@ -36,71 +36,23 @@ import { GetAllocatedTheatres } from "../API/GetEventsService";
 
 import TableHeader from "../Components/BookingTable/TableHeader";
 import TableToolBar from "../Components/BookingTable/TableToolBar";
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: "#FFFFFF",
-  },
-  "&:nth-of-type(even)": {
-    backgroundColor: "#D7E9B9",
-  },
-  // hide last border
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
-}));
+import TableBody from "../Components/BookingTable/TableBodyRender";
 
 
 
+// Props for table START
 TableHeader.propTypes = {
   numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
+  // onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-  orderBy: PropTypes.string.isRequired,
+  // order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+  // orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
 };
-
-// function TableToolBar(props) {
-//   const { numSelected } = props;
-//   return (
-//     <Toolbar
-//       sx={{
-//         pl: { sm: 2 },
-//         pr: { xs: 1, sm: 1 },
-//         ...(numSelected > 0 && {
-//           bgcolor: (theme) =>
-//             alpha(
-//               theme.palette.primary.main,
-//               theme.palette.action.activatedOpacity
-//             ),
-//         }),
-//       }}
-//     >
-//       {numSelected > 0 ? (
-//         <Typography
-//           sx={{ flex: "1 1 100%" }}
-//           color="inherit"
-//           variant="subtitle1"
-//           component="div"
-//         >
-//           {numSelected} selected
-//         </Typography>
-//       ) : (
-//         <Typography
-//           sx={{ flex: "1 1 100%" }}
-//           variant="h6"
-//           id="tableTitle"
-//           component="div"
-//         ></Typography>
-//       )}
-//     </Toolbar>
-//   );
-// }
-
 TableToolBar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
+// Props for table END
 
 // MAIN FUNCTION START
 export default function EnhancedTable() {
@@ -296,119 +248,16 @@ export default function EnhancedTable() {
               // onRequestSort={handleRequestSort}
               rowCount={events.length}
             />
-            <TableBody>
-              {events.map((event, index) => {
-                const isItemSelected = isSelected(event.event_id);
-                const labelId = `enhanced-table-checkbox-${index}`;
-                return (
-                  <StyledTableRow
-                    hover
-                    // onClick={(event) => handleClick(event, event.uhid)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={event.event_id}
-                    selected={isItemSelected}
-                  >
-                    <TableCell padding="checkbox">
-                      <IconButton>
-                        <DeleteIcon
-                          onClick={(e) => DeleteClick(e, event.event_id)}
-                        />
-                      </IconButton>
-                    </TableCell>
+            
+            <TableBody 
+              events={events} 
+              DeleteClick = {DeleteClick}
+              EditClick = {EditClick}
+              handleClick = {handleClick}
+              OpenDetailedClick = {OpenDetailedClick}
+              isSelected = {isSelected}
+            />
 
-                    <TableCell padding="checkbox">
-                      <IconButton>
-                        <EditIcon
-                          onClick={(e) => EditClick(e, event.event_id)}
-                        />
-                      </IconButton>
-                    </TableCell>
-
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        onClick={(e) => handleClick(e, event.event_id)}
-                        inputProps={{
-                          "aria-labelledby": labelId,
-                        }}
-                      />
-                    </TableCell>
-
-                    {/* patientRegistrationNo START */}
-                    <TableCell
-                      component="th"
-                      id={labelId}
-                      scope="event"
-                      padding="none"
-                      align="center"
-                      onClick={(e) =>
-                        OpenDetailedClick(e, event.event_id)
-                      }
-                      style={{ cursor: "pointer", textDecoration: "underline" }}
-                    >
-                      {event.patientRegistrationNo}
-                    </TableCell>
-                    {/* patientRegistrationNo END */}
-
-                    {/* patientName START */}
-                    <TableCell align="center">{event.patientName}</TableCell>
-                    {/* patientName END */}
-                    
-                    
-                    {/* Surgeon Name Section START  */}
-                    <TableCell align="center">
-                      {event.bookedByDoctorFirstName !== null ? (
-                        event.bookedByDoctorFirstName +
-                        " " +
-                        event.bookedByDoctorMiddleName +
-                        " " +
-                        event.bookedByDoctorLastName
-                      ) : (
-                        <></>
-                      )}
-                    </TableCell>
-                    {/* Surgeon Name Section START  */}
-
-                    {/* Surgery Name START */}
-                    <TableCell align="center">{event.SurgeryPrintName}</TableCell>
-                    {/* Surgery Name END */}
-
-
-
-                    {/* date START*/}
-                    <TableCell align="center">
-                      {JsDatetimeToSQLDatetTme(event.start)}
-                    </TableCell>
-                    {/* date END*/}
-
-                    {/* Start Time START */}
-                    <TableCell align="center">
-                      {GetTimeFromJsDateTime(event.start)}
-                    </TableCell>
-                    {/* Start Time END */}
-
-                    {/* End Time START */}
-                    <TableCell align="center">
-                      {GetTimeFromJsDateTime(event.end)}
-                    </TableCell>
-                    {/* End Time END */}
-
-                    <TableCell align="center">
-                      <Dots />
-                    </TableCell>
-                    <TableCell align="center">
-                      <Dots />
-                    </TableCell>
-                    <TableCell align="center">
-                      <Dots />
-                    </TableCell>
-                  </StyledTableRow>
-                );
-              })}
-            </TableBody>
           </Table>
         </TableContainer>
       </Paper>

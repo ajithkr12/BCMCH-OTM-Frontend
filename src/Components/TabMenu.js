@@ -45,11 +45,11 @@ const TabMenu = () => {
     <div>
       <AppBar
         style={{ marginTop: "40px", background: "#ffffff" }}
-        elevation={false}
+        elevation={0}
       >
         <Grid
           container
-          md={12}
+          // md={12}
           style={{
             marginBottom: "2%",
             paddingTop: "50px",
@@ -57,7 +57,7 @@ const TabMenu = () => {
             paddingRight: "20px",
           }}
         >
-          <Grid md={10}>
+          <Grid item md ={10}>
             <Tabs
               value={value}
               onChange={handleChange}
@@ -67,7 +67,7 @@ const TabMenu = () => {
               <Tab value="SCHEDULELIST" label="Booking List" />
             </Tabs>
           </Grid>
-          <Grid md={2}>
+          <Grid item md ={2}>
             {/*Operation Theatre Id Drop down on top right START*/}
             <FormControl fullWidth>
               {selectedOperationTheatre !== 0 && (
