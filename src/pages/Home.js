@@ -74,9 +74,9 @@ const Home = () => {
   // loading set START
   useEffect(() => {
     if (user.loaded && patient.loaded && megaMenu.loaded) {
-      console.log("patient : ", patient);
-      console.log("user : ", user);
-      console.log("Menu : ", megaMenu);
+      // console.log("patient : ", patient);
+      // console.log("user : ", user);
+      // console.log("Menu : ", megaMenu);
       setLoading(false);
     }
   }, [user, patient, megaMenu]);

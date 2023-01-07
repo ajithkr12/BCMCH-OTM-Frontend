@@ -72,7 +72,7 @@ function  ContextProvider(props) {
     
     const FetchMasterData = async ()=>{
         var _data = await GetAllMasters();
-        console.log("MasterData : ",_data)
+        // console.log("MasterData : ",_data)
         _data.loaded = true;
         setMasters(_data)
     }

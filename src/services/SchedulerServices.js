@@ -7,14 +7,22 @@ export const EventDataFormatter = async (eventsFetchedFromDb) => {
   // So we loop through data from backend and give new fileds and edit existing fields.
   try {
     var reformattedArray = await eventsFetchedFromDb.map(
+      // var start = 
       ({ event_id, startDate, endDate, ...props }) => ({
         ["event_id"]:event_id,
         ["title"]: "event " + event_id,
-        ["start"]: new Date(startDate),
+        ["start"]: new Date(startDate.substring(0, startDate.length-2)),
         ["end"]: new Date(endDate),
         ...props,
       })
     );
+    // startDate.substring(0, startDate.length-2) here we do this because 
+    // we need to remove last 2 digits from the dateTime string . 
+    // which is the .5 millisecond that we've added to the booking start time 
+    // so we remove that to show it in the event calendar 
+
+
+    
     // console.log("reformattedArray : ", reformattedArray);
     return reformattedArray;
   } catch (error) {

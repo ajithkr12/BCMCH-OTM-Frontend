@@ -59,7 +59,7 @@ const EventContainer = (props) => {
     var bookingsformatted = await EventDataFormatter(bookings);
     setAllocation(allocations);
     setEvents(bookingsformatted);
-    // console.log("bookings : ", bookings);
+    // console.log("bookingsformatted : ", bookingsformatted);
     // console.log("allocations : ", allocations);
     // return bookingsformatted;
   };
