@@ -26,7 +26,7 @@ import Loader from "../Components/Loader";
 
 import { ContextConsumer } from "../Utils/Context";
 import {
-  JsDatetimeToSQLDatetTme,
+  JsDatetimeToSQLDate,
   GetTimeFromJsDateTime,
 } from "../services/DateTimeServices";
 import { GetEventsAndAllocations } from "../API/GetEventsService";
@@ -158,7 +158,7 @@ export default function EnhancedTable() {
         // converts sql date formate to js datetime
         _endDateTime.setDate(_endDateTime.getDate() + 6);
         // ADDS 6 DAYS TO TODAY - to form end date
-        var _endDate = JsDatetimeToSQLDatetTme(_endDateTime);
+        var _endDate = JsDatetimeToSQLDate(_endDateTime);
         // converts js date time to sql date , then used to fetch data from db after
 
         setSchedulerStartDate(dbdateTimeToday.date);
@@ -178,7 +178,8 @@ export default function EnhancedTable() {
             LoadEventsAndAllocations();
           } else {
             // setAllocation([]);
-            setEvents([]);
+            // setEvents([]);
+              LoadEventsAndAllocations();
           }
         }
       }
@@ -261,8 +262,8 @@ export default function EnhancedTable() {
         selectedDate={new Date(schedulerStartDate)}
         onChange={(e) => {
           // console.log("e : ", e);
-          var startDate = JsDatetimeToSQLDatetTme(e.startDate);
-          var endDate = JsDatetimeToSQLDatetTme(e.endDate);
+          var startDate = JsDatetimeToSQLDate(e.startDate);
+          var endDate = JsDatetimeToSQLDate(e.endDate);
           setSchedulerStartDate(startDate);
           setSchedulerEndDate(endDate);
         }}

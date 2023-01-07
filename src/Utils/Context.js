@@ -10,6 +10,7 @@ function  ContextProvider(props) {
     const test="data";
     const [bookingFormOpen , setBookingFormOpen ] = useState();
     
+    
     const [dbdateTimeToday, setDbdateTimeToday] = useState({
         date: "",
         Time:"",
@@ -17,11 +18,6 @@ function  ContextProvider(props) {
     });
     // used to store date time from DB
 
-    const [masters,setMasters] = useState({
-        operationTheatreList:[ {name:""} ],
-        loaded:false
-    });
-    // used to store master tables
 
     const [allocatedOperationTheatres,setAllocatedOperationTheatres] = useState({
             list:[],
@@ -33,7 +29,35 @@ function  ContextProvider(props) {
     // used to store selected operation theatre data from the ot dropdown 
 
 
+
+
+    const [user, setUser] = useState({
+        id : "",
+        name:"",
+        departmentId:1,
+        loaded:false
+    })
+    const [patient, setPatient] = useState({
+        id : "",
+        name:"",
+        ward:"",
+        loaded:false
+    })
+    const [megaMenu, setMegaMenu] = useState({
+        list:[],
+        loaded:false
+    })
+    const [masters,setMasters] = useState({
+        operationTheatreList:[ {name:""} ],
+        loaded:false
+    });
+    // used to store master tables
+
     
+
+
+
+
     // LOCAL FUNCTIONS USED IN CONTEXT ONLY START
     const FetchDateTimeToday =async ()=>{
         var _today = await GetServerDateTime();
@@ -48,6 +72,7 @@ function  ContextProvider(props) {
     
     const FetchMasterData = async ()=>{
         var _data = await GetAllMasters();
+        console.log("MasterData : ",_data)
         _data.loaded = true;
         setMasters(_data)
     }
@@ -69,8 +94,10 @@ function  ContextProvider(props) {
             dbdateTimeToday, 
             allocatedOperationTheatres,setAllocatedOperationTheatres,
             masters,
-            selectedOperationTheatre,setSelectedOperationTheatre
-            
+            selectedOperationTheatre,setSelectedOperationTheatre,
+            user, setUser,
+            patient, setPatient,
+            megaMenu, setMegaMenu,
         }}>
 
             {props.children}

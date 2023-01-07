@@ -30,18 +30,25 @@ import {
   GetSurgeryList,
 } from "../API/GetMasters";
 import Loader from "../Components/Loader";
+import moment from "moment";
+import { SaveEvent } from "../API/UpdateEventServices";
 
 const BookingRegistrationForm = (props) => {
+  const { setBookingFormOpen,user,patient, selectedOperationTheatre, masters } = useContext(ContextConsumer);
   console.log("props: ", props);
+  console.log("ot: ", masters.operationTheatreList[selectedOperationTheatre]);
 
   ////////////// - DEFAULT FORM VALUES - /////////////////////////
 
-  const PatientName = "Hari Devan"; // todo - set values from scheduler
-  const WardName = "B21";
-  const OtName = "OT1";
-  const defaultFormValuesForRegistrationForm = {
-    PatientName: PatientName,
-    Ward: WardName,
+  // const PatientName = "Hari Devan"; // todo - set values from scheduler
+  // const WardName = "B21";
+  const OtName = masters.operationTheatreList[selectedOperationTheatre-1].name;
+  
+  const defaultFormValues = {
+    UserId : user.id,
+    UserName : user.name,
+    PatientName: patient.name,
+    Ward: patient.ward,
     OtName: OtName,
   };
   ///////////////////////////////////////
@@ -81,7 +88,7 @@ const BookingRegistrationForm = (props) => {
     endTimeSelected = startTimeSelected + 30 * 60 * 1000;
   }
 
-  const { setBookingFormOpen } = useContext(ContextConsumer);
+  
 
   const OnCancel = () => {
     setBookingFormOpen(false);
@@ -115,24 +122,25 @@ const BookingRegistrationForm = (props) => {
 
   const [page, setPage] = useState("1");
 
-  const [departmentSelected, setDepartmentsSelected] = useState([]);
+  const [otherDepartments, setOtherDepartments] = useState([]);
   // for multiple department select
   const [otherDepartmentSurgeons, setOtherDepartmentSurgeons] = useState([]);
   // for multiple department select
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [surgeryListPage, setSurgeryListPage] = useState(1);
   const [surgeryListLoading, setSurgeryListLoading] = useState(false);
-  const [Masters, setMasters] = useState();
+  // const [Masters, setMasters] = useState();
   const [SurgeryList, setSurgeryList] = useState([]);
 
-  const GetMasters = async () => {
-    var _allMasters = await GetAllMasters();
-    console.log("<<<<<<<<<<<<<masters : ", _allMasters);
-    setMasters(_allMasters);
-    setLoading(false);
-  };
+  // const GetMasters = async () => {
+  //   var _allMasters = await GetAllMasters();
+  //   console.log("<<<<<<<<<<<<<masters : ", _allMasters);
+  //   setMasters(_allMasters);
+    // setLoading(false);
+  // };
 
-  //form
+
+  //form initialization START
   const {
     register,
     control,
@@ -140,32 +148,96 @@ const BookingRegistrationForm = (props) => {
     handleSubmit,
     watch,
   } = useForm({
-    defaultValues: defaultFormValuesForRegistrationForm,
+    defaultValues: defaultFormValues,
     mode: "all",
   });
+  //form initialization END
 
+  
   const currentFormState = watch();
+  //all the form datas are saved in currentFormState
 
-  const onSave = (data) => {
+
+  const onSave = async () => {
+    // called when save button is clicked 
     console.log(",,,,,,,,,,,,current", currentFormState);
-    // data.EmployeeIdArray = [...data.OdEmployeeIdArray, ...data.EmployeeIdArray]
-    // navigate("/");
+    console.log("SurgeryTypeValue : ",SurgeryTypeValue)
+    
+    const TwelveHourDateAndTimeToSqlDateTime = (date,time, milliSecondsToadd ) =>{
+        var date_splitted = date.split("/");
+        var newDate = date_splitted[2]+ "-"
+                      +date_splitted[0]+"-"
+                      +date_splitted[1]
+        var SQLTimeFormatted = moment(time, ["h:mm A"]).format("HH:mm")+":00"+milliSecondsToadd ;
+        return newDate+"T"+SQLTimeFormatted;
+    };
+
+    var startDateTime =TwelveHourDateAndTimeToSqlDateTime(currentFormState.bDate,currentFormState.startTime,".500")
+    // always add .500 to start time
+    var endDateTime =TwelveHourDateAndTimeToSqlDateTime(currentFormState.bDate,currentFormState.endTime,".000")
+    // always add .000 to end time
+
+    // We add .500 to the start time because we start the event at .5000 seconds after the given time , 
+    // concider this senario :
+    
+    //  if we booked an event with 
+    // start time -  2023-01-07T07:30:00.000
+    // end time   -  2023-01-07T08:00:00.000
+
+    // and after that we have to book an event with 
+    // start time -  2023-01-07T08:00:00.000
+    // end time   -  2023-01-07T08:30:00.000
+    // the backend will first check if this sload is  isAlreadyBooked 
+    // and when we check the previous event is already booked at 2023-01-07T08:00:00.000
+    // so we won't be able to book this schedule . 
+    // to solve this problem we add .500 with start and .000 to end times 
+
+    // EXPLAINING THE PROCESS
+    // concider we booked an event with 
+    // StartDate: "2023-01-07T07:30:00.500"
+    // EndDate : "2023-01-07T08:00:00.000"
+    // when we want to book the next event with 
+    // StartDate: "2023-01-07T08:00:00.500"
+    // EndDate : "2023-01-07T08:30:00.000"
+    // when the db checks for the event it will not be booked between the given start and end date. 
+    //  because we add .500 with start date
+
+
+    var convertedData=  {
+      AnaesthetistId:currentFormState.anaesthetistId,
+      AnaesthesiaTypeId: currentFormState.anaesthesiaTypeId,
+      DepartmentId: user.departmentId,
+      OperationTheatreId: selectedOperationTheatre,
+      DoctorId: user.id,
+      StatusId: 1,
+      SurgeryId: SurgeryTypeValue===undefined?"":SurgeryTypeValue.id,
+      RegistrationNo: patient.id,
+      StartDate: startDateTime,
+      EndDate:   endDateTime,
+      Duration: 0,
+      InstructionToNurse: currentFormState.InstructionToNurse,
+      InstructionToAnaesthetist: currentFormState.InstructionToAnaesthetist ,
+      InstructionToOperationTeatrePersons: currentFormState.InstructionToOperationTeatrePersons,
+      RequestForSpecialMeterial: currentFormState.RequestForSpecialMeterial,
+      Type: "BOOKED",
+      EmployeeIdArray: currentFormState.OtherDepartmentEmployeeIdArray.toString(),
+      EquipmentsIdArray: currentFormState.EquipmentsIdArray.toString()
+    }
+
+    console.log("DATA : " , convertedData )
+
+    await SaveEvent(convertedData);
   };
 
-  const SelectChange = (e) => {
-    console.log("typing >>>>>>>>> ", e);
-    return e.target?.value;
-  };
+
 
   const loadMoreResults = () => {
     const nextPage = page + 1;
     setPage(nextPage);
-    console.log("page number", nextPage);
   };
 
   const loadMoreSurgeryList = async () => {
     // await setSurgeryListLoading(true);
-
     const nextPage = surgeryListPage + 1;
     await setSurgeryListPage(nextPage);
     console.log("page number  : ", nextPage);
@@ -198,6 +270,7 @@ const BookingRegistrationForm = (props) => {
   };
 
   const FetchOtherDepartmentSurgeons = async (selectedDepartments) => {
+    console.log("FetchOtherDepartmentSurgeons departments: ", selectedDepartments);
     const _data = await GetOtherDepartmentSurgeons(
       selectedDepartments,
       1,
@@ -211,9 +284,9 @@ const BookingRegistrationForm = (props) => {
     stringify: (option) => option.name + option.id,
   });
 
-  useEffect(() => {
-    GetMasters();
-  }, []);
+  // useEffect(() => {
+  //   GetMasters();
+  // }, []);
 
   return loading ? (
     <Loader />
@@ -222,11 +295,13 @@ const BookingRegistrationForm = (props) => {
       <DialogContent dividers>
         <form>
           <Grid container>
+
             {/* UHID Field START */}
             <Grid item={true} md={3} style={useStyles.root}>
               <TextField
                 label="Patient's UHID"
                 variant="outlined"
+                defaultValue={"111"}
                 style={useStyles.textfield}
                 {...register("RegistrationNo", {
                   required: true,
@@ -251,7 +326,7 @@ const BookingRegistrationForm = (props) => {
               <TextField
                 label="Patient's Name"
                 variant="outlined"
-                value={PatientName}
+                value={patient.name}
                 disabled
                 style={useStyles.textfield}
                 {...register("PatientName", { required: true, minLength: 2 })}
@@ -266,10 +341,10 @@ const BookingRegistrationForm = (props) => {
                 variant="outlined"
                 value={OtName}
                 style={useStyles.textfield}
-                {...register("OperationTheatreId", { required: true })}
+                {...register("operationTheatreId", { required: true })}
               />
-              {errors.OperationTheatreId &&
-                errors.OperationTheatreId.type === "required" && (
+              {errors.operationTheatreId &&
+                errors.operationTheatreId.type === "required" && (
                   <p style={useStyles.errortext}>OT Name is required.</p>
                 )}
             </Grid>
@@ -280,7 +355,7 @@ const BookingRegistrationForm = (props) => {
               <TextField
                 label="Patient's Ward"
                 variant="outlined"
-                value={WardName}
+                value={defaultFormValues.Ward}
                 disabled
                 style={useStyles.textfield}
                 {...register("Ward", { required: true, minLength: 2 })}
@@ -294,6 +369,7 @@ const BookingRegistrationForm = (props) => {
                 <DesktopDatePicker
                   label="Date "
                   inputFormat="MM/DD/YYYY"
+                  
                   style={useStyles.textfield}
                   value={dateSelector}
                   onChange={(newDate) => {
@@ -321,10 +397,10 @@ const BookingRegistrationForm = (props) => {
                     setTimeStart(newDate);
                   }}
                   renderInput={(params) => (
-                    <TextField {...params} {...register("sTime")} />
+                    <TextField {...params} {...register("startTime")} />
                   )}
                 />
-                {errors.sTime && errors.sTime.type === "required" && (
+                {errors.startTime && errors.startTime.type === "required" && (
                   <p style={useStyles.errortext}>Start time is required.</p>
                 )}
               </LocalizationProvider>
@@ -342,10 +418,10 @@ const BookingRegistrationForm = (props) => {
                     setTimeEnd(newDate);
                   }}
                   renderInput={(params) => (
-                    <TextField {...params} {...register("eTime")} />
+                    <TextField {...params} {...register("endTime")} />
                   )}
                 />
-                {errors.eTime && errors.eTime.type === "required" && (
+                {errors.endTime && errors.endTime.type === "required" && (
                   <p style={useStyles.errortext}>End time is required.</p>
                 )}
               </LocalizationProvider>
@@ -381,10 +457,6 @@ const BookingRegistrationForm = (props) => {
                   console.log("_data_fetched : ", _data_fetched);
                   setSurgeryList(_data_fetched);
                   setInputValueSurgery(newInputValue);
-                  // const optionEl = document.querySelector(
-                  //     `[data-name="Abdominoplasty Liposuction Level VI"]`
-                  //   );
-                  // optionEl?.scrollIntoView();
                 }}
                 renderInput={(params) => (
                   <TextField
@@ -448,6 +520,7 @@ const BookingRegistrationForm = (props) => {
                 label="Doctor ID"
                 variant="outlined"
                 style={useStyles.textfield}
+                defaultValue={defaultFormValues.UserId }
                 {...register("DoctorId", { required: true })}
               />
               {errors.DoctorId && errors.DoctorId.type === "required" && (
@@ -504,9 +577,9 @@ const BookingRegistrationForm = (props) => {
                   label="Anesthesia Type"
                   defaultValue=""
                   style={useStyles.textfield}
-                  {...register("AnaesthesiaTypeId", { required: true })}
+                  {...register("anaesthesiaTypeId", { required: true })}
                 >
-                  {Masters.anaesthesiaList.map((data) => {
+                  {masters.anaesthesiaList.map((data) => {
                     return (
                       <MenuItem key={data.id} value={data.id}>
                         {data.name}
@@ -514,8 +587,8 @@ const BookingRegistrationForm = (props) => {
                     );
                   })}
                 </Select>
-                {errors.AnaesthesiaTypeId &&
-                  errors.AnaesthesiaTypeId.type === "required" && (
+                {errors.anaesthesiaTypeId &&
+                  errors.anaesthesiaTypeId.type === "required" && (
                     <p style={useStyles.errortext}>
                       Anesthesia Type is required.
                     </p>
@@ -536,9 +609,9 @@ const BookingRegistrationForm = (props) => {
                   label="Preffered Anasthetist"
                   defaultValue=""
                   style={useStyles.textfield}
-                  {...register("AnaesthetistId", { required: true })}
+                  {...register("anaesthetistId", { required: true })}
                 >
-                  {Masters.anaesthetistList.map((data) => {
+                  {masters.anaesthetistList.map((data) => {
                     return (
                       <MenuItem key={data.employeeId} value={data.employeeId}>
                         {data.firstName +
@@ -550,8 +623,8 @@ const BookingRegistrationForm = (props) => {
                     );
                   })}
                 </Select>
-                {errors.AnaesthetistId &&
-                  errors.AnaesthetistId.type === "required" && (
+                {errors.anaesthetistId &&
+                  errors.anaesthetistId.type === "required" && (
                     <p style={useStyles.errortext}>
                       Preffered Anasthetist is required.
                     </p>
@@ -563,7 +636,7 @@ const BookingRegistrationForm = (props) => {
             {/* Other Department Selector START*/}
             <Grid item md={3} style={useStyles.root}>
               <Controller
-                name="DepartmentId"
+                name="otherDepartments"
                 control={control}
                 type="text"
                 defaultValue={[]}
@@ -575,8 +648,8 @@ const BookingRegistrationForm = (props) => {
                     </InputLabel>
                     <Select
                       {...register}
-                      labelId="DepartmentId"
-                      id="DepartmentId"
+                      labelId="otherDepartments"
+                      id="otherDepartments"
                       label="Other Department Names"
                       multiple
                       defaultValue={[]}
@@ -584,16 +657,16 @@ const BookingRegistrationForm = (props) => {
                       MenuProps={{ PaperProps: { sx: { maxHeight: 250 } } }}
                       onChange={async (e) => {
                         onChange(e.target?.value);
-                        setDepartmentsSelected(e.target?.value);
+                        setOtherDepartments(e.target?.value);
                         console.log(
-                          "setDepartmentsSelected : ",
-                          departmentSelected
+                          "setOtherDepartments : ",
+                          otherDepartments
                         );
                         await FetchOtherDepartmentSurgeons(e.target?.value);
                       }}
                       // MenuProps={MenuProps}
                     >
-                      {Masters.departmentsList.map((data) => {
+                      {masters.departmentsList.map((data) => {
                         return (
                           <MenuItem
                             key={data.departmentId}
@@ -616,12 +689,12 @@ const BookingRegistrationForm = (props) => {
                 name="OtherDepartmentEmployeeIdArray"
                 control={control}
                 type="text"
-                defaultValue={"[]"}
+                defaultValue={[]}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <FormControl fullWidth>
                     <InputLabel id="demo-multiple-name-label">
-                      Other Department Surgen Names
+                      Other Department Surgeons
                     </InputLabel>
                     <Select
                       {...register}
@@ -685,12 +758,11 @@ const BookingRegistrationForm = (props) => {
                       defaultValue={[]}
                       style={useStyles.textfield}
                       onChange={(e) => {
-                        let newData = SelectChange(e);
-                        onChange(newData);
+                        onChange(e.target?.value);
                       }}
                       // MenuProps={MenuProps}
                     >
-                      {Masters.equipmentList.map((data) => {
+                      {masters.equipmentList.map((data) => {
                         return (
                           <MenuItem key={data.id} value={data.id}>
                             {data.name}

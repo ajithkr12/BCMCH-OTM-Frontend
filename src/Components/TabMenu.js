@@ -1,5 +1,4 @@
 import React, { useEffect, useContext, useState } from "react";
-import { useParams } from "react-router-dom";
 
 import EventContainer from "../layouts/EventContainer";
 import Tabs from "@mui/material/Tabs";
@@ -22,8 +21,8 @@ const TabMenu = () => {
     setSelectedOperationTheatre,
   } = useContext(ContextConsumer);
 
-  let { uhid, name } = useParams();
-  const [value, setValue] = useState("SCHEDULELIST");
+
+  const [value, setValue] = useState("SCHEDULER");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -64,7 +63,7 @@ const TabMenu = () => {
               aria-label="secondary tabs example"
             >
               <Tab value="SCHEDULER" label="Scheduler" />
-              <Tab value="SCHEDULELIST" label="Booking List" />
+              <Tab value="SCHEDULELIST" label="Bookings" />
             </Tabs>
           </Grid>
           <Grid item md={2}>
@@ -110,7 +109,7 @@ const TabMenu = () => {
                       overflow: "auto", 
                       // height: "750px" 
                    }}>
-          <EventContainer uhid={uhid} EpId={name} />
+          <EventContainer doctorId={"doctorId"} patientId={"patientId"} />
         </div>
       )}
       {value === "SCHEDULELIST" && (

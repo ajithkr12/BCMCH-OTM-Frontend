@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -8,6 +8,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 import { Stack, Avatar } from "@mui/material";
 import { Colors } from "../Constants/Colors";
+import { ContextConsumer } from "../Utils/Context";
 
 const drawerWidth = 220;
 
@@ -17,22 +18,18 @@ const AppBar = styled(MuiAppBar, {
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
-  
-  
   }),
   ...(open && {
-   
     marginLeft: `${drawerWidth}px`,
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
-      
-
     }),
   }),
 }));
 
 const Header = (props) => {
+  const { user, patient } = useContext( ContextConsumer );
   const { open, setOpen } = props;
 
   const handleDrawerOpen = () => {
@@ -44,7 +41,7 @@ const Header = (props) => {
       position="fixed"
       open={open}
       elevation={0}
-      style={{ background: Colors.PrimaryBlue, boxShadow: 0 ,zIndex:2000}}
+      style={{ background: Colors.PrimaryBlue, boxShadow: 0, zIndex: 2000 }}
     >
       <Toolbar>
         <IconButton
@@ -52,7 +49,7 @@ const Header = (props) => {
           aria-label="open drawer"
           onClick={handleDrawerOpen}
           edge="start"
-          sx={{ mr: 2,}}
+          sx={{ mr: 2 }}
         >
           <MenuIcon />
         </IconButton>
@@ -61,7 +58,7 @@ const Header = (props) => {
         </Typography>
         <Stack direction="row" spacing={2} alignItems="center" sx={{ p: 0.5 }}>
           <Avatar alt="profile user" src={""} sx={{ width: 32, height: 32 }} />
-          <Typography variant="subtitle1">John Doe</Typography>
+          {user.loaded&&<Typography variant="subtitle1">{user.name}</Typography>}
         </Stack>
       </Toolbar>
     </AppBar>
@@ -70,4 +67,3 @@ const Header = (props) => {
 export default Header;
 
 // sx={{ mr: 2, ...(open && { display: "none" }) }}
-

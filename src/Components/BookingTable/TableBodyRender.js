@@ -20,7 +20,7 @@ import { styled } from "@mui/material/styles";
 import { Colors } from "../../Constants/Colors";
 import Dots from "../Dots";
 
-import { JsDatetimeToSQLDatetTme,GetTimeFromJsDateTime } from "../../services/DateTimeServices";
+import { JsDatetimeToSQLDate,GetTimeFromJsDateTime } from "../../services/DateTimeServices";
 const TableBodyRender = (props) => {
     
     const {events,
@@ -125,7 +125,7 @@ const TableBodyRender = (props) => {
 
                     {/* date START*/}
                     <TableCell align="center">
-                      {JsDatetimeToSQLDatetTme(event.start)}
+                      {JsDatetimeToSQLDate(event.start)}
                     </TableCell>
                     {/* date END*/}
 

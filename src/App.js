@@ -10,7 +10,7 @@ function App() {
   return (
         <BrowserRouter>
           <Routes>
-            <Route path="/:uhid/:name" element={<Home />} />
+            <Route path="/:doctorId/:patientId" element={<Home />} />
             <Route path="/" element={<HomeTest />} />
           </Routes>
           

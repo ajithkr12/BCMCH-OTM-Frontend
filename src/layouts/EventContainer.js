@@ -19,7 +19,7 @@ import {
   IsBooked,
 } from "../services/SchedulerServices";
 import {
-  JsDatetimeToSQLDatetTme,
+  JsDatetimeToSQLDate,
   DateOnly,
 } from "../services/DateTimeServices";
 import { MenuItem, Select } from "@mui/material";
@@ -145,7 +145,7 @@ const EventContainer = (props) => {
         // converts sql date formate to js datetime
         _endDateTime.setDate(_endDateTime.getDate() + 6);
         // ADDS 6 DAYS TO TODAY - to form end date
-        var _endDate = JsDatetimeToSQLDatetTme(_endDateTime);
+        var _endDate = JsDatetimeToSQLDate(_endDateTime);
         // converts js date time to sql date , then used to fetch data from db after
 
         setSchedulerStartDate(dbdateTimeToday.date);
@@ -162,6 +162,9 @@ const EventContainer = (props) => {
             //   "selectedOperationTheatre : ",
             //   selectedOperationTheatre
             // );
+            LoadEventsAndAllocations();
+          }
+          else{
             LoadEventsAndAllocations();
           }
         }
@@ -216,9 +219,9 @@ const EventContainer = (props) => {
         getRemoteEvents={(e) => {
           // this will be called when we press the event date switcher on the top
           // console.log(e);
-          var startDate = JsDatetimeToSQLDatetTme(e.start);
+          var startDate = JsDatetimeToSQLDate(e.start);
           // console.log("startDate : ",startDate)
-          var endDate = JsDatetimeToSQLDatetTme(e.end);
+          var endDate = JsDatetimeToSQLDate(e.end);
           // console.log("endDate : ",endDate)
           setSchedulerStartDate(startDate);
           setSchedulerEndDate(endDate);
@@ -238,7 +241,7 @@ const EventContainer = (props) => {
       />
 
       {bookingFormOpen && (
-        <PopUp dataToForm={dataToForm} isEventEditor={isEventEditor} />
+        <PopUp dataToForm={dataToForm}  isEventEditor={isEventEditor} />
       )}
     </div>
 
