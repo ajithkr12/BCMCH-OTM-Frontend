@@ -28,11 +28,13 @@ import { ClickAwayListener, Dialog, Grow, MenuItem, MenuList, Paper, Popper, Sel
 import RightClickMenu from "../Components/RightClickMenu";
 
 const EventContainer = (props) => {
-  // right click
-  const [rightClick,setRightClick] = useState(false);
-  const [rightClickPosition,setRightClickPosition] = useState({x:0,y:0});
   
-  let { uhid, EpId } = props;
+  //UNCOMMENT TO ENABLE right click
+  // const [rightClick,setRightClick] = useState(false);
+  // const [rightClickPosition,setRightClickPosition] = useState({x:0,y:0});
+  //UNCOMMENT TO ENABLE right click
+
+
   const [loading, setLoading] = useState(true);
   const [isEventEditor, setIsEventEditor] = useState(false);
 
@@ -73,7 +75,7 @@ const EventContainer = (props) => {
     // return bookingsformatted;
   };
 
-  const divRef = React.useRef();
+  
   
 
   const CustomEventRenderer = (_event) => {
@@ -300,7 +302,7 @@ const EventContainer = (props) => {
         /> 
       )
       } */}
-      
+
       {/* UNCOMMENT TO ENABLE RIGHT CLICK */}
 
     

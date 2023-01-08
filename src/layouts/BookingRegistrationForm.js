@@ -396,6 +396,12 @@ const BookingRegistrationForm = (props) => {
             <Grid item md={3} style={useStyles.root}>
               <LocalizationProvider dateAdapter={AdapterMoment}>
                 <TimePicker
+                  // disable unwanted minutes START
+                  // We wants minutes in 30 minute interval
+                  shouldDisableTime={(timeValue, clockType) => {
+                    return clockType === "minutes" && ( (timeValue>0 && timeValue < 30) || (timeValue > 30&&timeValue<=59)  ) ;
+                  }}
+                  // disable unwanted minutes END
                   label="Start time"
                   style={useStyles.textfield}
                   value={TimeStart}
@@ -417,6 +423,12 @@ const BookingRegistrationForm = (props) => {
             <Grid item md={3} style={useStyles.root}>
               <LocalizationProvider dateAdapter={AdapterMoment}>
                 <TimePicker
+                  // disable unwanted minutes START
+                  // We wants minutes in 30 minute interval
+                  shouldDisableTime={(timeValue, clockType) => {
+                    return clockType === "minutes" && ( (timeValue>0 && timeValue < 30) || (timeValue > 30&&timeValue<=59)  ) ;
+                  }}
+                  // disable unwanted minutes END
                   label="End time"
                   style={useStyles.textfield}
                   value={TimeEnd}
