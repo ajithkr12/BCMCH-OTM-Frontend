@@ -84,17 +84,17 @@ const EventContainer = (props) => {
       <div
         style={_eventStyle}
         onClick={(e) => {
-          
-          // setIsEventEditor(true);
-          // setdataToForm(_event);
-          // setBookingFormOpen(true);
+
+          setIsEventEditor(true);
+          setdataToForm(_event);
+          setBookingFormOpen(true);
           
           // UNCOMMENT TO ENABLE RIGHT CLICK
-          setRightClick(true)
-          setRightClickPosition({
-            x:e.clientX, 
-            y:e.clientY
-          })
+          // setRightClick(true)
+          // setRightClickPosition({
+          //   x:e.clientX, 
+          //   y:e.clientY
+          // })
           // UNCOMMENT TO ENABLE RIGHT CLICK
 
 
@@ -290,7 +290,8 @@ const EventContainer = (props) => {
       
 
       {/* UNCOMMENT TO ENABLE RIGHT CLICK */}
-      {
+
+      {/* {
       rightClick && (
         <RightClickMenu 
           rightClickPosition={rightClickPosition} 
@@ -298,7 +299,8 @@ const EventContainer = (props) => {
           rightClick={rightClick} 
         /> 
       )
-      }
+      } */}
+      
       {/* UNCOMMENT TO ENABLE RIGHT CLICK */}
 
     
