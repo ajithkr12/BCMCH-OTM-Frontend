@@ -11,7 +11,9 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
-
+import { ContextConsumer } from '../Utils/Context';
+import { useContext } from 'react';
+import { Link } from 'react-router-dom';
 const drawerWidth = 220;
 
 
@@ -32,43 +34,54 @@ const SideMenu = (props) => {
     setOpen(false);
   };
 
+  const { megaMenu } =useContext(ContextConsumer);
+
   return (
-    
-      <Drawer
-        sx={{
-          
+    <Drawer
+      sx={{
+        width: drawerWidth,
+        flexShrink: 0,
+        "& .MuiDrawer-paper": {
           width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-            boxSizing: 'border-box',
-            
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={open}
-      >
+          boxSizing: "border-box",
+        },
+      }}
+      variant="persistent"
+      anchor="left"
+      open={open}
+    >
       <DrawerHeader>
-      <IconButton onClick={handleDrawerClose}>
-        {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-      </IconButton>
+        <IconButton onClick={handleDrawerClose}>
+          {theme.direction === "ltr" ? (
+            <ChevronLeftIcon />
+          ) : (
+            <ChevronRightIcon />
+          )}
+        </IconButton>
       </DrawerHeader>
-        <Divider />
+      <Divider />
+      {/* Load megamenu only if it is loaded  */}
+      {/* Megamenu list section START */}
+      {megaMenu.loaded && (
         <List>
-          {['All mail', 'Trash', 'Spam','Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding>
+          {megaMenu.list.map((item, index) => (
+            <ListItem key={item.name} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  <InboxIcon /> 
+                  <InboxIcon />
                 </ListItemIcon>
-                <ListItemText primary={text} />
+                
+                {/* <Link to="/" > */}
+                  <ListItemText primary={item.name} />
+                {/* </Link> */}
+
               </ListItemButton>
             </ListItem>
           ))}
         </List>
-      </Drawer>
-
+      )}
+      {/*Megamenu list section END */}
+    </Drawer>
   );
 }
 export default SideMenu;
