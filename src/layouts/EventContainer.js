@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 
 import { Scheduler } from "@aldabil/react-scheduler";
+// import ClickAwayListener from '@mui/base/ClickAwayListener';
+
 // import PopUpForm from '../pages/PopUpForm';
 import PopUp from "./PopUp";
 import Loader from "../Components/Loader";
@@ -22,9 +24,14 @@ import {
   JsDatetimeToSQLDate,
   DateOnly,
 } from "../services/DateTimeServices";
-import { MenuItem, Select } from "@mui/material";
+import { ClickAwayListener, Dialog, Grow, MenuItem, MenuList, Paper, Popper, Select } from "@mui/material";
+import RightClickMenu from "../Components/RightClickMenu";
 
 const EventContainer = (props) => {
+  // right click
+  const [rightClick,setRightClick] = useState(false);
+  const [rightClickPosition,setRightClickPosition] = useState({x:0,y:0});
+  
   let { uhid, EpId } = props;
   const [loading, setLoading] = useState(true);
   const [isEventEditor, setIsEventEditor] = useState(false);
@@ -59,27 +66,41 @@ const EventContainer = (props) => {
     var bookingsformatted = await EventDataFormatter(bookings);
     setAllocation(allocations);
     setEvents(bookingsformatted);
+    // console.log("start date : ", schedulerStartDate );
+    // console.log("start date : ", schedulerEndDate );
     // console.log("bookingsformatted : ", bookingsformatted);
     // console.log("allocations : ", allocations);
     // return bookingsformatted;
   };
 
+  const divRef = React.useRef();
+  
+
   const CustomEventRenderer = (_event) => {
     var { _eventStyle } = EventTypeCheck(_event.statusName);
+    
+    
     return (
       <div
         style={_eventStyle}
-        onClick={() => {
-          if (_event.statusName === "BLOCKED") {
-            return "";
-          }
-          setIsEventEditor(true);
-          setdataToForm(_event);
-          setBookingFormOpen(true);
+        onClick={(e) => {
+          
+          // setIsEventEditor(true);
+          // setdataToForm(_event);
+          // setBookingFormOpen(true);
+          
+          // UNCOMMENT TO ENABLE RIGHT CLICK
+          setRightClick(true)
+          setRightClickPosition({
+            x:e.clientX, 
+            y:e.clientY
+          })
+          // UNCOMMENT TO ENABLE RIGHT CLICK
+
+
         }}
       >
         <p>{_event.title}</p>
-        {/* <p>{_event.patientRegistrationNo}</p> */}
       </div>
     );
   };
@@ -143,7 +164,7 @@ const EventContainer = (props) => {
         // so that the we can fetch the events and allocations from that date
         var _endDateTime = new Date(dbdateTimeToday.date);
         // converts sql date formate to js datetime
-        _endDateTime.setDate(_endDateTime.getDate() + 6);
+        _endDateTime.setDate(_endDateTime.getDate() + 7);
         // ADDS 6 DAYS TO TODAY - to form end date
         var _endDate = JsDatetimeToSQLDate(_endDateTime);
         // converts js date time to sql date , then used to fetch data from db after
@@ -186,6 +207,20 @@ const EventContainer = (props) => {
     }
   }, [schedulerStartDate]);
 
+
+
+  // document.addEventListener("click",(e)=>{
+  //   e.preventDefault();
+  //   console.log(e)
+  // })
+  // const handleClick = (e) => {
+  //   if (e.type === 'click') {
+  //     console.log('Left click');
+  //   } else if (e.type === 'contextmenu') {
+  //     console.log('Right click');
+  //   }
+  // };
+
   return loading ? (
     <Loader />
   ) : (
@@ -218,14 +253,21 @@ const EventContainer = (props) => {
         eventRenderer={(event) => CustomEventRenderer(event)}
         getRemoteEvents={(e) => {
           // this will be called when we press the event date switcher on the top
-          // console.log(e);
           var startDate = JsDatetimeToSQLDate(e.start);
-          // console.log("startDate : ",startDate)
-          var endDate = JsDatetimeToSQLDate(e.end);
-          // console.log("endDate : ",endDate)
+          // Above line will fetch rhe startDate
+
+          var _endDateTime = e.end
+          _endDateTime.setDate(_endDateTime.getDate() + 1);
+          // add 1 day to enddatetime
+          var endDate = JsDatetimeToSQLDate(_endDateTime);
+          // above lines will fetch enddate from the scheduler and 
+          // The event renderer only returns 6 days. 
+          // In our case we need 7 days
+          // so we add 1 day to it . 
+          
           setSchedulerStartDate(startDate);
           setSchedulerEndDate(endDate);
-          // console.log("im here")
+          
         }}
         events={events}
         // to disable right top menu to switch between views
@@ -240,9 +282,27 @@ const EventContainer = (props) => {
         }}
       />
 
-      {bookingFormOpen && (
-        <PopUp dataToForm={dataToForm}  isEventEditor={isEventEditor} />
-      )}
+      {
+        bookingFormOpen && (
+          <PopUp dataToForm={dataToForm} isEventEditor={isEventEditor} />
+        )
+      }
+      
+
+      {/* UNCOMMENT TO ENABLE RIGHT CLICK */}
+      {
+      rightClick && (
+        <RightClickMenu 
+          rightClickPosition={rightClickPosition} 
+          setRightClick={setRightClick} 
+          rightClick={rightClick} 
+        /> 
+      )
+      }
+      {/* UNCOMMENT TO ENABLE RIGHT CLICK */}
+
+    
+      
     </div>
 
     // </>

@@ -11,7 +11,7 @@ export const EventDataFormatter = async (eventsFetchedFromDb) => {
       ({ event_id, startDate, endDate, ...props }) => ({
         ["event_id"]:event_id,
         ["title"]: "event " + event_id,
-        ["start"]: new Date(startDate.substring(0, startDate.length-2)),
+        ["start"]: new Date(startDate),
         ["end"]: new Date(endDate),
         ...props,
       })

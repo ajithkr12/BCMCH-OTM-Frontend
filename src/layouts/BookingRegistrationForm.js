@@ -52,8 +52,14 @@ const BookingRegistrationForm = (props) => {
     OtName: OtName,
   };
   ///////////////////////////////////////
-  const { start } = props.dataToForm?.props;
   const { isEventEditor } = props;
+  if (isEventEditor){
+    var { start } = props?.dataToForm;
+  }
+  else{
+    var { start } = props.dataToForm?.props;
+  }
+  
   // isEventEditor is used to know weather its an editor form
   // or booking form .
   // if it is an editor form we need to load data from that particular booking with its id
