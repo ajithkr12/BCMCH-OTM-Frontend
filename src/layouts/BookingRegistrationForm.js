@@ -82,7 +82,7 @@ const BookingRegistrationForm = (props) => {
   // the above line selects the time only from the given datetime
 
   let endTimeSelected;
-  let surgerySelectedFromProps = {name:""};
+  let surgerySelectedFromProps = { name: "" };
   if (isEventEditor) {
     console.log("event editor : ", props.dataToForm);
     endTimeSelected = new Date(end);
@@ -122,8 +122,10 @@ const BookingRegistrationForm = (props) => {
   const [TimeStart, setTimeStart] = useState(startTimeSelected);
   const [TimeEnd, setTimeEnd] = useState(endTimeSelected);
   const [value, setValue] = useState();
-  
-  const [selectedSurgery, setSelectedSurgery] = useState( surgerySelectedFromProps);
+
+  const [selectedSurgery, setSelectedSurgery] = useState(
+    surgerySelectedFromProps
+  );
 
   const [inputValue, setInputValue] = useState();
 
@@ -131,10 +133,15 @@ const BookingRegistrationForm = (props) => {
 
   const [page, setPage] = useState("1");
 
+  
+  
+
   const [otherDepartments, setOtherDepartments] = useState([]);
   // for multiple department select
+  const [otherDepartmentSurgeonsSelected, setOtherDepartmentSurgeonsSelected] = useState([]);
+  //to hold selected surgeons from multiple select box
   const [otherDepartmentSurgeons, setOtherDepartmentSurgeons] = useState([]);
-  // for multiple department select
+  // to load surgeon list of departments given
   const [loading, setLoading] = useState(false);
   const [surgeryListPage, setSurgeryListPage] = useState(1);
   const [surgeryListLoading, setSurgeryListLoading] = useState(false);
@@ -166,8 +173,8 @@ const BookingRegistrationForm = (props) => {
 
   const onSave = async () => {
     // called when save button is clicked
-    console.log("current", currentFormState);
-    console.log("selectedSurgery : ", selectedSurgery);
+    // console.log("current", currentFormState);
+    // console.log("selectedSurgery : ", selectedSurgery);
     const TwelveHourDateAndTimeToSqlDateTime = (
       date,
       time,
@@ -218,6 +225,7 @@ const BookingRegistrationForm = (props) => {
     // EndDate : "2023-01-07T08:30:00.000"
     // when the db checks for the event it will not be booked between the given start and end date.
     //  because we add .500 with start date
+    console.log("Form Data : ", currentFormState )
 
     var convertedData = {
       AnaesthetistId: currentFormState.anaesthetistId,
@@ -237,8 +245,7 @@ const BookingRegistrationForm = (props) => {
         currentFormState.InstructionToOperationTeatrePersons,
       RequestForSpecialMeterial: currentFormState.RequestForSpecialMeterial,
       Type: "BOOKED",
-      EmployeeIdArray:
-        currentFormState.OtherDepartmentEmployeeIdArray.toString(),
+      EmployeeIdArray: otherDepartmentSurgeonsSelected.toString(),
       EquipmentsIdArray: currentFormState.EquipmentsIdArray.toString(),
     };
 
@@ -428,7 +435,7 @@ const BookingRegistrationForm = (props) => {
                       style={useStyles.textfield}
                       value={TimeStart}
                       onChange={(e) => {
-                        console.log(e);
+                        // console.log(e);
                         setTimeStart(e?._d);
                         onChange(e?._d);
                       }}
@@ -474,7 +481,7 @@ const BookingRegistrationForm = (props) => {
                         style={useStyles.textfield}
                         value={TimeEnd}
                         onChange={(e) => {
-                          console.log(e);
+                          // console.log(e);
                           setTimeEnd(e?._d);
                           onChange(e?._d);
                         }}
@@ -507,10 +514,10 @@ const BookingRegistrationForm = (props) => {
                 // Executed when the surgery value is selected from a list START
                 onChange={(event, newValue) => {
                   setSelectedSurgery(newValue);
-                  console.log(
-                    "JSON.stringify : ",
-                    JSON.stringify(newValue, null, " ")
-                  );
+                  // console.log(
+                  //   "JSON.stringify : ",
+                  //   JSON.stringify(newValue, null, " ")
+                  // );
                 }}
                 // Executed when the surgery value is selected from a list END
                 // Executed when we type START
@@ -587,13 +594,14 @@ const BookingRegistrationForm = (props) => {
             </Grid>
             {/* Doctor ID Field END */}
 
-            {/* Employee name selector START */}
+            {/* Additional Surgeon selector START */}
             <Grid item md={3} style={useStyles.root}>
               <Autocomplete
-                disablePortal
+                multiple
+                // disablePortal
                 id="AdditionalSurgeon"
                 value={value}
-                options={["SurgeonName1"]}
+                options={["SurgeonName1", "SurgeonName3", "SurgeonName4"]}
                 style={useStyles.textfield}
                 onChange={(event, newValue) => {
                   setValue(newValue);
@@ -615,13 +623,14 @@ const BookingRegistrationForm = (props) => {
                 )}
                 ListboxProps={{
                   onScroll: handleScroll,
+                  style: { maxHeight: "200px" },
                 }}
               />
               {errors.SurgeonId && errors.SurgeonId.type === "required" && (
                 <p style={useStyles.errortext}>surgeon is required.</p>
               )}
             </Grid>
-            {/* Employee name selector END */}
+            {/* Additional Surgeon selector END */}
 
             {/* Anesthesia Type Selector START */}
             <Grid item md={3} style={useStyles.root}>
@@ -701,37 +710,40 @@ const BookingRegistrationForm = (props) => {
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <FormControl fullWidth>
-                    <InputLabel id="other-department">
-                      Other Departments
-                    </InputLabel>
-                    <Select
-                      {...register}
-                      labelId="otherDepartments"
-                      id="otherDepartments"
-                      label="Other Department Names"
+                    <Autocomplete
                       multiple
-                      defaultValue={[]}
+                      id="otherDepartments"
+                      options={masters.departmentsList}
+                      getOptionLabel={(option) => option.departmentName}
                       style={useStyles.textfield}
-                      MenuProps={{ PaperProps: { sx: { maxHeight: 250 } } }}
-                      onChange={async (e) => {
-                        onChange(e.target?.value);
-                        setOtherDepartments(e.target?.value);
-                        console.log("setOtherDepartments : ", otherDepartments);
-                        await FetchOtherDepartmentSurgeons(e.target?.value);
-                      }}
-                      // MenuProps={MenuProps}
-                    >
-                      {masters.departmentsList.map((data) => {
-                        return (
-                          <MenuItem
-                            key={data.departmentId}
-                            value={data.departmentId}
-                          >
-                            {data.departmentName}
-                          </MenuItem>
+                      onChange={async (event, newValue) => {
+                        // setOtherDepartments(newValue);
+                        // the newvalue has all fields of the department data
+                        // it includes id, name, etc
+                        // we only want to store its id , so we filter out the id only
+                        var departmentsIdArray = await newValue.map(
+                          (_data) => _data.departmentId
                         );
-                      })}
-                    </Select>
+                        // so we store id only in departmentsIdArray and
+                        // fetch the surgeons in accordance with that data
+                        await FetchOtherDepartmentSurgeons(departmentsIdArray);
+                      }}
+                      renderInput={(value) => (
+                        <TextField
+                          {...value}
+                          InputProps={{
+                            ...value.InputProps,
+                            type: "search",
+                          }}
+                          {...register("otherDepartments", { required: true })}
+                          label="Departments To Include"
+                        />
+                      )}
+                      ListboxProps={{
+                        onScroll: handleScroll,
+                        style: { maxHeight: "200px" },
+                      }}
+                    />
                   </FormControl>
                 )}
               />
@@ -741,44 +753,54 @@ const BookingRegistrationForm = (props) => {
             {/* Other department employee selector START */}
             <Grid item md={3} style={useStyles.root}>
               <Controller
-                name="OtherDepartmentEmployeeIdArray"
+                name="OdEmployeeIdArray"
                 control={control}
                 type="text"
                 defaultValue={[]}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <FormControl fullWidth>
-                    <InputLabel id="demo-multiple-name-label">
-                      Other Department Surgeons
-                    </InputLabel>
-                    <Select
-                      {...register}
-                      labelId="OdEmployeeIdArray"
-                      id="OdEmployeeIdArray"
-                      label="Other Department Surgen Names"
+                    <Autocomplete
                       multiple
-                      defaultValue={[]}
-                      style={useStyles.textfield}
-                      onChange={(e) => {
-                        onChange(e.target?.value);
-                      }}
-                      MenuProps={{ PaperProps: { sx: { maxHeight: 250 } } }}
-                    >
-                      {otherDepartmentSurgeons.map((data) => {
-                        return (
-                          <MenuItem
-                            key={data.employeeId}
-                            value={data.employeeId}
-                          >
-                            {data.firstName +
-                              " " +
-                              data.middleName +
-                              " " +
-                              data.lastName}
-                          </MenuItem>
+                      id="OdEmployeeIdArray"
+                      options={otherDepartmentSurgeons}
+                      getOptionLabel={(option) =>{
+                        option.middleName= option.middleName==null?"":option.middleName 
+                        return (option.firstName +
+                        " " +
+                        option.middleName+
+                        " " +
+                        option.lastName)}
+                      }
+                      onChange={ (event, employees) => {
+                        // the employees has all fields of the surgeon data
+                        // it includes id, name, etc
+                        // we only want to store its id , so we filter out the id only
+                        var surgeonIdArray = employees.map(
+                          (_data) => _data.employeeId
                         );
-                      })}
-                    </Select>
+                        onChange(employees)
+                        setOtherDepartmentSurgeonsSelected(surgeonIdArray)
+                        // console.log(surgeonIdArray)
+                      }}
+
+                      style={useStyles.textfield}
+
+                      renderInput={(value) => (
+                        <TextField
+                          {...value}
+                          InputProps={{
+                            ...value.InputProps,
+                            type: "search",
+                          }}
+                          {...register("OdEmployeeIdArray", { required: true })}
+                          label="Surgeons To Include"
+                        />
+                      )}
+                      ListboxProps={{
+                        style: { maxHeight: "200px" },
+                      }}
+                    />
                   </FormControl>
                 )}
               />
@@ -899,6 +921,7 @@ const BookingRegistrationForm = (props) => {
           >
             Cancel
           </Button>
+
           <Button
             onClick={() => onSave()}
             type="submit"
