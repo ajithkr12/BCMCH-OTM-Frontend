@@ -31,6 +31,8 @@ export const GetSurgeryList = async (
   _pageNumber = 1,
   _rowsPerPage = 20
 ) => {
+  console.log("GET SURGERY LIST")
+  console.log(_searchKeyword,": ", _pageNumber, ": ", _rowsPerPage)
   try {
     const response = await axios.get(
       ConstantURL.GetSurgeryList,

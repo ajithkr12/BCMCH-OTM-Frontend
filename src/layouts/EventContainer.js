@@ -129,7 +129,7 @@ const EventContainer = (props) => {
             return "";
           }
           setIsEventEditor(false);
-          setdataToForm({ props });
+          setdataToForm(props);
           setBookingFormOpen(true);
         }}
       ></div>

@@ -34,32 +34,30 @@ import moment from "moment";
 import { SaveEvent } from "../API/UpdateEventServices";
 
 const BookingRegistrationForm = (props) => {
-  const { setBookingFormOpen,user,patient, selectedOperationTheatre, masters } = useContext(ContextConsumer);
+  const {
+    setBookingFormOpen,
+    user,
+    patient,
+    selectedOperationTheatre,
+    masters,
+  } = useContext(ContextConsumer);
   console.log("props: ", props);
-  console.log("ot: ", masters.operationTheatreList[selectedOperationTheatre]);
 
-  ////////////// - DEFAULT FORM VALUES - /////////////////////////
-
-  // const PatientName = "Hari Devan"; // todo - set values from scheduler
-  // const WardName = "B21";
-  const OtName = masters.operationTheatreList[selectedOperationTheatre-1].name;
-  
+  // Default Form Values START
+  const OtName =
+    masters.operationTheatreList[selectedOperationTheatre - 1].name;
   const defaultFormValues = {
-    UserId : user.id,
-    UserName : user.name,
+    UserId: user.id,
+    UserName: user.name,
     PatientName: patient.name,
     Ward: patient.ward,
     OtName: OtName,
   };
-  ///////////////////////////////////////
+  // Default Form Values END
+
   const { isEventEditor } = props;
-  if (isEventEditor){
-    var { start } = props?.dataToForm;
-  }
-  else{
-    var { start } = props.dataToForm?.props;
-  }
-  
+  var { start, end } = props.dataToForm;
+
   // isEventEditor is used to know weather its an editor form
   // or booking form .
   // if it is an editor form we need to load data from that particular booking with its id
@@ -78,23 +76,26 @@ const BookingRegistrationForm = (props) => {
 
   const dateSelected = getDateAndTime(start);
 
-  console.log("<<<<<<<dateSelected : ", dateSelected);
+  // console.log("<<<<<<<dateSelected : ", dateSelected);
   // the above dateSelected contains the selected date in dd/mm/yyyy format
   const startTimeSelected = dateSelected.startTimeSelected;
   // the above line selects the time only from the given datetime
 
   let endTimeSelected;
-
-  if (isEventEditor === true) {
+  let surgerySelectedFromProps = {name:""};
+  if (isEventEditor) {
     console.log("event editor : ", props.dataToForm);
-    endTimeSelected = new Date(props.dataToForm.end);
+    endTimeSelected = new Date(end);
+    surgerySelectedFromProps = {
+      id: props.dataToForm.surgeryId,
+      name: props.dataToForm.surgeryName,
+      printName: props.dataToForm.surgeryPrintName,
+    };
     // loads endtime from the
   } else {
     // To form add 30 minutes with the starttime .
     endTimeSelected = startTimeSelected + 30 * 60 * 1000;
   }
-
-  
 
   const OnCancel = () => {
     setBookingFormOpen(false);
@@ -121,7 +122,9 @@ const BookingRegistrationForm = (props) => {
   const [TimeStart, setTimeStart] = useState(startTimeSelected);
   const [TimeEnd, setTimeEnd] = useState(endTimeSelected);
   const [value, setValue] = useState();
-  const [SurgeryTypeValue, setsurgeryTypeValue] = useState();
+  
+  const [selectedSurgery, setSelectedSurgery] = useState( surgerySelectedFromProps);
+
   const [inputValue, setInputValue] = useState();
 
   const [inputValueSurgery, setInputValueSurgery] = useState();
@@ -142,9 +145,8 @@ const BookingRegistrationForm = (props) => {
   //   var _allMasters = await GetAllMasters();
   //   console.log("<<<<<<<<<<<<<masters : ", _allMasters);
   //   setMasters(_allMasters);
-    // setLoading(false);
+  // setLoading(false);
   // };
-
 
   //form initialization START
   const {
@@ -159,124 +161,135 @@ const BookingRegistrationForm = (props) => {
   });
   //form initialization END
 
-  
   const currentFormState = watch();
   //all the form datas are saved in currentFormState
 
-
   const onSave = async () => {
-    // called when save button is clicked 
-    console.log(",,,,,,,,,,,,current", currentFormState);
-    console.log("SurgeryTypeValue : ",SurgeryTypeValue)
-    
-    const TwelveHourDateAndTimeToSqlDateTime = (date,time, milliSecondsToadd ) =>{
-        var date_splitted = date.split("/");
-        var newDate = date_splitted[2]+ "-"
-                      +date_splitted[0]+"-"
-                      +date_splitted[1]
-        var SQLTimeFormatted = moment(time, ["h:mm A"]).format("HH:mm")+":00"+milliSecondsToadd ;
-        return newDate+"T"+SQLTimeFormatted;
+    // called when save button is clicked
+    console.log("current", currentFormState);
+    console.log("selectedSurgery : ", selectedSurgery);
+    const TwelveHourDateAndTimeToSqlDateTime = (
+      date,
+      time,
+      milliSecondsToadd
+    ) => {
+      var date_splitted = date.split("/");
+      var newDate =
+        date_splitted[2] + "-" + date_splitted[0] + "-" + date_splitted[1];
+      var SQLTimeFormatted =
+        moment(time, ["h:mm A"]).format("HH:mm") + ":00" + milliSecondsToadd;
+      return newDate + "T" + SQLTimeFormatted;
     };
 
-    var startDateTime =TwelveHourDateAndTimeToSqlDateTime(currentFormState.bDate,currentFormState.startTime,".500")
+    var startDateTime = TwelveHourDateAndTimeToSqlDateTime(
+      currentFormState.bDate,
+      currentFormState.startTime,
+      ".500"
+    );
     // always add .500 to start time
-    var endDateTime =TwelveHourDateAndTimeToSqlDateTime(currentFormState.bDate,currentFormState.endTime,".000")
+    var endDateTime = TwelveHourDateAndTimeToSqlDateTime(
+      currentFormState.bDate,
+      currentFormState.endTime,
+      ".000"
+    );
     // always add .000 to end time
 
-    // We add .500 to the start time because we start the event at .5000 seconds after the given time , 
+    // We add .500 to the start time because we start the event at .5000 seconds after the given time ,
     // concider this senario :
-    
-    //  if we booked an event with 
+
+    //  if we booked an event with
     // start time -  2023-01-07T07:30:00.000
     // end time   -  2023-01-07T08:00:00.000
 
-    // and after that we have to book an event with 
+    // and after that we have to book an event with
     // start time -  2023-01-07T08:00:00.000
     // end time   -  2023-01-07T08:30:00.000
-    // the backend will first check if this sload is  isAlreadyBooked 
+    // the backend will first check if this sload is  isAlreadyBooked
     // and when we check the previous event is already booked at 2023-01-07T08:00:00.000
-    // so we won't be able to book this schedule . 
-    // to solve this problem we add .500 with start and .000 to end times 
+    // so we won't be able to book this schedule .
+    // to solve this problem we add .500 with start and .000 to end times
 
     // EXPLAINING THE PROCESS
-    // concider we booked an event with 
+    // concider we booked an event with
     // StartDate: "2023-01-07T07:30:00.500"
     // EndDate : "2023-01-07T08:00:00.000"
-    // when we want to book the next event with 
+    // when we want to book the next event with
     // StartDate: "2023-01-07T08:00:00.500"
     // EndDate : "2023-01-07T08:30:00.000"
-    // when the db checks for the event it will not be booked between the given start and end date. 
+    // when the db checks for the event it will not be booked between the given start and end date.
     //  because we add .500 with start date
 
-
-    var convertedData=  {
-      AnaesthetistId:currentFormState.anaesthetistId,
+    var convertedData = {
+      AnaesthetistId: currentFormState.anaesthetistId,
       AnaesthesiaTypeId: currentFormState.anaesthesiaTypeId,
       DepartmentId: user.departmentId,
       OperationTheatreId: selectedOperationTheatre,
       DoctorId: user.id,
       StatusId: 1,
-      SurgeryId: SurgeryTypeValue===undefined?"":SurgeryTypeValue.id,
+      SurgeryId: selectedSurgery === undefined ? 0 : selectedSurgery.id,
       RegistrationNo: patient.id,
       StartDate: startDateTime,
-      EndDate:   endDateTime,
+      EndDate: endDateTime,
       Duration: 0,
       InstructionToNurse: currentFormState.InstructionToNurse,
-      InstructionToAnaesthetist: currentFormState.InstructionToAnaesthetist ,
-      InstructionToOperationTeatrePersons: currentFormState.InstructionToOperationTeatrePersons,
+      InstructionToAnaesthetist: currentFormState.InstructionToAnaesthetist,
+      InstructionToOperationTeatrePersons:
+        currentFormState.InstructionToOperationTeatrePersons,
       RequestForSpecialMeterial: currentFormState.RequestForSpecialMeterial,
       Type: "BOOKED",
-      EmployeeIdArray: currentFormState.OtherDepartmentEmployeeIdArray.toString(),
-      EquipmentsIdArray: currentFormState.EquipmentsIdArray.toString()
-    }
+      EmployeeIdArray:
+        currentFormState.OtherDepartmentEmployeeIdArray.toString(),
+      EquipmentsIdArray: currentFormState.EquipmentsIdArray.toString(),
+    };
 
-    console.log("DATA : " , convertedData )
+    console.log("DATA : ", convertedData);
 
     await SaveEvent(convertedData);
   };
-
-
 
   const loadMoreResults = () => {
     const nextPage = page + 1;
     setPage(nextPage);
   };
 
-  const loadMoreSurgeryList = async () => {
-    // await setSurgeryListLoading(true);
-    const nextPage = surgeryListPage + 1;
-    await setSurgeryListPage(nextPage);
-    console.log("page number  : ", nextPage);
-    const _surgeryList = await GetSurgeryList(inputValueSurgery, nextPage, 20);
+  // const loadMoreSurgeryList = async () => {
+  //   // await setSurgeryListLoading(true);
+  //   const nextPage = surgeryListPage + 1;
+  //   await setSurgeryListPage(nextPage);
+  //   console.log("page number  : ", nextPage);
+  //   const _surgeryList = await GetSurgeryList(inputValueSurgery, nextPage, 20);
 
-    // if( surgeryListLoading ===true){
-    console.log("done");
-    setSurgeryList(...SurgeryList, _surgeryList);
-    setSurgeryListLoading(false);
-    // }
-    // setSurgeryListLoading(false);
-  };
+  //   // if( surgeryListLoading ===true){
+  //   console.log("done");
+  //   setSurgeryList(...SurgeryList, _surgeryList);
+  //   setSurgeryListLoading(false);
+  //   // }
+  //   // setSurgeryListLoading(false);
+  // };
 
   const handleScroll = (event) => {
     const listboxNode = event.currentTarget;
     const position = listboxNode.scrollTop + listboxNode.clientHeight;
-    console.log(listboxNode.scrollHeight - position);
+    console.log("scroll end: ", listboxNode.scrollHeight - position);
     if (listboxNode.scrollHeight - position <= 1) {
       loadMoreResults();
     }
   };
 
-  const handleScrollSurgeryList = async (event) => {
-    const listboxNode = event.currentTarget;
-    const position = listboxNode.scrollTop + listboxNode.clientHeight;
-    console.log(listboxNode.scrollHeight - position);
-    if (listboxNode.scrollHeight - position <= 1) {
-      await loadMoreSurgeryList();
-    }
-  };
+  // const handleScrollSurgeryList = async (event) => {
+  //   const listboxNode = event.currentTarget;
+  //   const position = listboxNode.scrollTop + listboxNode.clientHeight;
+  //   console.log(listboxNode.scrollHeight - position);
+  //   if (listboxNode.scrollHeight - position <= 1) {
+  //     await loadMoreSurgeryList();
+  //   }
+  // };
 
   const FetchOtherDepartmentSurgeons = async (selectedDepartments) => {
-    console.log("FetchOtherDepartmentSurgeons departments: ", selectedDepartments);
+    console.log(
+      "FetchOtherDepartmentSurgeons departments: ",
+      selectedDepartments
+    );
     const _data = await GetOtherDepartmentSurgeons(
       selectedDepartments,
       1,
@@ -301,7 +314,6 @@ const BookingRegistrationForm = (props) => {
       <DialogContent dividers>
         <form>
           <Grid container>
-
             {/* UHID Field START */}
             <Grid item={true} md={3} style={useStyles.root}>
               <TextField
@@ -375,7 +387,6 @@ const BookingRegistrationForm = (props) => {
                 <DesktopDatePicker
                   label="Date "
                   inputFormat="MM/DD/YYYY"
-                  
                   style={useStyles.textfield}
                   value={dateSelector}
                   onChange={(newDate) => {
@@ -394,88 +405,130 @@ const BookingRegistrationForm = (props) => {
 
             {/* Start Time Picker START */}
             <Grid item md={3} style={useStyles.root}>
-              <LocalizationProvider dateAdapter={AdapterMoment}>
-                <TimePicker
-                  // disable unwanted minutes START
-                  // We wants minutes in 30 minute interval
-                  shouldDisableTime={(timeValue, clockType) => {
-                    return clockType === "minutes" && ( (timeValue>0 && timeValue < 30) || (timeValue > 30&&timeValue<=59)  ) ;
-                  }}
-                  // disable unwanted minutes END
-                  label="Start time"
-                  style={useStyles.textfield}
-                  value={TimeStart}
-                  onChange={(newDate) => {
-                    setTimeStart(newDate);
-                  }}
-                  renderInput={(params) => (
-                    <TextField {...params} {...register("startTime")} />
-                  )}
-                />
-                {errors.startTime && errors.startTime.type === "required" && (
-                  <p style={useStyles.errortext}>Start time is required.</p>
+              <Controller
+                name="startTime"
+                control={control}
+                type="text"
+                // defaultValue={[]}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <TimePicker
+                      // disable unwanted minutes START
+                      // We wants minutes in 30 minute interval
+                      shouldDisableTime={(timeValue, clockType) => {
+                        return (
+                          clockType === "minutes" &&
+                          ((timeValue > 0 && timeValue < 30) ||
+                            (timeValue > 30 && timeValue <= 59))
+                        );
+                      }}
+                      // disable unwanted minutes END
+                      label="Start time"
+                      style={useStyles.textfield}
+                      value={TimeStart}
+                      onChange={(e) => {
+                        console.log(e);
+                        setTimeStart(e?._d);
+                        onChange(e?._d);
+                      }}
+                      renderInput={(params) => (
+                        <TextField {...params} {...register("startTime")} />
+                      )}
+                    />
+                    {errors.startTime &&
+                      errors.startTime.type === "required" && (
+                        <p style={useStyles.errortext}>
+                          Start time is required.
+                        </p>
+                      )}
+                  </LocalizationProvider>
                 )}
-              </LocalizationProvider>
+              />
             </Grid>
             {/* Start Time Picker END */}
 
             {/* End Time Picker START */}
             <Grid item md={3} style={useStyles.root}>
-              <LocalizationProvider dateAdapter={AdapterMoment}>
-                <TimePicker
-                  // disable unwanted minutes START
-                  // We wants minutes in 30 minute interval
-                  shouldDisableTime={(timeValue, clockType) => {
-                    return clockType === "minutes" && ( (timeValue>0 && timeValue < 30) || (timeValue > 30&&timeValue<=59)  ) ;
-                  }}
-                  // disable unwanted minutes END
-                  label="End time"
-                  style={useStyles.textfield}
-                  value={TimeEnd}
-                  onChange={(newDate) => {
-                    setTimeEnd(newDate);
-                  }}
-                  renderInput={(params) => (
-                    <TextField {...params} {...register("endTime")} />
-                  )}
-                />
-                {errors.endTime && errors.endTime.type === "required" && (
-                  <p style={useStyles.errortext}>End time is required.</p>
+              <Controller
+                name="endTime"
+                control={control}
+                type="text"
+                // defaultValue={[]}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <FormControl fullWidth>
+                    <LocalizationProvider dateAdapter={AdapterMoment}>
+                      <TimePicker
+                        // disable unwanted minutes START
+                        // We wants minutes in 30 minute interval
+                        shouldDisableTime={(timeValue, clockType) => {
+                          return (
+                            clockType === "minutes" &&
+                            ((timeValue > 0 && timeValue < 30) ||
+                              (timeValue > 30 && timeValue <= 59))
+                          );
+                        }}
+                        // disable unwanted minutes END
+                        label="End time"
+                        style={useStyles.textfield}
+                        value={TimeEnd}
+                        onChange={(e) => {
+                          console.log(e);
+                          setTimeEnd(e?._d);
+                          onChange(e?._d);
+                        }}
+                        renderInput={(params) => (
+                          <TextField {...params} {...register("endTime")} />
+                        )}
+                      />
+                      {errors.endTime && errors.endTime.type === "required" && (
+                        <p style={useStyles.errortext}>End time is required.</p>
+                      )}
+                    </LocalizationProvider>
+                  </FormControl>
                 )}
-              </LocalizationProvider>
+              />
             </Grid>
             {/* End Time Picker END */}
 
+            {/* ----- */}
             {/* Surgery Type Selector START */}
             <Grid item md={3} style={useStyles.root}>
               <Autocomplete
-                loading={surgeryListLoading}
                 id="surgeryList"
-                // value={SurgeryTypeValue||{name:""}}
-                value={SurgeryTypeValue}
+                value={selectedSurgery}
+                // value - holds the current selected surgery
                 options={SurgeryList}
+                // options - holds the surgery list
                 getOptionLabel={(option) => option.name}
-                // defaultValue={{name:""}}
-
+                // select label as name from the SurgeryList object
                 style={useStyles.textfield}
+                // Executed when the surgery value is selected from a list START
                 onChange={(event, newValue) => {
-                  setsurgeryTypeValue(newValue);
+                  setSelectedSurgery(newValue);
                   console.log(
                     "JSON.stringify : ",
                     JSON.stringify(newValue, null, " ")
                   );
                 }}
-                inputValue={inputValueSurgery || ""}
+                // Executed when the surgery value is selected from a list END
+                // Executed when we type START
                 onInputChange={async (event, newInputValue) => {
+                  // When a new value is typed we load the surgery list inaccordance
+                  // with the input value, we load upto 50 values.
                   var _data_fetched = await GetSurgeryList(
                     newInputValue,
                     1,
-                    50
+                    20
                   );
-                  console.log("_data_fetched : ", _data_fetched);
+                  console.log("_data_fetched inputchange : ", _data_fetched);
                   setSurgeryList(_data_fetched);
                   setInputValueSurgery(newInputValue);
+                  // inputValueSurgery is used to do search in the scroll pagination
                 }}
+                // Executed when we type END
+
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -487,39 +540,25 @@ const BookingRegistrationForm = (props) => {
                     label="Surgery Type"
                   />
                 )}
-                // onOpen={() => {
-                //     setTimeout(() => {
-                //       const optionEl = document.querySelector(
-                //         `[data-name="Adenoidectomy"]`
-                //       );
-                //       optionEl?.scrollIntoView();
-                //     }, 1);
-                // }}
-
                 ListboxProps={{
                   onScroll: async (event) => {
                     const listboxNode = event.currentTarget;
                     const position =
                       listboxNode.scrollTop + listboxNode.clientHeight;
-                    console.log(listboxNode.scrollHeight - position);
+                    // console.log(listboxNode.scrollHeight - position);
 
                     if (listboxNode.scrollHeight - position <= 1) {
+                      // console.log("event :", event )
                       const nextPage = surgeryListPage + 1;
-                      await setSurgeryListPage(nextPage);
+                      setSurgeryListPage(nextPage);
+                      console.log("<<<< NEXT PAGE>>>>");
                       console.log("page number  : ", nextPage);
                       const _surgeryList = await GetSurgeryList(
                         inputValueSurgery,
                         nextPage,
                         20
                       );
-                      const _data = SurgeryList.concat(_surgeryList);
-                      console.log("_data : ", _data);
-                      setSurgeryList(_data);
-
-                      // const optionEl = document.querySelector(
-                      //     `[name="Abdominoperineal Resection"]`
-                      //   );
-                      // optionEl?.scrollIntoView();
+                      setSurgeryList(SurgeryList.concat(_surgeryList));
                     }
                   },
                   style: { maxHeight: 200, overflow: "auto" },
@@ -531,6 +570,7 @@ const BookingRegistrationForm = (props) => {
               )}
             </Grid>
             {/* Surgery Type Selector END */}
+            {/* ----- */}
 
             {/* Doctor ID Field START */}
             <Grid item md={3} style={useStyles.root}>
@@ -538,7 +578,7 @@ const BookingRegistrationForm = (props) => {
                 label="Doctor ID"
                 variant="outlined"
                 style={useStyles.textfield}
-                defaultValue={defaultFormValues.UserId }
+                defaultValue={defaultFormValues.UserId}
                 {...register("DoctorId", { required: true })}
               />
               {errors.DoctorId && errors.DoctorId.type === "required" && (
@@ -676,10 +716,7 @@ const BookingRegistrationForm = (props) => {
                       onChange={async (e) => {
                         onChange(e.target?.value);
                         setOtherDepartments(e.target?.value);
-                        console.log(
-                          "setOtherDepartments : ",
-                          otherDepartments
-                        );
+                        console.log("setOtherDepartments : ", otherDepartments);
                         await FetchOtherDepartmentSurgeons(e.target?.value);
                       }}
                       // MenuProps={MenuProps}
