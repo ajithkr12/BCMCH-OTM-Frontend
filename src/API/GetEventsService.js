@@ -28,6 +28,33 @@ export const GetEvents = async (_operationTheatreId, _fromDate, _toDate) => {
   }
 };
 
+export const GetEquipmentsAndEmployeesMapping = async (_bookingId) => {
+  // used to fetch multiple select mappings using bookingId
+  try {
+    const response = await axios.get(
+      ConstantURL.SelectEquipmentsAndEmployees,
+      {
+        params: {
+          bookingId:_bookingId
+        },
+      },
+      { "Content-Type": "application/json", Accept: "*/*" }
+    );
+    if (response.data.success === false) {
+      throw new Error("backend : ",response.data.response);
+    }
+    // console.log("GetEquipmentsAndEmployeesMapping : ",response.data.data)
+    return response.data.data;
+  } catch (error) {
+    const _error =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    console.log("error GetEquipmentsAndEmployeesMapping : ", _error);
+  } finally {
+  }
+};
+
 export const GetAllocation = async (_departmentId, _fromDate, _toDate) => {
   try {
     const response = await axios.get(

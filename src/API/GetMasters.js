@@ -11,7 +11,7 @@ export const GetAllMasters = async () => {
     if (response.data.success === false) {
       throw new Error(response.data.response);
     }
-
+    // console.log("response.data.data : ",response.data.data)
     return response.data.data;
   } catch (error) {
     const _error =

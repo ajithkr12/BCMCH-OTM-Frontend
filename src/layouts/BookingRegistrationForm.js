@@ -24,14 +24,12 @@ import FormControl from "@mui/material/FormControl";
 import Autocomplete from "@mui/material/Autocomplete";
 import { createFilterOptions } from "@mui/material/Autocomplete";
 import { ContextConsumer } from "../Utils/Context";
-import {
-  GetAllMasters,
-  GetOtherDepartmentSurgeons,
-  GetSurgeryList,
-} from "../API/GetMasters";
+import { GetOtherDepartmentSurgeons, GetSurgeryList } from "../API/GetMasters";
 import Loader from "../Components/Loader";
 import moment from "moment";
 import { SaveEvent } from "../API/UpdateEventServices";
+import { GetEquipmentsAndEmployeesMapping } from "../API/GetEventsService";
+
 
 const BookingRegistrationForm = (props) => {
   const {
@@ -46,14 +44,6 @@ const BookingRegistrationForm = (props) => {
   // Default Form Values START
   const OtName =
     masters.operationTheatreList[selectedOperationTheatre - 1].name;
-  const defaultFormValues = {
-    UserId: user.id,
-    UserName: user.name,
-    PatientName: patient.name,
-    Ward: patient.ward,
-    OtName: OtName,
-  };
-  // Default Form Values END
 
   const { isEventEditor } = props;
   var { start, end } = props.dataToForm;
@@ -63,10 +53,13 @@ const BookingRegistrationForm = (props) => {
   // if it is an editor form we need to load data from that particular booking with its id
   // else we load a new form for bookig
   // we first select date from the datetime from event scheduler
+
   const getDateAndTime = (date) => {
     const startDate = new Date(date);
-    let day = startDate.getDate();
-    let month = startDate.getMonth() + 1;
+    var day= ("0" + (startDate.getDate())).slice(-2);
+    var month= ("0" + (startDate.getMonth()+1)).slice(-2)
+    // let day = startDate.getDate();
+    // let month = startDate.getMonth() + 1;
     let year = startDate.getFullYear();
     return {
       date: month + "/" + day + "/" + year,
@@ -78,23 +71,54 @@ const BookingRegistrationForm = (props) => {
 
   // console.log("<<<<<<<dateSelected : ", dateSelected);
   // the above dateSelected contains the selected date in dd/mm/yyyy format
-  const startTimeSelected = dateSelected.startTimeSelected;
+  // const startTimeSelected = dateSelected.startTimeSelected;
+  const startTimeSelected =start
+    
+  
+  // console.log("startTimeSelected : ",  UnixTimeToTime(startTimeSelected))
+  // startTimeSelected=UnixTimeToTime(startTimeSelected)
   // the above line selects the time only from the given datetime
 
   let endTimeSelected;
   let surgerySelectedFromProps = { name: "" };
+  let AnaesthetistFromProps = {
+    employeeId:0,
+    firstName:"",
+    lastName:"",
+    middleName:""
+  }
+  let AnesthesiaFromProps ={
+    id: 0,
+    name: ""
+  };
+
   if (isEventEditor) {
     console.log("event editor : ", props.dataToForm);
     endTimeSelected = new Date(end);
+    // loads endtime from the event
+
     surgerySelectedFromProps = {
       id: props.dataToForm.surgeryId,
       name: props.dataToForm.surgeryName,
       printName: props.dataToForm.surgeryPrintName,
     };
-    // loads endtime from the
+    // loads surgery from props 
+    AnaesthetistFromProps={
+      employeeId: props.dataToForm.anaesthetistId,
+      firstName: props.dataToForm.anaesthetistFirstName,
+      lastName: props.dataToForm.anaesthetistLastName,
+      middleName: props.dataToForm.anaesthetistMiddleName,
+    }
+    // loads Anaesthetist From Props
+    AnesthesiaFromProps ={
+      id:  props.dataToForm.anaesthesiaTypeId,
+      name:props.dataToForm.anaesthesiaType 
+    }
+    // loads Anesthesia From Props
+    
   } else {
     // To form add 30 minutes with the starttime .
-    endTimeSelected = startTimeSelected + 30 * 60 * 1000;
+    endTimeSelected = new Date(dateSelected.startTimeSelected + 30 * 60 * 1000)
   }
 
   const OnCancel = () => {
@@ -127,54 +151,34 @@ const BookingRegistrationForm = (props) => {
     surgerySelectedFromProps
   );
 
-  const [inputValue, setInputValue] = useState();
+  const [inputValueAdditionalSurgeon, setInputValueAdditionalSurgeon] =
+    useState();
 
   const [inputValueSurgery, setInputValueSurgery] = useState();
 
   const [page, setPage] = useState("1");
 
-  
-  
+  const [defaultEquipments, setDefaultEquipments] = useState([]);
+  const [defaultotherDepartments, setDefaultotherDepartments] = useState([]);
 
-  const [otherDepartments, setOtherDepartments] = useState([]);
-  // for multiple department select
-  const [otherDepartmentSurgeonsSelected, setOtherDepartmentSurgeonsSelected] = useState([]);
   //to hold selected surgeons from multiple select box
-  const [otherDepartmentSurgeons, setOtherDepartmentSurgeons] = useState([]);
+  const [otherDepartmentSurgeonsOptions, setOtherDepartmentSurgeonsOptions] =
+    useState([]);
+  const [defaultOtherDepartmentSurgeons, setDefaultOtherDepartmentSurgeons] =
+    useState([]);
+
   // to load surgeon list of departments given
   const [loading, setLoading] = useState(false);
   const [surgeryListPage, setSurgeryListPage] = useState(1);
-  const [surgeryListLoading, setSurgeryListLoading] = useState(false);
-  // const [Masters, setMasters] = useState();
   const [SurgeryList, setSurgeryList] = useState([]);
-
-  // const GetMasters = async () => {
-  //   var _allMasters = await GetAllMasters();
-  //   console.log("<<<<<<<<<<<<<masters : ", _allMasters);
-  //   setMasters(_allMasters);
-  // setLoading(false);
-  // };
-
-  //form initialization START
-  const {
-    register,
-    control,
-    formState: { isDirty, isValid, errors },
-    handleSubmit,
-    watch,
-  } = useForm({
-    defaultValues: defaultFormValues,
-    mode: "all",
-  });
-  //form initialization END
-
-  const currentFormState = watch();
-  //all the form datas are saved in currentFormState
-
+  const [defaultAnaesthetist, setdefaultAnaesthetist] = useState(AnaesthetistFromProps);
+  const [defaultAnesthesia, setdefaultAnesthesia] = useState(AnesthesiaFromProps);
+  // const [defaultSpecialMeterial, setdefaultSpecialMeterial] = useState(AnesthesiaFromProps);
+  
   const onSave = async () => {
-    // called when save button is clicked
-    // console.log("current", currentFormState);
-    // console.log("selectedSurgery : ", selectedSurgery);
+    
+
+    // --- START TIME END TIME PROCESSING START ---
     const TwelveHourDateAndTimeToSqlDateTime = (
       date,
       time,
@@ -187,6 +191,8 @@ const BookingRegistrationForm = (props) => {
         moment(time, ["h:mm A"]).format("HH:mm") + ":00" + milliSecondsToadd;
       return newDate + "T" + SQLTimeFormatted;
     };
+
+    console.log("Form Data : ", currentFormState);
 
     var startDateTime = TwelveHourDateAndTimeToSqlDateTime(
       currentFormState.bDate,
@@ -225,11 +231,60 @@ const BookingRegistrationForm = (props) => {
     // EndDate : "2023-01-07T08:30:00.000"
     // when the db checks for the event it will not be booked between the given start and end date.
     //  because we add .500 with start date
-    console.log("Form Data : ", currentFormState )
+
+    // --- START TIME END TIME PROCESSING END ---
+
+    
+
+
+
+    // --- EQUIPMENTS PROCESSING START ---
+    var equipmets_id_array = [];
+    if (currentFormState.EquipmentsSelect.length > 0) {
+      // if currentFormState.EquipmentsSelect is modified menas added or deleted
+      // then we load it from the form itself
+      equipmets_id_array = currentFormState.EquipmentsSelect.map(
+        (_data) => _data.id
+      );
+    } else {
+      // if currentFormState.EquipmentsSelect is not modified
+      // then we load it from the defaultEquipments
+      equipmets_id_array = defaultEquipments.map((_data) => _data.id);
+    }
+    var strEquipmentAr = equipmets_id_array.toString();
+    // after we convert it into string format from [1,2,3] to "1,2,3"
+    // --- EQUIPMENTS PROCESSING END ---
+
+
+    // -----
+
+
+    // --- EMPLOYEE PROCESSING START ---
+    var employee_id_array = [];
+    if (currentFormState.otherDepartmentSurgeons.length > 0) {
+      // console.log("if:")
+      // if currentFormState.otherDepartmentSurgeons is modified menas added or deleted
+      // then we load it from the form itself
+      employee_id_array = currentFormState.otherDepartmentSurgeons.map(
+        (_data) => _data.employeeId
+      );
+    } else {
+      // console.log("else:", defaultOtherDepartmentSurgeons)
+      // else currentFormState.otherDepartmentSurgeons is not modified
+      // then we load it from the defaultOtherDepartmentSurgeons
+      employee_id_array = defaultOtherDepartmentSurgeons.map(
+        (_data) => _data.employeeId
+      );
+    }
+    var strEmployeeIdAr = employee_id_array.toString();
+    // after we convert it into string format from [1,2,3] to "1,2,3"
+    // --- EMPLOYEE PROCESSING END ---
+
+
 
     var convertedData = {
-      AnaesthetistId: currentFormState.anaesthetistId,
-      AnaesthesiaTypeId: currentFormState.anaesthesiaTypeId,
+      AnaesthetistId: currentFormState.Anaesthetist=== null ?null :currentFormState.Anaesthetist.employeeId,
+      AnaesthesiaTypeId: currentFormState.Anesthesia=== null ? null:currentFormState.Anesthesia.id ,
       DepartmentId: user.departmentId,
       OperationTheatreId: selectedOperationTheatre,
       DoctorId: user.id,
@@ -241,17 +296,20 @@ const BookingRegistrationForm = (props) => {
       Duration: 0,
       InstructionToNurse: currentFormState.InstructionToNurse,
       InstructionToAnaesthetist: currentFormState.InstructionToAnaesthetist,
-      InstructionToOperationTeatrePersons:
-        currentFormState.InstructionToOperationTeatrePersons,
+      InstructionToOperationTeatrePersons: currentFormState.OTPersonInstruction,
       RequestForSpecialMeterial: currentFormState.RequestForSpecialMeterial,
       Type: "BOOKED",
-      EmployeeIdArray: otherDepartmentSurgeonsSelected.toString(),
-      EquipmentsIdArray: currentFormState.EquipmentsIdArray.toString(),
+      EmployeeIdArray: strEmployeeIdAr,
+      EquipmentsIdArray: strEquipmentAr,
     };
 
     console.log("DATA : ", convertedData);
 
-    await SaveEvent(convertedData);
+    if (isEventEditor) {
+      console.log("DATA EDIT: ", convertedData);
+    } else {
+      await SaveEvent(convertedData);
+    }
   };
 
   const loadMoreResults = () => {
@@ -293,26 +351,69 @@ const BookingRegistrationForm = (props) => {
   // };
 
   const FetchOtherDepartmentSurgeons = async (selectedDepartments) => {
-    console.log(
-      "FetchOtherDepartmentSurgeons departments: ",
-      selectedDepartments
-    );
+    // console.log(
+    //   "FetchOtherDepartmentSurgeons departments: ",
+    //   selectedDepartments
+    // );
     const _data = await GetOtherDepartmentSurgeons(
       selectedDepartments,
       1,
       10000
     );
-    setOtherDepartmentSurgeons(_data);
-    console.log("FetchOtherDepartmentSurgeons : ", _data);
+    setOtherDepartmentSurgeonsOptions(_data);
+    // console.log("FetchOtherDepartmentSurgeons : ", _data);
   };
 
-  const filterOptions = createFilterOptions({
-    stringify: (option) => option.name + option.id,
-  });
+  const FetchEquipmentsAndEmployeesMapping = async () => {
+    var _data = await GetEquipmentsAndEmployeesMapping(
+      props.dataToForm.event_id
+    );
+    console.log("GetEquipmentsAndEmployeesMapping : ", _data);
+    setDefaultotherDepartments(_data.departments);
+    setDefaultOtherDepartmentSurgeons(_data.surgeons);
+    setDefaultEquipments(_data.equipments);
+    var departmentsIdArray = await _data.departments.map((_data) => _data.id);
+    await FetchOtherDepartmentSurgeons(departmentsIdArray);
+  };
 
-  // useEffect(() => {
-  //   GetMasters();
-  // }, []);
+  useEffect(() => {
+    if (isEventEditor) {
+      console.log("FETCH STARTED")
+      FetchEquipmentsAndEmployeesMapping();
+    }
+  }, []);
+
+  const [defaultFormValues, setdefaultFormValues] = useState({
+    UserId: user.id,
+    UserName: user.name,
+    PatientName: patient.name,
+    Ward: patient.ward,
+    OtName: OtName,
+    bDate:dateSelected.date ,
+    startTime:startTimeSelected,
+    endTime:endTimeSelected,
+    otherDepartmentSurgeons: defaultOtherDepartmentSurgeons,
+    EquipmentsSelect: defaultEquipments,
+    Anaesthetist:defaultAnaesthetist,
+    Anesthesia:defaultAnesthesia,
+  });
+  // Default Form Values END
+
+  //form initialization START
+  const {
+    register,
+    control,
+    formState: { isDirty, isValid, errors },
+    handleSubmit,
+    watch,
+  } = useForm({
+    defaultValues: defaultFormValues,
+    mode: "all",
+  });
+  //form initialization END
+
+  const currentFormState = watch();
+  //all the form datas are saved in currentFormState
 
   return loading ? (
     <Loader />
@@ -514,10 +615,6 @@ const BookingRegistrationForm = (props) => {
                 // Executed when the surgery value is selected from a list START
                 onChange={(event, newValue) => {
                   setSelectedSurgery(newValue);
-                  // console.log(
-                  //   "JSON.stringify : ",
-                  //   JSON.stringify(newValue, null, " ")
-                  // );
                 }}
                 // Executed when the surgery value is selected from a list END
                 // Executed when we type START
@@ -598,7 +695,6 @@ const BookingRegistrationForm = (props) => {
             <Grid item md={3} style={useStyles.root}>
               <Autocomplete
                 multiple
-                // disablePortal
                 id="AdditionalSurgeon"
                 value={value}
                 options={["SurgeonName1", "SurgeonName3", "SurgeonName4"]}
@@ -606,9 +702,9 @@ const BookingRegistrationForm = (props) => {
                 onChange={(event, newValue) => {
                   setValue(newValue);
                 }}
-                inputValue={inputValue}
+                inputValue={inputValueAdditionalSurgeon}
                 onInputChange={(event, newInputValue) => {
-                  setInputValue(newInputValue);
+                  setInputValueAdditionalSurgeon(newInputValue);
                 }}
                 renderInput={(value) => (
                   <TextField
@@ -634,7 +730,44 @@ const BookingRegistrationForm = (props) => {
 
             {/* Anesthesia Type Selector START */}
             <Grid item md={3} style={useStyles.root}>
-              <FormControl fullWidth>
+            <Controller
+                name="Anesthesia"
+                control={control}
+                type="text"
+                // rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <FormControl fullWidth>
+                    <Autocomplete
+                      // multiple
+                      id="Anesthesia"
+                      options={masters.anaesthesiaList}
+                      value={defaultAnesthesia}
+                      defaultValue={defaultAnesthesia}
+                      getOptionLabel={(option) => option.name}
+                      style={useStyles.textfield}
+                      onChange={async (event, newValue) => {
+                        onChange(newValue)
+                        setdefaultAnesthesia(newValue);
+                      }}
+                      
+                      renderInput={(value) => (
+                        <TextField
+                          {...value}
+                          InputProps={{
+                            ...value.InputProps,
+                            type: "search",
+                          }}
+                          label="Anesthesia"
+                        />
+                      )}
+                      ListboxProps={{
+                        style: { maxHeight: "200px" },
+                      }}
+                    />
+                  </FormControl>
+                )}
+              />
+              {/* <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">
                   Anesthesia Type
                 </InputLabel>
@@ -660,43 +793,55 @@ const BookingRegistrationForm = (props) => {
                       Anesthesia Type is required.
                     </p>
                   )}
-              </FormControl>
+              </FormControl> */}
             </Grid>
             {/* Anesthesia Type Selector END */}
 
             {/* Anasthetist Selector START */}
             <Grid item md={3} style={useStyles.root}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">
-                  Preffered Anasthetist
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Preffered Anasthetist"
-                  defaultValue=""
-                  style={useStyles.textfield}
-                  {...register("anaesthetistId", { required: true })}
-                >
-                  {masters.anaesthetistList.map((data) => {
-                    return (
-                      <MenuItem key={data.employeeId} value={data.employeeId}>
-                        {data.firstName +
-                          " " +
-                          data.middleName +
-                          " " +
-                          data.lastName}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-                {errors.anaesthetistId &&
-                  errors.anaesthetistId.type === "required" && (
-                    <p style={useStyles.errortext}>
-                      Preffered Anasthetist is required.
-                    </p>
-                  )}
-              </FormControl>
+              <Controller
+                name="Anaesthetist"
+                control={control}
+                type="text"
+                // rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <FormControl fullWidth>
+                    <Autocomplete
+                    
+                      // multiple
+                      id="Anaesthetist"
+                      options={masters.anaesthetistList}
+                      value={defaultAnaesthetist}
+                      defaultValue={defaultAnaesthetist}
+                      getOptionLabel={(option) => {
+                        option.middleName = option.middleName == null ? "" : option.middleName;
+                        return option.firstName + " " + 
+                        option.middleName + " " +
+                        option.lastName;
+                      }}
+                      style={useStyles.textfield}
+                      onChange={async (event, newValue) => {
+                        onChange(newValue)
+                        setdefaultAnaesthetist(newValue);
+                      }}
+                      
+                      renderInput={(value) => (
+                        <TextField
+                          {...value}
+                          InputProps={{
+                            ...value.InputProps,
+                            type: "search",
+                          }}
+                          label="Anaesthetist"
+                        />
+                      )}
+                      ListboxProps={{
+                        style: { maxHeight: "200px" },
+                      }}
+                    />
+                  </FormControl>
+                )}
+              />
             </Grid>
             {/* Anasthetist Selector END */}
 
@@ -707,25 +852,27 @@ const BookingRegistrationForm = (props) => {
                 control={control}
                 type="text"
                 defaultValue={[]}
-                rules={{ required: true }}
+                // rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <FormControl fullWidth>
                     <Autocomplete
                       multiple
                       id="otherDepartments"
                       options={masters.departmentsList}
-                      getOptionLabel={(option) => option.departmentName}
+                      value={defaultotherDepartments}
+                      getOptionLabel={(option) => option.name}
                       style={useStyles.textfield}
                       onChange={async (event, newValue) => {
-                        // setOtherDepartments(newValue);
+                        // console.log( "newValue :",newValue )
                         // the newvalue has all fields of the department data
                         // it includes id, name, etc
                         // we only want to store its id , so we filter out the id only
                         var departmentsIdArray = await newValue.map(
-                          (_data) => _data.departmentId
+                          (_data) => _data.id
                         );
                         // so we store id only in departmentsIdArray and
                         // fetch the surgeons in accordance with that data
+                        setDefaultotherDepartments(newValue);
                         await FetchOtherDepartmentSurgeons(departmentsIdArray);
                       }}
                       renderInput={(value) => (
@@ -735,7 +882,10 @@ const BookingRegistrationForm = (props) => {
                             ...value.InputProps,
                             type: "search",
                           }}
-                          {...register("otherDepartments", { required: true })}
+                          {...register(
+                            "otherDepartments"
+                            // { required: true }
+                          )}
                           label="Departments To Include"
                         />
                       )}
@@ -753,39 +903,44 @@ const BookingRegistrationForm = (props) => {
             {/* Other department employee selector START */}
             <Grid item md={3} style={useStyles.root}>
               <Controller
-                name="OdEmployeeIdArray"
+                name="otherDepartmentSurgeons"
                 control={control}
                 type="text"
-                defaultValue={[]}
-                rules={{ required: true }}
+                // rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <FormControl fullWidth>
                     <Autocomplete
                       multiple
-                      id="OdEmployeeIdArray"
-                      options={otherDepartmentSurgeons}
-                      getOptionLabel={(option) =>{
-                        option.middleName= option.middleName==null?"":option.middleName 
-                        return (option.firstName +
-                        " " +
-                        option.middleName+
-                        " " +
-                        option.lastName)}
-                      }
-                      onChange={ (event, employees) => {
+                      id="otherDepartmentSurgeons"
+                      options={otherDepartmentSurgeonsOptions}
+                      value={defaultOtherDepartmentSurgeons}
+                      // getOptionSelected={(option, value) => value.id === option.id}
+
+                      getOptionLabel={(option) => {
+                        option.middleName =
+                          option.middleName == null ? "" : option.middleName;
+                        return (
+                          option.firstName +
+                          " " +
+                          option.middleName +
+                          " " +
+                          option.lastName
+                        );
+                      }}
+                      onChange={(event, employees) => {
                         // the employees has all fields of the surgeon data
                         // it includes id, name, etc
                         // we only want to store its id , so we filter out the id only
-                        var surgeonIdArray = employees.map(
-                          (_data) => _data.employeeId
-                        );
-                        onChange(employees)
-                        setOtherDepartmentSurgeonsSelected(surgeonIdArray)
+                        console.log(employees);
+                        // var surgeonIdArray = employees.map(
+                        //   (_data) => _data.employeeId
+                        // );
+                        onChange(employees);
+                        // setOtherDepartmentSurgeonsOptionsSelected(surgeonIdArray);
+                        setDefaultOtherDepartmentSurgeons(employees);
                         // console.log(surgeonIdArray)
                       }}
-
                       style={useStyles.textfield}
-
                       renderInput={(value) => (
                         <TextField
                           {...value}
@@ -793,7 +948,10 @@ const BookingRegistrationForm = (props) => {
                             ...value.InputProps,
                             type: "search",
                           }}
-                          {...register("OdEmployeeIdArray", { required: true })}
+                          {...register(
+                            "otherDepartmentSurgeons"
+                            // { required: true }
+                          )}
                           label="Surgeons To Include"
                         />
                       )}
@@ -804,8 +962,8 @@ const BookingRegistrationForm = (props) => {
                   </FormControl>
                 )}
               />
-              {errors.OdEmployeeIdArray &&
-                errors.OdEmployeeIdArray.type === "required" && (
+              {errors.otherDepartmentSurgeons &&
+                errors.otherDepartmentSurgeons.type === "required" && (
                   <p style={useStyles.errortext}>
                     Other Department Surgen Names is required.
                   </p>
@@ -816,41 +974,49 @@ const BookingRegistrationForm = (props) => {
             {/* Equipments list START */}
             <Grid item md={3} style={useStyles.root}>
               <Controller
-                name="EquipmentsIdArray"
+                name="EquipmentsSelect"
                 control={control}
-                type="text"
-                defaultValue={[]}
-                rules={{ required: true }}
+                // type="text"
+                // defaultValue={[]}
+                // rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <FormControl fullWidth>
-                    <InputLabel id="demo-multiple-name-label">
-                      Special Equipment
-                    </InputLabel>
-                    <Select
-                      {...register}
-                      labelId="EquipmentsIdArray"
-                      id="EquipmentsIdArray"
-                      label="Special Equipment"
-                      multiple
-                      defaultValue={[]}
-                      style={useStyles.textfield}
-                      onChange={(e) => {
-                        onChange(e.target?.value);
-                      }}
-                      // MenuProps={MenuProps}
-                    >
-                      {masters.equipmentList.map((data) => {
-                        return (
-                          <MenuItem key={data.id} value={data.id}>
-                            {data.name}
-                          </MenuItem>
-                        );
+                    <Autocomplete
+                      {...register("EquipmentsSelect", {
+                        required: true,
                       })}
-                    </Select>
+                      multiple
+                      id="EquipmentsSelect"
+                      value={defaultEquipments}
+                      defaultValue={defaultEquipments}
+                      options={masters.equipmentList}
+                      getOptionLabel={(option) => option.name}
+                      onChange={(event, equipments) => {
+                        onChange(equipments);
+                        setDefaultEquipments(equipments);
+                      }}
+                      renderInput={(value) => (
+                        <TextField
+                          id={value.id}
+                          {...value}
+                          InputProps={{
+                            ...value.InputProps,
+                            type: "search",
+                          }}
+                          // {...register("EquipmentsSelect", { required: true })}
+                          label="Equipments"
+                        />
+                      )}
+                    />
                   </FormControl>
                 )}
               />
-              {/* {errors.EquipmentsIdArray && errors.EquipmentsIdArray.type === "required" && <p style={useStyles.errortext}>Special Equipment is required.</p>} */}
+              {/* {errors.EquipmentsSelect &&
+                errors.EquipmentsSelect.type === "required" && (
+                  <p style={useStyles.errortext}>
+                    Special Equipment is required.
+                  </p>
+                )} */}
             </Grid>
             {/* Equipments list END */}
 
@@ -858,7 +1024,9 @@ const BookingRegistrationForm = (props) => {
               <TextField
                 label="Instructions for Nurses"
                 variant="outlined"
-                defaultValue=""
+                defaultValue={
+                  isEventEditor ? props.dataToForm.instructionToNurse : ""
+                }
                 multiline
                 maxRows={4}
                 style={useStyles.textfield}
@@ -871,7 +1039,11 @@ const BookingRegistrationForm = (props) => {
               <TextField
                 label="Instructions for anaesthetist"
                 variant="outlined"
-                defaultValue=""
+                defaultValue={
+                  isEventEditor
+                    ? props.dataToForm.instructionToAnaesthetist
+                    : ""
+                }
                 multiline
                 maxRows={4}
                 style={useStyles.textfield}
@@ -886,11 +1058,15 @@ const BookingRegistrationForm = (props) => {
               <TextField
                 label="Instructions for OT Person"
                 variant="outlined"
-                defaultValue=""
+                defaultValue={
+                  isEventEditor
+                    ? props.dataToForm.instructionToOperationTeatrePersons
+                    : ""
+                }
                 multiline
                 maxRows={4}
                 style={useStyles.textfield}
-                {...register("InstructionToOperationTeatrePersons", {
+                {...register("OTPersonInstruction", {
                   required: true,
                   maxLength: 1000,
                 })}
@@ -901,7 +1077,9 @@ const BookingRegistrationForm = (props) => {
               <TextField
                 label="Special Material Requests"
                 variant="outlined"
-                defaultValue=""
+                defaultValue={
+                  isEventEditor ? props.dataToForm.requestForSpecialMeterial : ""
+                }
                 multiline
                 maxRows={4}
                 style={useStyles.textfield}
