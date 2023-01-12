@@ -27,7 +27,7 @@ import { ContextConsumer } from "../Utils/Context";
 import { GetOtherDepartmentSurgeons, GetSurgeryList } from "../API/GetMasters";
 import Loader from "../Components/Loader";
 import moment from "moment";
-import { SaveEvent } from "../API/UpdateEventServices";
+import { EditEvent, SaveEvent } from "../API/UpdateEventServices";
 import { GetEquipmentsAndEmployeesMapping } from "../API/GetEventsService";
 
 
@@ -307,6 +307,7 @@ const BookingRegistrationForm = (props) => {
 
     if (isEventEditor) {
       console.log("DATA EDIT: ", convertedData);
+      await EditEvent( props.dataToForm.event_id ,convertedData)
     } else {
       await SaveEvent(convertedData);
     }

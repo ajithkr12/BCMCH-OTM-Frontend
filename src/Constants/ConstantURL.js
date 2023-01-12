@@ -14,6 +14,7 @@ export const ConstantURL = {
   GetToday                          : BASE_URL+"/api/Master/get-today/",
   DeleteEvents                      : BASE_URL+"/api/Booking/delete-booking/",
   AddEvent                          : BASE_URL+"/api/Booking/add-booking/",
+  EditEvent                         : BASE_URL+"/api/Booking/update-booking",
   SelectEquipmentsAndEmployees      : BASE_URL+"/api/Booking/get-event-equipments-and-employees/",
 }
 // https://localhost:5001
