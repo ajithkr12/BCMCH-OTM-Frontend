@@ -42,7 +42,7 @@ const DateNavigator = (props) => {
 
   const handlePrev = () => {
     var _newEnddDate = AddSevenDays(startDate, -1);
-    var _newStartDate = AddSevenDays(_newEnddDate, -7);
+    var _newStartDate = AddSevenDays(_newEnddDate, -6);
     setStartDate(_newStartDate);
     setEndDate(_newEnddDate);
   };
@@ -53,6 +53,7 @@ const DateNavigator = (props) => {
     setEndDate(_newEnddDate);
   };
   const handleChange = (e) => {
+    console.log("here :",e)
     setStartDate(AddSevenDays(e.$d, -6));
     setEndDate(e.$d);
   };

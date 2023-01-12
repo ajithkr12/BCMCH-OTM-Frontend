@@ -103,7 +103,7 @@ export default function EnhancedTable() {
     );
     // setAllocation(allocations);
     setEvents(bookingOnly);
-    console.log("bookings : ", bookingsformatted);
+    console.log("bookings : ", bookingOnly);
   };
 
   const FetchAllocatedOperationTheatres = async (_startDate, _endDate) => {
@@ -156,7 +156,7 @@ export default function EnhancedTable() {
         // so that the we can fetch the events and allocations from that date
         var _endDateTime = new Date(dbdateTimeToday.date);
         // converts sql date formate to js datetime
-        _endDateTime.setDate(_endDateTime.getDate() + 6);
+        _endDateTime.setDate(_endDateTime.getDate() + 7);
         // ADDS 6 DAYS TO TODAY - to form end date
         var _endDate = JsDatetimeToSQLDate(_endDateTime);
         // converts js date time to sql date , then used to fetch data from db after
@@ -261,7 +261,7 @@ export default function EnhancedTable() {
       <DateNavigator
         selectedDate={new Date(schedulerStartDate)}
         onChange={(e) => {
-          // console.log("e : ", e);
+          console.log("e : ", e);
           var startDate = JsDatetimeToSQLDate(e.startDate);
           var endDate = JsDatetimeToSQLDate(e.endDate);
           setSchedulerStartDate(startDate);
